@@ -12,14 +12,6 @@
                     <path-in-war>/</path-in-war>
                 </library>
                 <library>
-                    <file>${reference.ManagementClient.j2ee-module-car}</file>
-                    <path-in-war>/</path-in-war>
-                </library>
-                <library>
-                    <file>${reference.ReservationClient.j2ee-module-car}</file>
-                    <path-in-war>/</path-in-war>
-                </library>
-                <library>
                     <file>${reference.ManagementClient-1.j2ee-module-car}</file>
                     <path-in-war>/</path-in-war>
                 </library>
@@ -39,23 +31,7 @@
                 <id>dist-ear</id>
             </reference>
             <reference>
-                <foreign-project>ManagementClient</foreign-project>
-                <artifact-type>j2ee_ear_archive</artifact-type>
-                <script>build.xml</script>
-                <target>dist-ear</target>
-                <clean-target>clean-ear</clean-target>
-                <id>j2ee-module-car</id>
-            </reference>
-            <reference>
                 <foreign-project>ManagementClient-1</foreign-project>
-                <artifact-type>j2ee_ear_archive</artifact-type>
-                <script>build.xml</script>
-                <target>dist-ear</target>
-                <clean-target>clean-ear</clean-target>
-                <id>j2ee-module-car</id>
-            </reference>
-            <reference>
-                <foreign-project>ReservationClient</foreign-project>
                 <artifact-type>j2ee_ear_archive</artifact-type>
                 <script>build.xml</script>
                 <target>dist-ear</target>
