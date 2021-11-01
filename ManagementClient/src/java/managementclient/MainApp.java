@@ -52,6 +52,8 @@ public class MainApp {
                         
                         // hotelOperationModule
                         
+                        // frontOfficeModule
+                        
                     } catch(InvalidLoginCredentialException ex) {
                         System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
                     }

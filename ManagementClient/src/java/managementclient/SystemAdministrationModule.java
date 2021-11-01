@@ -23,7 +23,7 @@ public class SystemAdministrationModule {
     }
     
     
-    // overloaded constructor
+    // overloaded constructor here
     
     
     
@@ -31,9 +31,9 @@ public class SystemAdministrationModule {
     public void menuSystemAdministration() { // throws invalid access right something
     
         /*
-        if(currentEmployee.getAccessRightEnum() != AccessRightEnum.SYSTEMADMINISTRATOR)
+        if(currentEmployee.getAccessRightEnum() != AccessRightEnum.SYSTEM_ADMINISTRATOR)
         {
-            throw new InvalidAccessRightException("You don't have MANAGER rights to access the system administration module.");
+            throw new InvalidAccessRightException("You don't have SYSTEM_ADMINISTRATOR rights to access the system administration module.");
         }
         */
         
