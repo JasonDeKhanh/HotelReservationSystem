@@ -5,8 +5,10 @@
  */
 package ejb.session.singleton;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
+import javax.ejb.Startup;
 
 /**
  *
@@ -14,8 +16,31 @@ import javax.ejb.LocalBean;
  */
 @Singleton
 @LocalBean
+@Startup
+
 public class DataInitialisationSessionBean {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    public DataInitialisationSessionBean() {
+    }
+
+    @PostConstruct
+    public void postConstruct() {
+//        try
+//        {
+//            staffEntitySessionBeanLocal.retrieveStaffByUsername("manager");
+//        }
+//        catch(StaffNotFoundException ex)
+//        {
+//            initializeData();
+//        }
+    }
+    
+    private void initialiseData() {
+//        try {
+//            // try to initialize data
+//        } catch () {
+//            // from prof: catch(StaffUsernameExistException | ProductSkuCodeExistException | UnknownPersistenceException | InputDataValidationException ex)
+//            // ex.printStackTrace();
+//        }
+    }
 }
