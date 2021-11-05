@@ -85,7 +85,7 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     }
 
     @Override
-    public List<Employee> retrieveAllStaffs()
+    public List<Employee> retrieveAllEmployees()
     {
         Query query = em.createQuery("SELECT e FROM Employee e");
         

@@ -3,6 +3,8 @@ package managementclient;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import entity.Employee;
 import java.util.Scanner;
+import util.enumeration.AccessRight;
+import util.exception.InvalidAccessRightException;
 import util.exception.InvalidLoginCredentialException;
 
 
@@ -16,7 +18,9 @@ public class MainApp {
     // Queue and ConnectionFactory for MDB
     
     // SystemAdministrationModule
+    private SystemAdministrationModule systemAdministrationModule;
     // HotelOperationModule
+    private HotelOperationModule hotelOperationModule;
     
     private Employee currentEmployee;
     
@@ -53,15 +57,24 @@ public class MainApp {
                     try {
                         doLogin();
                         System.out.println("Login successful!\n");
-                        
-                        // systemAdministrationModule
-                        
-                        // hotelOperationModule
-                        
-                        // frontOfficeModule
-                        
+                                             
+                        if(currentEmployee!=null && currentEmployee.getAccessRight()==AccessRight.SYSTEM_ADMIN){
+                            // systemAdministrationModule
+                            systemAdministrationModule = new SystemAdministrationModule(currentEmployee, employeeSessionBeanRemote);
+                            systemAdministrationModule.menuSystemAdministration();
+                            
+                        }else if(currentEmployee!=null && (currentEmployee.getAccessRight()==AccessRight.OPERATION_MANAGER || currentEmployee.getAccessRight()==AccessRight.SALES_MANAGER)){
+                            // hotelOperationModule
+                            
+                            
+                        }else{
+                            // frontOfficeModule
+                        }
+
                     } catch(InvalidLoginCredentialException ex) {
                         System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
+                    } catch(InvalidAccessRightException ex) {
+                        System.out.println(ex.getMessage());
                     }
                 
                 } else if (response == 2) {
