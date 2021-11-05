@@ -5,10 +5,20 @@
  */
 package ejb.session.singleton;
 
+import ejb.session.stateless.EmployeeSessionBeanLocal;
+import entity.Employee;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
 import javax.ejb.Startup;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import util.enumeration.AccessRight;
+import util.exception.EmployeeNotFoundException;
+import util.exception.EmployeeUsernameExistException;
+import util.exception.InputDataValidationException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -20,27 +30,42 @@ import javax.ejb.Startup;
 
 public class DataInitialisationSessionBean {
 
+    @EJB(name = "EmployeeSessionBeanLocal")
+    private EmployeeSessionBeanLocal employeeSessionBeanLocal;
+
+    @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
+    private EntityManager em;
+    
+    
+
     public DataInitialisationSessionBean() {
     }
 
     @PostConstruct
     public void postConstruct() {
+        if(em.find(Employee.class, 1l) == null){
+            initialiseData();
+        }
+        
 //        try
 //        {
-//            staffEntitySessionBeanLocal.retrieveStaffByUsername("manager");
+//            employeeSessionBeanLocal.retrieveEmployeeByUsername("sysAdmin");
 //        }
-//        catch(StaffNotFoundException ex)
+//        catch(EmployeeNotFoundException ex)
 //        {
-//            initializeData();
+//            initialiseData();
 //        }
     }
     
     private void initialiseData() {
-//        try {
-//            // try to initialize data
-//        } catch () {
-//            // from prof: catch(StaffUsernameExistException | ProductSkuCodeExistException | UnknownPersistenceException | InputDataValidationException ex)
-//            // ex.printStackTrace();
-//        }
+        try {
+            employeeSessionBeanLocal.createNewEmployee(new Employee("sysAdmin", "password", AccessRight.SYSTEM_ADMIN));
+            employeeSessionBeanLocal.createNewEmployee(new Employee("manager1", "password", AccessRight.OPERATION_MANAGER));
+            employeeSessionBeanLocal.createNewEmployee(new Employee("manager2", "password", AccessRight.SALES_MANAGER));
+            employeeSessionBeanLocal.createNewEmployee(new Employee("manager3", "password", AccessRight.GUEST_RELATION_OFFICER));
+        } catch(EmployeeUsernameExistException | UnknownPersistenceException | InputDataValidationException ex){
+             ex.printStackTrace();
+        }
     }
+
 }
