@@ -1,6 +1,7 @@
 package managementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.PartnerSessionBeanRemote;
 import entity.Employee;
 import java.util.Scanner;
 import util.enumeration.AccessRight;
@@ -14,6 +15,7 @@ public class MainApp {
     // private attributes here
     // all the needed remote session beans
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
+    private PartnerSessionBeanRemote partnerSessionBeanRemote;
     
     // Queue and ConnectionFactory for MDB
     
@@ -29,8 +31,9 @@ public class MainApp {
     }
     
     // overloaded constructor here
-    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote) {
+    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
+        this.partnerSessionBeanRemote = partnerSessionBeanRemote;
     }
     
     public void runApp() {
@@ -60,7 +63,7 @@ public class MainApp {
                                              
                         if(currentEmployee!=null && currentEmployee.getAccessRight()==AccessRight.SYSTEM_ADMIN){
                             // systemAdministrationModule
-                            systemAdministrationModule = new SystemAdministrationModule(currentEmployee, employeeSessionBeanRemote);
+                            systemAdministrationModule = new SystemAdministrationModule(currentEmployee, employeeSessionBeanRemote, partnerSessionBeanRemote);
                             systemAdministrationModule.menuSystemAdministration();
                             
                         }else if(currentEmployee!=null && (currentEmployee.getAccessRight()==AccessRight.OPERATION_MANAGER || currentEmployee.getAccessRight()==AccessRight.SALES_MANAGER)){

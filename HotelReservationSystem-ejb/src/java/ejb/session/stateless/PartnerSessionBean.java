@@ -5,7 +5,7 @@
  */
 package ejb.session.stateless;
 
-import entity.Employee;
+import entity.Partner;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
@@ -19,10 +19,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import util.exception.EmployeeNotFoundException;
-import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.PartnerUsernameExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -30,34 +29,34 @@ import util.exception.UnknownPersistenceException;
  * @author xqy11
  */
 @Stateless
-public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeSessionBeanLocal {
-
+public class PartnerSessionBean implements PartnerSessionBeanRemote {   
+    
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
-
+    
     //Added for bean validation
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
     
-    public EmployeeSessionBean()
+    public PartnerSessionBean()
     {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
     
     @Override
-    public Long createNewEmployee(Employee newEmployeeEntity) throws EmployeeUsernameExistException, UnknownPersistenceException, InputDataValidationException
+    public Long createNewPartner(Partner newPartnerEntity) throws PartnerUsernameExistException, UnknownPersistenceException, InputDataValidationException
     {
-        Set<ConstraintViolation<Employee>>constraintViolations = validator.validate(newEmployeeEntity);
+        Set<ConstraintViolation<Partner>>constraintViolations = validator.validate(newPartnerEntity);
         
         if(constraintViolations.isEmpty())
         {
             try
             {
-                em.persist(newEmployeeEntity);
+                em.persist(newPartnerEntity);
                 em.flush();
 
-                return newEmployeeEntity.getEmployeeId();
+                return newPartnerEntity.getPartnerId();
             }
             catch(PersistenceException ex)
             {
@@ -65,7 +64,7 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
                 {
                     if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException"))
                     {
-                        throw new EmployeeUsernameExistException();
+                        throw new PartnerUsernameExistException();
                     }
                     else
                     {
@@ -85,54 +84,54 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     }
 
     @Override
-    public List<Employee> retrieveAllEmployees()
+    public List<Partner> retrieveAllPartners()
     {
-        Query query = em.createQuery("SELECT e FROM Employee e");
+        Query query = em.createQuery("SELECT p FROM Partner p");
         
         return query.getResultList();
     }
     
     @Override
-    public Employee retrieveEmployeeByUsername(String username) throws EmployeeNotFoundException
+    public Partner retrievePartnerByUsername(String username) throws PartnerUsernameExistException
     {
-        Query query = em.createQuery("SELECT e FROM Employee e WHERE e.username = :inUsername");
+        Query query = em.createQuery("SELECT p FROM Partner p WHERE p.username = :inUsername");
         query.setParameter("inUsername", username);
         
         try
         {
-            return (Employee)query.getSingleResult();
+            return (Partner)query.getSingleResult();
         }
         catch(NoResultException | NonUniqueResultException ex)
         {
-            throw new EmployeeNotFoundException("Employee Username " + username + " does not exist!");
+            throw new PartnerUsernameExistException("Partner Username " + username + " does not exist!");
         }
     }
     
     @Override
-    public Employee employeeLogin(String username, String password) throws InvalidLoginCredentialException
+    public Partner partnerLogin(String username, String password) throws InvalidLoginCredentialException
     {
         try
         {
-            Employee employee = retrieveEmployeeByUsername(username);
+            Partner partner = retrievePartnerByUsername(username);
             
-            if(employee.getPassword().equals(password))
+            if(partner.getPassword().equals(password))
             {
 //                employee.getSaleTransactionEntities().size();                
-                return employee;
+                return partner;
             }
             else
             {
                 throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
             }
         }
-        catch(EmployeeNotFoundException ex)
+        catch(PartnerUsernameExistException ex)
         {
             throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
         }
     }
     
     
-    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Employee>>constraintViolations)
+    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Partner>>constraintViolations)
     {
         String msg = "Input data validation error!:";
             
@@ -143,4 +142,9 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
         
         return msg;
     }
+
+    public void persist(Object object) {
+        em.persist(object);
+    }
+    
 }

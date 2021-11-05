@@ -1,7 +1,9 @@
 package managementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.PartnerSessionBeanRemote;
 import entity.Employee;
+import entity.Partner;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Scanner;
@@ -14,6 +16,7 @@ import util.enumeration.AccessRight;
 import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
+import util.exception.PartnerUsernameExistException;
 import util.exception.UnknownPersistenceException;
 
 
@@ -26,6 +29,7 @@ public class SystemAdministrationModule {
 
     // private attribute for required remote session bean remote
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
+    private PartnerSessionBeanRemote partnerSessionBeanRemote;
     
     private Employee currentEmployee;
 
@@ -36,10 +40,11 @@ public class SystemAdministrationModule {
     
     
     // overloaded constructor here
-    public SystemAdministrationModule(Employee currentEmployee, EmployeeSessionBeanRemote employeeSessionBeanRemote) {
+    public SystemAdministrationModule(Employee currentEmployee, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote) {
         this();
         this.currentEmployee = currentEmployee;
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
+        this.partnerSessionBeanRemote = partnerSessionBeanRemote;
     }
     
     
@@ -115,7 +120,7 @@ public class SystemAdministrationModule {
         Scanner scanner = new Scanner(System.in);
         Employee newEmployee = new Employee();
         
-        System.out.println("*** POS System :: System Administration :: Create New Employee ***\n");
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Employee ***\n");
         System.out.print("Enter Usesrname> ");
         newEmployee.setUsername(scanner.nextLine().trim());
         System.out.print("Enter password> ");
@@ -137,12 +142,6 @@ public class SystemAdministrationModule {
             }
         }
         
-//        scanner.nextLine();
-//        System.out.print("Enter Username> ");
-//        newEmployee.setUsername(scanner.nextLine().trim());
-//        System.out.print("Enter Password> ");
-//        newEmployee.setPassword(scanner.nextLine().trim());
-        
         Set<ConstraintViolation<Employee>>constraintViolations = validator.validate(newEmployee);
         
         if(constraintViolations.isEmpty())
@@ -150,15 +149,15 @@ public class SystemAdministrationModule {
             try
             {
                 Long newStaffId = employeeSessionBeanRemote.createNewEmployee(newEmployee);
-                System.out.println("New staff created successfully!: " + newStaffId + "\n");
+                System.out.println("New employee created successfully!: " + newStaffId + "\n");
             }
             catch(EmployeeUsernameExistException ex)
             {
-                System.out.println("An error has occurred while creating the new staff!: The user name already exist\n");
+                System.out.println("An error has occurred while creating the new employee!: The user name already exist\n");
             }
             catch(UnknownPersistenceException ex)
             {
-                System.out.println("An unknown error has occurred while creating the new staff!: " + ex.getMessage() + "\n");
+                System.out.println("An unknown error has occurred while creating the new employee!: " + ex.getMessage() + "\n");
             }
             catch(InputDataValidationException ex)
             {
@@ -175,7 +174,7 @@ public class SystemAdministrationModule {
     private void doViewAllEmployees() {
         Scanner scanner = new Scanner(System.in);
         
-        System.out.println("*** POS System :: System Administration :: View All Products ***\n");
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: View All Employees ***\n");
         
         List<Employee> employeeEntities = employeeSessionBeanRemote.retrieveAllEmployees();
         System.out.printf("%10s%40s%40s\n", "Employee Id", "Name", "Access Right");
@@ -192,17 +191,79 @@ public class SystemAdministrationModule {
 
     
     private void doCreateNewPartners() {
+        Scanner scanner = new Scanner(System.in);
+        Partner newPartner = new Partner();
+        
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Partner ***\n");
+        System.out.print("Enter Usesrname> ");
+        newPartner.setUsername(scanner.nextLine().trim());
+        System.out.print("Enter password> ");
+        newPartner.setPassword(scanner.nextLine().trim());
+        
+        Set<ConstraintViolation<Partner>>constraintViolations = validator.validate(newPartner);
+        
+        if(constraintViolations.isEmpty())
+        {
+            try
+            {
+                Long newPartnerId = partnerSessionBeanRemote.createNewPartner(newPartner);
+                System.out.println("New partner created successfully!: " + newPartnerId + "\n");
+            }
+            catch(PartnerUsernameExistException ex)
+            {
+                System.out.println("An error has occurred while creating the new partner!: The user name already exist\n");
+            }
+            catch(UnknownPersistenceException ex)
+            {
+                System.out.println("An unknown error has occurred while creating the new partner!: " + ex.getMessage() + "\n");
+            }
+            catch(InputDataValidationException ex)
+            {
+                System.out.println(ex.getMessage() + "\n");
+            }
+        }
+        else
+        {
+            showInputDataValidationErrorsForPartnerEntity(constraintViolations);
+        }
     
     }
     
     
     private void doViewAllPartners() {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: View All Partners ***\n");
+        
+        List<Partner> partnerEntities = partnerSessionBeanRemote.retrieveAllPartners();
+        System.out.printf("%10s%40s\n", "Partner Id", "Name");
+
+        for(Partner p: partnerEntities)
+        {
+            System.out.printf("%10s%40s\n", p.getPartnerId(), p.getUsername());
+        }
+        
+        System.out.print("Press any key to continue...> ");
+        scanner.nextLine();
     
     }
     
     
     //Bean Validation methods
     private void showInputDataValidationErrorsForEmployeetEntity(Set<ConstraintViolation<Employee>>constraintViolations)
+    {
+        System.out.println("\nInput data validation error!:");
+            
+        for(ConstraintViolation constraintViolation:constraintViolations)
+        {
+            System.out.println("\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage());
+        }
+
+        System.out.println("\nPlease try again......\n");
+    }
+    
+    //Bean Validation methods
+    private void showInputDataValidationErrorsForPartnerEntity(Set<ConstraintViolation<Partner>>constraintViolations)
     {
         System.out.println("\nInput data validation error!:");
             
