@@ -61,16 +61,17 @@ public class MainApp {
                         doLogin();
                         System.out.println("Login successful!\n");
                                              
-                        if(currentEmployee!=null && currentEmployee.getAccessRight()==AccessRight.SYSTEM_ADMIN){
+                        if(currentEmployee != null && currentEmployee.getAccessRight()==AccessRight.SYSTEM_ADMIN){
                             // systemAdministrationModule
                             systemAdministrationModule = new SystemAdministrationModule(currentEmployee, employeeSessionBeanRemote, partnerSessionBeanRemote);
                             systemAdministrationModule.menuSystemAdministration();
                             
-                        }else if(currentEmployee!=null && (currentEmployee.getAccessRight()==AccessRight.OPERATION_MANAGER || currentEmployee.getAccessRight()==AccessRight.SALES_MANAGER)){
+                        } else if (currentEmployee != null && (currentEmployee.getAccessRight()==AccessRight.OPERATION_MANAGER || currentEmployee.getAccessRight()==AccessRight.SALES_MANAGER)){
                             // hotelOperationModule
+                            hotelOperationModule = new HotelOperationModule(currentEmployee);
+                            hotelOperationModule.menuHotelOperation();
                             
-                            
-                        }else{
+                        } else {
                             // frontOfficeModule
                         }
 
