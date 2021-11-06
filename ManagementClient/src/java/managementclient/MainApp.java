@@ -23,6 +23,8 @@ public class MainApp {
     private SystemAdministrationModule systemAdministrationModule;
     // HotelOperationModule
     private HotelOperationModule hotelOperationModule;
+    // FrontOfficeModule
+    private FrontOfficeModule frontOfficeModule;
     
     private Employee currentEmployee;
     
@@ -73,6 +75,9 @@ public class MainApp {
                             
                         } else {
                             // frontOfficeModule
+                            frontOfficeModule = new FrontOfficeModule(currentEmployee);
+                            frontOfficeModule.menuFrontOffice();
+                            
                         }
 
                     } catch(InvalidLoginCredentialException ex) {
@@ -82,7 +87,7 @@ public class MainApp {
                     }
                 
                 } else if (response == 2) {
-                    
+                    // Exit
                     break;
                     
                 } else {

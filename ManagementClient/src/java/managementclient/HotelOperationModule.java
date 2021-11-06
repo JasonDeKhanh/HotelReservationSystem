@@ -26,7 +26,7 @@ public class HotelOperationModule {
         
         if(currentEmployee.getAccessRight() != AccessRight.OPERATION_MANAGER || currentEmployee.getAccessRight() != AccessRight.SALES_MANAGER)
         {
-            throw new InvalidAccessRightException("You don't have OPERATION_MANAGER OR SALES_MANAGER rights to access the system administration module.\n");
+            throw new InvalidAccessRightException("You don't have OPERATION_MANAGER OR SALES_MANAGER rights to access the hotel operation module.\n");
         }
         
         Scanner scanner = new Scanner(System.in);
