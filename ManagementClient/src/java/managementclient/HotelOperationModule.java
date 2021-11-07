@@ -44,7 +44,7 @@ public class HotelOperationModule {
     // menu
     public void menuHotelOperation() throws InvalidAccessRightException {
         
-        if(currentEmployee.getAccessRight() != AccessRight.OPERATION_MANAGER || currentEmployee.getAccessRight() != AccessRight.SALES_MANAGER)
+        if(!(currentEmployee.getAccessRight() == AccessRight.OPERATION_MANAGER || currentEmployee.getAccessRight() == AccessRight.SALES_MANAGER))
         {
             throw new InvalidAccessRightException("You don't have OPERATION_MANAGER OR SALES_MANAGER rights to access the hotel operation module.\n");
         }
@@ -190,12 +190,12 @@ public class HotelOperationModule {
         //
         System.out.print("Enter room type bed name> ");
         String bedName = scanner.nextLine().trim();
-        System.out.print("Enter room type bed size> ");
-        Integer bedSize = Integer.parseInt(scanner.nextLine().trim());
-        newRoomType.getBeds().put(bedName, bedSize);
+        System.out.print("Enter room type number of " + bedName + " beds> ");
+        Integer numBeds = Integer.parseInt(scanner.nextLine().trim());
+        newRoomType.getBeds().put(bedName, numBeds);
         
         System.out.print("Enter room type capacity> ");
-        newRoomType.setName(scanner.nextLine().trim());
+        newRoomType.setCapacity(Integer.parseInt(scanner.nextLine().trim()));
         
         System.out.print("Enter 1 room type amenity> ");
         newRoomType.getAmenities().add(scanner.nextLine().trim());
@@ -228,11 +228,13 @@ public class HotelOperationModule {
         // call 
         try {
             
-            roomTypeSessionBeanRemote.createNewRoomType(nextHigherRoomTypeName, newRoomType);
-            
+            newRoomType = roomTypeSessionBeanRemote.createNewRoomType(nextHigherRoomTypeName, newRoomType);
+            System.out.println("Successfully created new room type " + newRoomType.getName() + " with ID " + newRoomType.getRoomTypeId() + "\n");
+        
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("An error occurred: " + ex.getMessage());
         }
+        
     
     }
     
