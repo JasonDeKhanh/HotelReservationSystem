@@ -7,6 +7,7 @@ package managementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
+import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import javax.ejb.EJB;
 
 /**
@@ -14,6 +15,9 @@ import javax.ejb.EJB;
  * @author msipc
  */
 public class Main {
+
+    @EJB
+    private static RoomTypeSessionBeanRemote roomTypeSessionBean;
 
     @EJB(name = "PartnerSessionBeanRemote")
     private static PartnerSessionBeanRemote partnerSessionBeanRemote;
@@ -25,7 +29,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        MainApp mainApp = new MainApp(employeeSessionBeanRemote, partnerSessionBeanRemote);
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote, partnerSessionBeanRemote, roomTypeSessionBean);
         mainApp.runApp();
     }
     

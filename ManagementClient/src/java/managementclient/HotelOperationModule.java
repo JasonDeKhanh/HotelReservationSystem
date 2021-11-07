@@ -1,23 +1,43 @@
 package managementclient;
 
+import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
+import entity.Partner;
+import entity.RoomType;
 import java.util.Scanner;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import util.enumeration.AccessRight;
 import util.exception.InvalidAccessRightException;
+import util.exception.RoomTypeNotFoundException;
 
 public class HotelOperationModule {
 
+    // validator for bean validation
+    private final ValidatorFactory validatorFactory;
+    private final Validator validator;
+    
     // private attributes for remote session bean here
+    private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
+    
+    
+    
     // Queue and ConnectionFactory
     private Employee currentEmployee;
 
     public HotelOperationModule() {
+        this.validatorFactory = Validation.buildDefaultValidatorFactory();
+        this.validator = validatorFactory.getValidator();
     }
 
     // overloaded constructor
-    public HotelOperationModule(Employee currentEmployee) {
-
+    public HotelOperationModule(Employee currentEmployee, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote) {
+        this();
         this.currentEmployee = currentEmployee;
+        this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
 
     }
 
@@ -155,6 +175,65 @@ public class HotelOperationModule {
 
     public void doCreateNewRoomType() {
         
+        Scanner scanner = new Scanner(System.in);
+        RoomType newRoomType = new RoomType();
+        
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Room Type ***\n");
+        
+        System.out.print("Enter room type name> ");
+        newRoomType.setName(scanner.nextLine().trim());
+        System.out.print("Enter room type description> ");
+        newRoomType.setDescription(scanner.nextLine().trim());
+        System.out.print("Enter room type size> ");
+        newRoomType.setSize(Double.parseDouble(scanner.nextLine().trim()));
+        
+        //
+        System.out.print("Enter room type bed name> ");
+        String bedName = scanner.nextLine().trim();
+        System.out.print("Enter room type bed size> ");
+        Integer bedSize = Integer.parseInt(scanner.nextLine().trim());
+        newRoomType.getBeds().put(bedName, bedSize);
+        
+        System.out.print("Enter room type capacity> ");
+        newRoomType.setName(scanner.nextLine().trim());
+        
+        System.out.print("Enter 1 room type amenity> ");
+        newRoomType.getAmenities().add(scanner.nextLine().trim());
+        
+        while(true) {
+            
+            System.out.println("Would you like to add another amenity? Y/N ");
+            String response = "";
+            System.out.print("> ");
+            response = scanner.nextLine().trim();
+            
+            if (response.equals("Y")) {
+                System.out.print("Enter 1 room type amenity> ");
+                newRoomType.getAmenities().add(scanner.nextLine().trim());
+            } else if (response.equals("N")) {
+                break;
+                
+            } else {
+                System.out.println("Invalid response");
+            }
+            
+        }
+        
+        // inventory automatically initialized as 0
+        
+        // read nextHigherRoomType
+        System.out.print("Enter next higher room type name. Enter 'None' if there is no higher room type.> ");
+        String nextHigherRoomTypeName = scanner.nextLine().trim();
+        
+        // call 
+        try {
+            
+            roomTypeSessionBeanRemote.createNewRoomType(nextHigherRoomTypeName, newRoomType);
+            
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("An error occurred: " + ex.getMessage());
+        }
+    
     }
     
     public void doViewRoomTypeDetails() {
@@ -190,6 +269,7 @@ public class HotelOperationModule {
     }
     
     ////
+    ////
     public void doCreateNewRoomRate() {
     
     }
@@ -204,6 +284,32 @@ public class HotelOperationModule {
     
     public void doViewAllRoomRates() {
         
+    }
+    
+    //Bean Validation methods
+    private void showInputDataValidationErrorsForEmployeetEntity(Set<ConstraintViolation<Employee>>constraintViolations)
+    {
+        System.out.println("\nInput data validation error!:");
+            
+        for(ConstraintViolation constraintViolation:constraintViolations)
+        {
+            System.out.println("\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage());
+        }
+
+        System.out.println("\nPlease try again......\n");
+    }
+    
+    //Bean Validation methods
+    private void showInputDataValidationErrorsForPartnerEntity(Set<ConstraintViolation<Partner>>constraintViolations)
+    {
+        System.out.println("\nInput data validation error!:");
+            
+        for(ConstraintViolation constraintViolation:constraintViolations)
+        {
+            System.out.println("\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage());
+        }
+
+        System.out.println("\nPlease try again......\n");
     }
     
 }

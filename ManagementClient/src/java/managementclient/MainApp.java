@@ -2,6 +2,7 @@ package managementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
+import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import java.util.Scanner;
 import util.enumeration.AccessRight;
@@ -16,6 +17,7 @@ public class MainApp {
     // all the needed remote session beans
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
+    private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     
     // Queue and ConnectionFactory for MDB
     
@@ -33,9 +35,11 @@ public class MainApp {
     }
     
     // overloaded constructor here
-    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote) {
+    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote,
+            RoomTypeSessionBeanRemote roomTypeSessionBeanRemote) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
+        this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
     }
     
     public void runApp() {
@@ -70,7 +74,7 @@ public class MainApp {
                             
                         } else if (currentEmployee != null && (currentEmployee.getAccessRight()==AccessRight.OPERATION_MANAGER || currentEmployee.getAccessRight()==AccessRight.SALES_MANAGER)){
                             // hotelOperationModule
-                            hotelOperationModule = new HotelOperationModule(currentEmployee);
+                            hotelOperationModule = new HotelOperationModule(currentEmployee, roomTypeSessionBeanRemote);
                             hotelOperationModule.menuHotelOperation();
                             
                         } else {
