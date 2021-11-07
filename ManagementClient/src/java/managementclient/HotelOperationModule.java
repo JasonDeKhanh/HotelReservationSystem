@@ -240,11 +240,101 @@ public class HotelOperationModule {
     
     public void doViewRoomTypeDetails() {
         // don't forget Update Room Type and Delete Room Type in here
+        Scanner scanner = new Scanner(System.in);
+        RoomType roomType;
+        String roomTypeName = "";
+        
+        System.out.print("Enter room type name to be viewed> ");
+        roomTypeName = scanner.nextLine().trim();
+        
+        try {
+            roomType = roomTypeSessionBeanRemote.retrieveRoomTypeByName(roomTypeName);
+            // add to show room rates here later!!!////////////////////////////////////////////////////////////////////////
+            System.out.println("---------------------");
+            System.out.println("Room Type Name: " + roomType.getName());
+            System.out.println("Description: " + roomType.getDescription());
+            System.out.println("Size: " + roomType.getSize()); // put metres square here???
+            System.out.println("Room capacity: " + roomType.getCapacity() + " pax");
+            // show beds
+            System.out.println("");
+            System.out.println("Beds: ");
+            for(String bedName : roomType.getBeds().keySet()) {
+                System.out.println(" - " + roomType.getBeds().get(bedName) + " " + bedName);
+            }
+            // show amenities
+            System.out.println("Amenities:");
+            for(String amenity : roomType.getAmenities()) {
+                System.out.println(" - " + amenity);
+            }
+            System.out.println("");
+            System.out.println("Inventory: " + roomType.getInventory());
+            if (roomType.getNextHigherRoomType() != null) {
+                System.out.println("Next Higher Room Type: " + roomType.getNextHigherRoomType().getName());
+            } else {
+                System.out.println("Next Higher Room Type: This room currently the highest room type or has no higher room type indicated");
+            }
+            // show room rates
+            System.out.println("Rates: ");
+            /*
+            for ( RoomRate roomRate : roomType.getRoomRates()) {
+                System.out.println(" - " + roomRate.getName() + ": " + roomRate.getRatePerNight() + " dollars/night");
+            }
+            */
+            System.out.println("---------------------");
+            
+            // ask to update roomType or delete roomType
+            while(true) {
+                System.out.println("1: Update Room Type");
+                System.out.println("2: Delete Room Type"); 
+                System.out.println("--------");
+                System.out.println("3: Back");
+                Integer response = 0;
+
+                while (response < 1 || response > 3) {
+
+                    System.out.print("> ");
+
+                    response = scanner.nextInt();
+
+                    if (response == 1) {
+
+                        doUpdateRoomType();
+                        
+                    } else if (response == 2) {
+
+                        doDeleteRoomType();
+                        
+                    } else if (response == 3) {
+                        // Back
+                        break;
+
+                    } else {
+
+                        System.out.println("Invalid option, please try again!\n");
+
+                    }
+                }
+
+                if (response == 3) { // same number as the Back option
+                    // back
+                    break;
+                }
+            }
+                    
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("An error occurred: " + ex.getMessage());
+        }
+        
+        
     }
     
-    // doUpdateRoomType()
+    public void doUpdateRoomType() {
+        
+    }
     
-    // doDeleteRoomType()
+    public void doDeleteRoomType() {
+        
+    }
     
     public void doViewAllRoomTypes() {
         

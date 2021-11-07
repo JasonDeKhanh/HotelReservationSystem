@@ -28,12 +28,20 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     public RoomTypeSessionBean() {
     }
 
+    @Override
     public RoomType retrieveRoomTypeByName(String roomTypeName) throws RoomTypeNotFoundException {
         Query query = em.createQuery("SELECT rt from RoomType rt WHERE rt.name = :inName");
         query.setParameter("inName", roomTypeName);
+        RoomType roomType;
         
         try {
-            return (RoomType) query.getSingleResult();
+            roomType = (RoomType) query.getSingleResult();
+            
+            roomType.getNextHigherRoomType();
+            // LAZY LOAD THE ROOMRATES HERE TOO ONCE YOU'VE FINISHED ROOM RATES
+            // roomType.getRoomRates().size();
+            
+            return roomType;
             
         } catch (NoResultException ex) {
             throw new RoomTypeNotFoundException("Room Type " + roomTypeName + " does not exist!");

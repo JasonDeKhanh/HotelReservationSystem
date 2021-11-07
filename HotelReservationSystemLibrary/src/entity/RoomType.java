@@ -32,16 +32,20 @@ public class RoomType implements Serializable {
     private HashMap<String, Integer> beds;
     private Integer capacity;
     private List<String> amenities;
-    private static Integer inventory;
+    private Integer inventory;
     
     
     // one to one, not mandatory, unidirectional
     @OneToOne
     private RoomType nextHigherRoomType;
+    
+    // @OneToMany
+    // private List<RoomRates> roomRates;
 
     public RoomType() {
         this.beds = new HashMap<String,Integer>();
         this.amenities = new ArrayList<>();
+        this.inventory = 0;
     }
 
     public RoomType(String name, String description, Double size, Integer capacity) {
