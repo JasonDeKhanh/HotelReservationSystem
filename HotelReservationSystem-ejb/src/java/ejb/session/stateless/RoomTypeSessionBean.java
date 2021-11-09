@@ -173,7 +173,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     
     public List<RoomType> retrieveAllRoomTypes() {
         
-        Query query = em.createQuery("SELECT rt FROM RoomType");
+        Query query = em.createQuery("SELECT rt FROM RoomType rt");
         
         return query.getResultList();
     }
