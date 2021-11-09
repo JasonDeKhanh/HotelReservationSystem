@@ -17,6 +17,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.DeleteRoomRateException;
 import util.exception.InputDataValidationException;
 import util.exception.RoomRateNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -91,32 +92,54 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
         }               
     }
     
-//    @Override
-//    public void updateRoom(RoomRate roomRateEntity) throws RoomRateNotFoundException, InputDataValidationException
-//    {
-//        if(roomRateEntity != null && roomRateEntity.getRoomId()!= null)
-//        {
-//            Set<ConstraintViolation<RoomRate>>constraintViolations = validator.validate(roomRateEntity);
+    @Override
+    public void updateRoomRate(RoomRate roomRateEntity) throws RoomRateNotFoundException, InputDataValidationException
+    {
+        if(roomRateEntity != null && roomRateEntity.getRoomRateId()!= null)
+        {
+            Set<ConstraintViolation<RoomRate>>constraintViolations = validator.validate(roomRateEntity);
+        
+            if(constraintViolations.isEmpty())
+            {
+                RoomRate roomEntityToUpdate = retrieveRoomRatesByRoomRateId(roomRateEntity.getRoomRateId());
+
+                
+                roomEntityToUpdate.setName(roomRateEntity.getName());
+                roomEntityToUpdate.setRateType(roomRateEntity.getRateType());
+                roomEntityToUpdate.setRatePerNight(roomRateEntity.getRatePerNight());
+                roomEntityToUpdate.setStartDate(roomRateEntity.getStartDate());
+                roomEntityToUpdate.setEndDate(roomRateEntity.getEndDate());
+                
+            }
+            else
+            {
+                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+            }
+        }
+        else
+        {
+            throw new RoomRateNotFoundException("Room ID not provided for room to be updated");
+        }
+    }
+    
+    @Override
+    public void deleteRoomRate(Long roomRateId) throws RoomRateNotFoundException, DeleteRoomRateException
+    {
+        RoomRate productEntityToRemove = retrieveRoomRatesByRoomRateId(roomRateId);
+        
+        //if no one using room -> delete
+        
+//        List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = saleTransactionEntitySessionBeanLocal.retrieveSaleTransactionLineItemsByProductId(productId);
 //        
-//            if(constraintViolations.isEmpty())
-//            {
-//                RoomRate roomEntityToUpdate = retrieveRoomRatesByRoomRateId(roomRateEntity.getRoomRateId());
-//
-//                
-//                roomEntityToUpdate.setName(roomRateEntity.getName());
-//                roomEntityToUpdate.setName(roomRateEntity.getName());
-//                
-//            }
-//            else
-//            {
-//                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
-//            }
+//        if(saleTransactionLineItemEntities.isEmpty())
+//        {
+//            em.remove(productEntityToRemove);
 //        }
 //        else
 //        {
-//            throw new RoomRateNotFoundException("Room ID not provided for room to be updated");
+//            throw new DeleteProductException("Product ID " + productId + " is associated with existing sale transaction line item(s) and cannot be deleted!");
 //        }
-//    }
+    }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RoomRate>>constraintViolations)
     {

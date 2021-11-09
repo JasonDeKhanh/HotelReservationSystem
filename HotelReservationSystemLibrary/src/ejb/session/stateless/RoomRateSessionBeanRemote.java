@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.RoomRate;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exception.DeleteRoomRateException;
 import util.exception.InputDataValidationException;
 import util.exception.RoomRateNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -24,5 +25,9 @@ public interface RoomRateSessionBeanRemote {
     public List<RoomRate> retrieveAllRooms();
 
     public RoomRate retrieveRoomRatesByRoomRateId(Long roomRateId) throws RoomRateNotFoundException;
+
+    public void deleteRoomRate(Long roomRateId) throws RoomRateNotFoundException, DeleteRoomRateException;
+
+    public void updateRoomRate(RoomRate roomRateEntity) throws RoomRateNotFoundException, InputDataValidationException;
     
 }

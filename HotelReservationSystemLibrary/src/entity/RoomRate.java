@@ -181,5 +181,19 @@ public class RoomRate implements Serializable {
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
     }
+
+    /**
+     * @return the roomType
+     */
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    /**
+     * @param roomType the roomType to set
+     */
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
     
 }
