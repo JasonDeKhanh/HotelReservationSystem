@@ -63,8 +63,23 @@ public class RoomRate implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private RoomType roomType;
+
+    public RoomRate() {
+        this.disabled = false;
+    }
+
+    public RoomRate(String name, RoomRateType rateType, BigDecimal ratePerNight, Date startDate, Date endDate) {
+        this();
+        this.name = name;
+        this.rateType = rateType;
+        this.ratePerNight = ratePerNight;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
     
 
+    
+    
     public Long getRoomRateId() {
         return roomRateId;
     }

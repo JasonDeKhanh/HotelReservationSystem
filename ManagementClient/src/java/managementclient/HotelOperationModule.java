@@ -23,6 +23,7 @@ import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
 import util.exception.RoomRateNameExistException;
+import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNameExistException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -291,6 +292,7 @@ public class HotelOperationModule {
             roomType = roomTypeSessionBeanRemote.retrieveRoomTypeByName(roomTypeName);
             // add to show room rates here later!!!////////////////////////////////////////////////////////////////////////
             System.out.println("---------------------");
+            System.out.println("Room Type ID: " + roomType.getRoomTypeId());
             System.out.println("Room Type Name: " + roomType.getName());
             System.out.println("Description: " + roomType.getDescription());
             System.out.println("Size: " + roomType.getSize()); // put metres square here???
@@ -636,8 +638,32 @@ public class HotelOperationModule {
     public void doViewRoomRateDetails() {
         
         Scanner scanner = new Scanner(System.in);
-        RoomType roomType;
+        RoomRate roomRate;
         String roomRateName = "";
+        
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Room Rate ***\n");
+    
+        System.out.print("Enter room rate name to be viewed> ");
+        roomRateName = scanner.nextLine().trim();
+        
+        try {
+            
+            roomRate = roomRateSessionBeanRemote.retrieveRoomRateByName(roomRateName);
+        
+            System.out.println("--------------------");
+            System.out.println("Room Rate ID: " + roomRate.getRoomRateId());
+            System.out.println("Room Rate Name: " + roomRate.getName());
+            System.out.println("Rate Type: " + roomRate.getRateType());
+            if(roomRate.getRateType().equals(RoomRateType.PEAK) || roomRate.getRateType().equals(RoomRateType.PROMOTION)) {
+                System.out.println("Start Date: " + roomRate.getStartDate());
+                System.out.println("End Date: " + roomRate.getEndDate());
+            }
+            System.out.println("--------------------");
+            
+        } catch (RoomRateNotFoundException ex) {
+            System.out.println("An error has occurred: " + ex.getMessage());
+        }
+        
     }
     
     // doUpdateRoomRate() 
