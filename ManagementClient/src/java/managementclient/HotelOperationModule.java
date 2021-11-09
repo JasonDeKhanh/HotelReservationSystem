@@ -630,14 +630,6 @@ public class HotelOperationModule {
             System.out.println("Invalid date input!\n");
         }
         
-        System.out.print("Enter rate per type> ");
-        newRoomRate.setRatePerNight(scanner.nextBigDecimal());
-        scanner.nextLine();
-        
-        System.out.print("Enter start date (dd/mm/yyyy)> ");
-//        newRoomRate.setStartDate("");
-        
-        System.out.print("Enter room type size> ");
         
     }
     
