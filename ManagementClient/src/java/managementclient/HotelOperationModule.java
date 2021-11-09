@@ -1,10 +1,14 @@
 package managementclient;
 
+import ejb.session.stateless.RoomRateSessionBeanRemote;
+import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -18,6 +22,7 @@ import util.enumeration.RoomStatus;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
+import util.exception.RoomRateNameExistException;
 import util.exception.RoomTypeNameExistException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -31,6 +36,8 @@ public class HotelOperationModule {
     
     // private attributes for remote session bean here
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
+    private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
+    private RoomSessionBeanRemote roomSessionBeanRemote;
     
     
     
@@ -43,10 +50,15 @@ public class HotelOperationModule {
     }
 
     // overloaded constructor
-    public HotelOperationModule(Employee currentEmployee, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote) {
+    public HotelOperationModule(Employee currentEmployee,
+            RoomTypeSessionBeanRemote roomTypeSessionBeanRemote,
+                RoomRateSessionBeanRemote roomRateSessionBeanRemote,
+                    RoomSessionBeanRemote roomSessionBeanRemote) {
         this();
         this.currentEmployee = currentEmployee;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
+        this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
+        this.roomSessionBeanRemote = roomSessionBeanRemote;
 
     }
 
@@ -544,27 +556,78 @@ public class HotelOperationModule {
     ////
     public void doCreateNewRoomRate() {
         
-        Scanner scanner = new Scanner(System.in);
-        RoomRate newRoomRate = new RoomRate();
-        
-        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Room Rate ***\n");
-        System.out.print("Enter room rate name> ");
-        newRoomRate.setName(scanner.nextLine().trim());
-        
-        while(true)
-        {
-            System.out.print("Select Access Right (1: Published, 2: Normal, 3: Peak, 4: Promotion)> ");
-            Integer roomRateTypeInt = scanner.nextInt();
+        try {
+            Scanner scanner = new Scanner(System.in);
+            RoomRate newRoomRate = new RoomRate();
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+
+            System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Room Rate ***\n");
+            System.out.print("Enter room rate name> ");
+            newRoomRate.setName(scanner.nextLine().trim());
+
+            while(true)
+            {
+                System.out.print("Select Access Right (1: Published, 2: Normal, 3: Peak, 4: Promotion)> ");
+                Integer roomRateTypeInt = scanner.nextInt();
+
+                if(roomRateTypeInt >= 1 && roomRateTypeInt <= 4)
+                {
+                    newRoomRate.setRateType(RoomRateType.values()[roomRateTypeInt-1]);
+                    break;
+                }
+                else
+                {
+                    System.out.println("Invalid option, please try again!\n");
+                }
+            }
+
+            System.out.print("Enter rate per night> ");
+            newRoomRate.setRatePerNight(scanner.nextBigDecimal());
+            scanner.nextLine();
+
+            if(newRoomRate.getRateType().equals(RoomRateType.PEAK) || newRoomRate.getRateType().equals(RoomRateType.PROMOTION)) {
+                System.out.print("Enter start date (dd/mm/yyyy)> ");
+                newRoomRate.setStartDate(inputDateFormat.parse(scanner.nextLine().trim()));
+
+                System.out.print("Enter end date (dd/mm/yyyy)> ");
+                newRoomRate.setEndDate(inputDateFormat.parse(scanner.nextLine().trim()));
+            }
+
+            System.out.print("Enter room type to be associated with> ");
+            String roomTypeName = scanner.nextLine().trim();
             
-            if(roomRateTypeInt >= 1 && roomRateTypeInt <= 4)
-            {
-                newRoomRate.setRateType(RoomRateType.values()[roomRateTypeInt-1]);
-                break;
-            }
-            else
-            {
-                System.out.println("Invalid option, please try again!\n");
-            }
+            
+            Set<ConstraintViolation<RoomRate>>constraintViolations = validator.validate(newRoomRate);
+            
+            if(constraintViolations.isEmpty()) {
+                try {
+            
+                    newRoomRate = roomRateSessionBeanRemote.createNewRoomRate(newRoomRate, roomTypeName);
+                    System.out.println("Successfully created new room rate " + newRoomRate.getName() + " with ID " + newRoomRate.getRoomRateId()+ "\n");
+
+                } 
+                catch (RoomTypeNotFoundException ex) 
+                {
+                    System.out.println("An error occurred: " + ex.getMessage());
+                } 
+                catch(RoomRateNameExistException ex) 
+                {
+                    System.out.println("An error occurred: " + ex.getMessage());
+                }
+                catch(UnknownPersistenceException ex)
+                {
+                    System.out.println("An unknown error has occurred while creating the new employee!: " + ex.getMessage() + "\n");
+                }
+                catch(InputDataValidationException ex)
+                {
+                    System.out.println(ex.getMessage() + "\n");
+                }
+                } else {
+                    showInputDataValidationErrorsForRoomRateEntity(constraintViolations);
+                }
+            
+        } catch (ParseException ex) {
+            System.out.println("Invalid date input!\n");
         }
         
         System.out.print("Enter rate per type> ");
