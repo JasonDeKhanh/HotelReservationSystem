@@ -14,6 +14,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.enumeration.AccessRight;
 import util.enumeration.RoomRateType;
+import util.enumeration.RoomStatus;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
@@ -468,6 +469,59 @@ public class HotelOperationModule {
         
         System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Room ***\n");
         
+        System.out.print("Enter room number> ");
+        newRoom.setRoomNumber(scanner.nextLine().trim());
+        
+        newRoom.setRoomStatus(RoomStatus.AVAILABLE);
+        
+        while(true)
+        {
+            List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllRoomTypes();
+            System.out.println("Available room type:");
+            for(int i = 0; i <= roomTypes.size(); i++){
+                System.out.println("- " + roomTypes.get(i).getName());
+            }
+            System.out.print("Enter room type name> ");
+            String rt = scanner.nextLine();
+            
+            try{
+                newRoom.setRoomType(roomTypeSessionBeanRemote.retrieveRoomTypeByName(rt));
+                break;
+            }catch(RoomTypeNotFoundException ex){
+                System.out.println("Invalid option, please try again!\n");
+            }
+        }
+        
+        Set<ConstraintViolation<Room>>constraintViolations = validator.validate(newRoom);
+
+//        if(constraintViolations.isEmpty()) {
+//            try {
+//            
+//            newRoom = roomTypeSessionBeanRemote.createNewRoomType(nextHigherRoomTypeName, newRoomType);
+//            System.out.println("Successfully created new room type " + newRoomType.getName() + " with ID " + newRoomType.getRoomTypeId() + "\n");
+//        
+//            } 
+//            catch (RoomTypeNotFoundException ex) 
+//            {
+//                System.out.println("An error occurred: " + ex.getMessage());
+//            } 
+//            catch(RoomTypeNameExistException ex) 
+//            {
+//                System.out.println("An error occurred: " + ex.getMessage());
+//            }
+//            catch(UnknownPersistenceException ex)
+//            {
+//                System.out.println("An unknown error has occurred while creating the new employee!: " + ex.getMessage() + "\n");
+//            }
+//            catch(InputDataValidationException ex)
+//            {
+//                System.out.println(ex.getMessage() + "\n");
+//            }
+//        } else {
+//            showInputDataValidationErrorsForRoomTypetEntity(constraintViolations);
+//        }
+        
+        
     }
     
     public void doUpdateRoom() {
@@ -518,7 +572,7 @@ public class HotelOperationModule {
         scanner.nextLine();
         
         System.out.print("Enter start date (dd/mm/yyyy)> ");
-        newRoomRate.setStartDate("");
+//        newRoomRate.setStartDate("");
         
         System.out.print("Enter room type size> ");
         
