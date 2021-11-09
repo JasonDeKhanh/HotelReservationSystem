@@ -59,10 +59,10 @@ public class DataInitialisationSessionBean {
     
     private void initialiseData() {
         try {
-            employeeSessionBeanLocal.createNewEmployee(new Employee("sysAdmin", "password", AccessRight.SYSTEM_ADMIN));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("manager1", "password", AccessRight.OPERATION_MANAGER));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("manager2", "password", AccessRight.SALES_MANAGER));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("manager3", "password", AccessRight.GUEST_RELATION_OFFICER));
+            employeeSessionBeanLocal.createNewEmployee(new Employee("sysadmin", "password", AccessRight.SYSTEM_ADMIN));
+            employeeSessionBeanLocal.createNewEmployee(new Employee("opmanager", "password", AccessRight.OPERATION_MANAGER));
+            employeeSessionBeanLocal.createNewEmployee(new Employee("salesmanager", "password", AccessRight.SALES_MANAGER));
+            employeeSessionBeanLocal.createNewEmployee(new Employee("guestrelo", "password", AccessRight.GUEST_RELATION_OFFICER));
         } catch(EmployeeUsernameExistException | UnknownPersistenceException | InputDataValidationException ex){
              ex.printStackTrace();
         }

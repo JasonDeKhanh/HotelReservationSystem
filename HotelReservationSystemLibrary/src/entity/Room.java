@@ -31,10 +31,10 @@ public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
-    @Column(nullable = false,length = 4)
+    @Column(nullable = false, unique = true, length = 4)
     @NotNull
     @Size(min = 4, max = 4)
-    private String roomNumber;
+    private String roomNumber; //unique
     @Column(nullable = false)
     @NotNull
     @Enumerated(EnumType.STRING)
