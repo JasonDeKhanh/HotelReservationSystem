@@ -60,9 +60,9 @@ public class RoomRate implements Serializable {
     @NotNull
     private Boolean disabled;
     
-//    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-//    @JoinColumn(nullable = false)
-//    private RoomType roomType;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private RoomType roomType;
     
 
     public Long getRoomRateId() {

@@ -53,10 +53,10 @@ public class RoomType implements Serializable {
     @OneToOne
     private RoomType nextHigherRoomType;
     
-    @OneToMany(mappedBy = "roomTypes")
+    @OneToMany(mappedBy = "roomType")
     private List<RoomRate> roomRates;
     
-    @OneToMany(mappedBy = "roomTypes")
+    @OneToMany(mappedBy = "roomType")
     private List<Room> rooms;
     
     public RoomType() {

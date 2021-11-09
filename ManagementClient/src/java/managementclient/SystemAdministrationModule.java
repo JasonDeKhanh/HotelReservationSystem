@@ -4,7 +4,6 @@ import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import entity.Employee;
 import entity.Partner;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
