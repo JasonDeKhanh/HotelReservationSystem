@@ -40,9 +40,9 @@ public class Room implements Serializable {
     @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus;
     
-//    @ManyToOne(optional = false,fetch = FetchType.LAZY)
-//    @JoinColumn(nullable = false)
-//    private RoomType roomType;
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private RoomType roomType;
 
     public Long getRoomId() {
         return roomId;
@@ -88,7 +88,7 @@ public class Room implements Serializable {
      * @param roomNumber the roomNumber to set
      */
     public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
+        this.setRoomNumber(roomNumber);
     }
 
     /**
@@ -102,7 +102,28 @@ public class Room implements Serializable {
      * @param roomStatus the roomStatus to set
      */
     public void setRoomStatus(RoomStatus roomStatus) {
-        this.roomStatus = roomStatus;
+        this.setRoomStatus(roomStatus);
     }
+
+    /**
+     * @param roomNumber the roomNumber to set
+     */
+
+
+    /**
+     * @return the roomType
+     */
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    /**
+     * @param roomType the roomType to set
+     */
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
+
     
 }
