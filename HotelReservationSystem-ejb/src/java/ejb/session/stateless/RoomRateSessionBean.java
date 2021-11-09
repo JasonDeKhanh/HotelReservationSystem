@@ -6,8 +6,10 @@
 package ejb.session.stateless;
 
 import entity.RoomRate;
+import entity.RoomType;
 import java.util.List;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,9 +21,10 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.DeleteRoomRateException;
 import util.exception.InputDataValidationException;
+import util.exception.RoomNotFoundException;
 import util.exception.RoomRateNotFoundException;
+import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
-import util.exception.UpdateRoomRateException;
 
 /**
  *
@@ -29,6 +32,9 @@ import util.exception.UpdateRoomRateException;
  */
 @Stateless
 public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateSessionBeanLocal {
+
+    @EJB(name = "RoomTypeSessionBeanLocal")
+    private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
 
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
@@ -44,13 +50,18 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     }
     
     @Override
-    public Long createNewRoomRate(RoomRate newRoomRateEntity) throws UnknownPersistenceException, InputDataValidationException{
-         Set<ConstraintViolation<RoomRate>>constraintViolations = validator.validate(newRoomRateEntity);
+    public Long createNewRoomRate(RoomRate newRoomRateEntity, String roomTypeName) throws UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException{
+
+        RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
+
+        Set<ConstraintViolation<RoomRate>>constraintViolations = validator.validate(newRoomRateEntity);
          
          if(constraintViolations.isEmpty())
         {
             try
             {
+                newRoomRateEntity.setRoomType(roomType);
+                roomType.getRoomRates().add(newRoomRateEntity);
                 em.persist(newRoomRateEntity);
                 em.flush();
 
@@ -118,27 +129,27 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
         }
         else
         {
-            throw new RoomRateNotFoundException("Room ID not provided for room to be updated");
+            throw new RoomRateNotFoundException("Room Rate ID not provided for room to be updated");
         }
     }
     
     @Override
     public void deleteRoomRate(Long roomRateId) throws RoomRateNotFoundException, DeleteRoomRateException
     {
-        RoomRate productEntityToRemove = retrieveRoomRatesByRoomRateId(roomRateId);
+        RoomRate roomRateEntityToRemove = retrieveRoomRatesByRoomRateId(roomRateId);
         
         //if no one using room -> delete
         
-//        List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = saleTransactionEntitySessionBeanLocal.retrieveSaleTransactionLineItemsByProductId(productId);
-//        
-//        if(saleTransactionLineItemEntities.isEmpty())
-//        {
-//            em.remove(productEntityToRemove);
-//        }
-//        else
-//        {
-//            throw new DeleteProductException("Product ID " + productId + " is associated with existing sale transaction line item(s) and cannot be deleted!");
-//        }
+
+        if(roomRateEntityToRemove.getDisabled())
+        {
+            em.remove(roomRateEntityToRemove);
+        }
+        else
+        {
+            roomRateEntityToRemove.setDisabled(true);
+            throw new DeleteRoomRateException("Room Rate ID " + roomRateId + " is associated with existing Room Type and cannot be deleted! It is DISABLED now.");
+        }
     }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RoomRate>>constraintViolations)

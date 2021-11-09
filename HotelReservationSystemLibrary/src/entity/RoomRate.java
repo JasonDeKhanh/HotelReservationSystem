@@ -60,7 +60,7 @@ public class RoomRate implements Serializable {
     @NotNull
     private Boolean disabled;
     
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private RoomType roomType;
     
