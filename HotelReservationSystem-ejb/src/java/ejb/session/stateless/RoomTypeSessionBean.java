@@ -76,14 +76,14 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     }
     
     @Override
-    public RoomType createNewRoomType(String nextHigherRoomType, RoomType newRoomType) throws RoomTypeNotFoundException, RoomTypeNameExistException, UnknownPersistenceException, InputDataValidationException {
+    public RoomType createNewRoomType(String nextHigherRoomTypeName, RoomType newRoomType) throws RoomTypeNotFoundException, RoomTypeNameExistException, UnknownPersistenceException, InputDataValidationException {
         
         Set<ConstraintViolation<RoomType>>constraintViolations = validator.validate(newRoomType);
         
         if(constraintViolations.isEmpty()) {
             try {
-                if(!nextHigherRoomType.equals("None")) {
-                    newRoomType.setNextHigherRoomType(retrieveRoomTypeByName(nextHigherRoomType));
+                if(!nextHigherRoomTypeName.equals("None")) {
+                    newRoomType.setNextHigherRoomType(retrieveRoomTypeByName(nextHigherRoomTypeName));
                 }
 
                 em.persist(newRoomType);
@@ -158,15 +158,23 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         
         RoomType roomTypeToRemove = retrieveRoomTypeById(roomTypeId);
         
-        if(roomTypeToRemove.getRooms().isEmpty()) {
-            for(RoomRate roomRate : roomTypeToRemove.getRoomRates()) {
-            em.remove(roomRate);
-            }
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.nextHigherRoomType.roomTypeId = :inRoomTypeId");
+        query.setParameter("inRoomTypeId", roomTypeToRemove.getRoomTypeId());
+        
+        try {
+            RoomType roomTypeRankBelow = (RoomType) query.getSingleResult();
+            throw new DeleteRoomTypeException("Room Type ID " + roomTypeId + " is the next higher level room type for another room type and cannot be deleted! It is now disabled");
+        } catch (NoResultException ex) { // if no roomTypeRankBelow then can delete
+            if(roomTypeToRemove.getRooms().isEmpty()) {
+                for(RoomRate roomRate : roomTypeToRemove.getRoomRates()) {
+                em.remove(roomRate);
+                }
 
-            em.remove(roomTypeToRemove);
-        } else {
-            roomTypeToRemove.setEnabled(false);
-            throw new DeleteRoomTypeException("Room Type ID " + roomTypeId + " is associated with existing Room(s) and cannot be deleted!");
+                em.remove(roomTypeToRemove);
+            } else {
+                roomTypeToRemove.setEnabled(false);
+                throw new DeleteRoomTypeException("Room Type ID " + roomTypeId + " is associated with existing Room(s) and cannot be deleted!");
+            }
         }
     }
     
