@@ -37,7 +37,7 @@ public class RoomRate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateId;
-    @Column(nullable = false,length = 64)
+    @Column(nullable = false,length = 64, unique = true)
     @NotNull
     @Size(min = 1, max = 64)
     private String name;

@@ -5,10 +5,11 @@
  */
 package ejb.session.stateless;
 
-import entity.Employee;
 import entity.Room;
+import entity.RoomType;
 import java.util.List;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -21,11 +22,10 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.DeleteRoomException;
-import util.exception.EmployeeNotFoundException;
-import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.RoomNotFoundException;
 import util.exception.RoomNumberExistException;
+import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
 import util.exception.UpdateRoomException;
 
@@ -35,6 +35,9 @@ import util.exception.UpdateRoomException;
  */
 @Stateless
 public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLocal {
+
+    @EJB(name = "RoomTypeSessionBeanLocal")
+    private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
 
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
@@ -50,13 +53,17 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     }
 
     @Override
-    public Long createNewRoom(Room newRoomEntity) throws RoomNumberExistException, UnknownPersistenceException, InputDataValidationException{
-         Set<ConstraintViolation<Room>>constraintViolations = validator.validate(newRoomEntity);
+    public Long createNewRoom(Room newRoomEntity, String roomTypeName) throws RoomNumberExistException, UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException{
+        RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
+        
+        Set<ConstraintViolation<Room>>constraintViolations = validator.validate(newRoomEntity);
          
-         if(constraintViolations.isEmpty())
+        if(constraintViolations.isEmpty())
         {
             try
             {
+                newRoomEntity.setRoomType(roomType);
+                roomType.getRooms().add(newRoomEntity);
                 em.persist(newRoomEntity);
                 em.flush();
 
@@ -144,7 +151,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
                 }
                 else
                 {
-                    throw new UpdateRoomException("Room Number og the room record to be updated does not match the existing record");
+                    throw new UpdateRoomException("Room Number of the room record to be updated does not match the existing record");
                 }
             }
             else
@@ -162,6 +169,8 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     public void deleteRoom(Long roomId) throws RoomNotFoundException, DeleteRoomException
     {
         Room productEntityToRemove = retrieveRoomByRoomId(roomId);
+        
+        //delete only when room not in use
         
 //        List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = saleTransactionEntitySessionBeanLocal.retrieveSaleTransactionLineItemsByProductId(productId);
 //        
