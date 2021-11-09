@@ -331,7 +331,7 @@ public class HotelOperationModule {
                     }
                 }
 
-                if (response == 3) { // same number as the Back option
+                if (response == 3 || response == 2 || response == 1) { // same number as the Back option
                     // back
                     break;
                 }
