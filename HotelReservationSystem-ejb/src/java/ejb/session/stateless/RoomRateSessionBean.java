@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -103,6 +104,19 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
         }               
     }
     
+    public RoomRate retrieveRoomRateByName(String roomRateName) throws RoomRateNotFoundException {
+        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.name = :inName");
+        query.setParameter("inName", roomRateName);
+        RoomRate roomRate;
+        
+        try {
+            roomRate = (RoomRate) query.getSingleResult();
+            return roomRate;
+        } catch (NoResultException ex) {
+            throw new RoomRateNotFoundException("Room Rate ID " + roomRateName + " does not exist!");
+        }
+    }
+    
     @Override
     public void updateRoomRate(RoomRate roomRateEntity) throws RoomRateNotFoundException, InputDataValidationException
     {
@@ -138,7 +152,6 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     {
         RoomRate roomRateEntityToRemove = retrieveRoomRatesByRoomRateId(roomRateId);
         
-        //if no one using room -> delete
         
 
         if(roomRateEntityToRemove.getDisabled())

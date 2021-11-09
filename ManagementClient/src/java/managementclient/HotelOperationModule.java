@@ -2,6 +2,7 @@ package managementclient;
 
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
+import entity.RoomRate;
 import entity.RoomType;
 import java.util.List;
 import java.util.Scanner;
@@ -460,6 +461,11 @@ public class HotelOperationModule {
     
     public void doCreateNewRoom() {
         
+        Scanner scanner = new Scanner(System.in);
+        RoomType newRoomType = new RoomType();
+        
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Room ***\n");
+        
     }
     
     public void doUpdateRoom() {
@@ -481,7 +487,13 @@ public class HotelOperationModule {
     ////
     ////
     public void doCreateNewRoomRate() {
-    
+        
+        Scanner scanner = new Scanner(System.in);
+        RoomRate newRoomRate = new RoomRate();
+        
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Room Rate ***\n");
+        
+        
     }
     
     public void doViewRoomRateDetails() {
@@ -498,6 +510,18 @@ public class HotelOperationModule {
     
     //Bean Validation methods
     private void showInputDataValidationErrorsForRoomTypetEntity(Set<ConstraintViolation<RoomType>>constraintViolations)
+    {
+        System.out.println("\nInput data validation error!:");
+            
+        for(ConstraintViolation constraintViolation:constraintViolations)
+        {
+            System.out.println("\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage());
+        }
+
+        System.out.println("\nPlease try again......\n");
+    }
+    
+    private void showInputDataValidationErrorsForRoomRateEntity(Set<ConstraintViolation<RoomRate>>constraintViolations)
     {
         System.out.println("\nInput data validation error!:");
             

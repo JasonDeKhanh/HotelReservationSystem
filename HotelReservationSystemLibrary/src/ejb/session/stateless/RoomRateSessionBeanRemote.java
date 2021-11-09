@@ -30,5 +30,7 @@ public interface RoomRateSessionBeanRemote {
     public void deleteRoomRate(Long roomRateId) throws RoomRateNotFoundException, DeleteRoomRateException;
 
     public void updateRoomRate(RoomRate roomRateEntity) throws RoomRateNotFoundException, InputDataValidationException;
+
+    public RoomRate retrieveRoomRateByName(String roomRateName) throws RoomRateNotFoundException;
   
 }
