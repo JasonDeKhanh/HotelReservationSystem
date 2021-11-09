@@ -2,6 +2,7 @@ package managementclient;
 
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
+import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.enumeration.AccessRight;
+import util.enumeration.RoomRateType;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
@@ -462,7 +464,7 @@ public class HotelOperationModule {
     public void doCreateNewRoom() {
         
         Scanner scanner = new Scanner(System.in);
-        RoomType newRoomType = new RoomType();
+        Room newRoom = new Room();
         
         System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Room ***\n");
         
@@ -492,7 +494,33 @@ public class HotelOperationModule {
         RoomRate newRoomRate = new RoomRate();
         
         System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Room Rate ***\n");
+        System.out.print("Enter room rate name> ");
+        newRoomRate.setName(scanner.nextLine().trim());
         
+        while(true)
+        {
+            System.out.print("Select Access Right (1: Published, 2: Normal, 3: Peak, 4: Promotion)> ");
+            Integer roomRateTypeInt = scanner.nextInt();
+            
+            if(roomRateTypeInt >= 1 && roomRateTypeInt <= 4)
+            {
+                newRoomRate.setRateType(RoomRateType.values()[roomRateTypeInt-1]);
+                break;
+            }
+            else
+            {
+                System.out.println("Invalid option, please try again!\n");
+            }
+        }
+        
+        System.out.print("Enter rate per type> ");
+        newRoomRate.setRatePerNight(scanner.nextBigDecimal());
+        scanner.nextLine();
+        
+        System.out.print("Enter start date (dd/mm/yyyy)> ");
+        newRoomRate.setStartDate("");
+        
+        System.out.print("Enter room type size> ");
         
     }
     
