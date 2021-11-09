@@ -11,8 +11,12 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.enumeration.AccessRight;
+import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
+import util.exception.RoomTypeNameExistException;
 import util.exception.RoomTypeNotFoundException;
+import util.exception.UnknownPersistenceException;
+import util.exception.UpdateRoomTypeException;
 
 public class HotelOperationModule {
 
@@ -187,37 +191,34 @@ public class HotelOperationModule {
         System.out.print("Enter room type size> ");
         newRoomType.setSize(Double.parseDouble(scanner.nextLine().trim()));
         
-        //
-        System.out.print("Enter room type bed name> ");
-        String bedName = scanner.nextLine().trim();
-        System.out.print("Enter room type number of " + bedName + " beds> ");
+        System.out.print("Enter room type number of beds> ");
         Integer numBeds = Integer.parseInt(scanner.nextLine().trim());
-        newRoomType.getBeds().put(bedName, numBeds);
+        newRoomType.setBeds(numBeds);
         
         System.out.print("Enter room type capacity> ");
         newRoomType.setCapacity(Integer.parseInt(scanner.nextLine().trim()));
         
-        System.out.print("Enter 1 room type amenity> ");
-        newRoomType.getAmenities().add(scanner.nextLine().trim());
+        System.out.print("Enter room type amenities> ");
+        newRoomType.setAmenities(scanner.nextLine().trim());
         
-        while(true) {
-            
-            System.out.println("Would you like to add another amenity? Y/N ");
-            String response = "";
-            System.out.print("> ");
-            response = scanner.nextLine().trim();
-            
-            if (response.equals("Y")) {
-                System.out.print("Enter 1 room type amenity> ");
-                newRoomType.getAmenities().add(scanner.nextLine().trim());
-            } else if (response.equals("N")) {
-                break;
-                
-            } else {
-                System.out.println("Invalid response");
-            }
-            
-        }
+//        while(true) {
+//            
+//            System.out.println("Would you like to add another amenity? Y/N ");
+//            String response = "";
+//            System.out.print("> ");
+//            response = scanner.nextLine().trim();
+//            
+//            if (response.equals("Y")) {
+//                System.out.print("Enter 1 room type amenity> ");
+//                newRoomType.getAmenities().add(scanner.nextLine().trim());
+//            } else if (response.equals("N")) {
+//                break;
+//                
+//            } else {
+//                System.out.println("Invalid response");
+//            }
+//            
+//        }
         
         // inventory automatically initialized as 0
         
@@ -225,15 +226,35 @@ public class HotelOperationModule {
         System.out.print("Enter next higher room type name. Enter 'None' if there is no higher room type.> ");
         String nextHigherRoomTypeName = scanner.nextLine().trim();
         
-        // call 
-        try {
+        Set<ConstraintViolation<RoomType>>constraintViolations = validator.validate(newRoomType);
+
+        if(constraintViolations.isEmpty()) {
+            try {
             
             newRoomType = roomTypeSessionBeanRemote.createNewRoomType(nextHigherRoomTypeName, newRoomType);
             System.out.println("Successfully created new room type " + newRoomType.getName() + " with ID " + newRoomType.getRoomTypeId() + "\n");
         
-        } catch (RoomTypeNotFoundException ex) {
-            System.out.println("An error occurred: " + ex.getMessage());
+            } 
+            catch (RoomTypeNotFoundException ex) 
+            {
+                System.out.println("An error occurred: " + ex.getMessage());
+            } 
+            catch(RoomTypeNameExistException ex) 
+            {
+                System.out.println("An error occurred: " + ex.getMessage());
+            }
+            catch(UnknownPersistenceException ex)
+            {
+                System.out.println("An unknown error has occurred while creating the new employee!: " + ex.getMessage() + "\n");
+            }
+            catch(InputDataValidationException ex)
+            {
+                System.out.println(ex.getMessage() + "\n");
+            }
+        } else {
+            showInputDataValidationErrorsForRoomTypetEntity(constraintViolations);
         }
+        
         
     
     }
@@ -255,17 +276,8 @@ public class HotelOperationModule {
             System.out.println("Description: " + roomType.getDescription());
             System.out.println("Size: " + roomType.getSize()); // put metres square here???
             System.out.println("Room capacity: " + roomType.getCapacity() + " pax");
-            // show beds
-            System.out.println("");
-            System.out.println("Beds: ");
-            for(String bedName : roomType.getBeds().keySet()) {
-                System.out.println(" - " + roomType.getBeds().get(bedName) + " " + bedName);
-            }
-            // show amenities
-            System.out.println("Amenities:");
-            for(String amenity : roomType.getAmenities()) {
-                System.out.println(" - " + amenity);
-            }
+            System.out.println("Beds: " + roomType.getBeds());
+            System.out.println("Amenities:" + roomType.getAmenities());
             System.out.println("");
             System.out.println("Inventory: " + roomType.getInventory());
             if (roomType.getNextHigherRoomType() != null) {
@@ -298,11 +310,11 @@ public class HotelOperationModule {
 
                     if (response == 1) {
 
-                        doUpdateRoomType();
+                        doUpdateRoomType(roomType);
                         
                     } else if (response == 2) {
 
-                        doDeleteRoomType();
+                        doDeleteRoomType(roomType);
                         
                     } else if (response == 3) {
                         // Back
@@ -328,11 +340,77 @@ public class HotelOperationModule {
         
     }
     
-    public void doUpdateRoomType() {
+    public void doUpdateRoomType(RoomType roomType) {
+        
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Room Type ***\n");
+        
+        System.out.print("Enter room type name (blank if no change)> ");
+        input = scanner.nextLine().trim();
+        if(input.length() > 0) {
+            roomType.setName(input);
+        }
+        
+        System.out.print("Enter room type description (blank if no change)> ");
+        input = scanner.nextLine().trim();
+        if(input.length() > 0) {
+            roomType.setDescription(input);
+        }
+        
+        System.out.print("Enter room type size (blank if no change)> ");
+        input = scanner.nextLine().trim();
+        if(input.length() > 0) {
+            roomType.setSize(Double.parseDouble(input));
+        }
+        
+        System.out.print("Enter room type number of beds (blank if no change)> ");
+        input = scanner.nextLine().trim();
+        if(input.length() > 0) {
+            roomType.setSize(Double.parseDouble(input));
+        }
+        // how to edit beds? are we allowed to delete or something
+        // same for amenities
+        
+        System.out.print("Enter room type capacity (blank if no change)> ");
+        input = scanner.nextLine().trim();
+        if(input.length() > 0) {
+            roomType.setCapacity(Integer.parseInt(input));
+        }
+        
+        System.out.print("Enter room type inventory (blank if no change)> ");
+        input = scanner.nextLine().trim();
+        if(input.length() > 0) {
+            roomType.setInventory(Integer.parseInt(input));
+        }
+        
+        System.out.print("Enter next higher room type name. Enter 'None' if there is no higher room type. (blank if no change)> ");
+        String nextHigherRoomTypeName = scanner.nextLine().trim();
+        
+        
+        Set<ConstraintViolation<RoomType>>constraintViolations = validator.validate(roomType);
+
+        if(constraintViolations.isEmpty()) {
+            try {
+                
+                RoomType nextHigherRoomType = roomTypeSessionBeanRemote.retrieveRoomTypeByName(nextHigherRoomTypeName);
+                roomType.setNextHigherRoomType(nextHigherRoomType);
+                roomTypeSessionBeanRemote.updateRoomType(roomType);
+                System.out.println("Room type updated successfully!\n");
+        
+            } catch (RoomTypeNotFoundException | UpdateRoomTypeException ex) {
+                System.out.println("An error occurred: " + ex.getMessage());
+            } catch (InputDataValidationException ex) {
+                System.out.println(ex.getMessage() + "\n");
+            }
+        } else {
+            showInputDataValidationErrorsForRoomTypetEntity(constraintViolations);
+        }
         
     }
     
-    public void doDeleteRoomType() {
+    public void doDeleteRoomType(RoomType roomType) {
         
     }
     
@@ -379,7 +457,7 @@ public class HotelOperationModule {
     }
     
     //Bean Validation methods
-    private void showInputDataValidationErrorsForEmployeetEntity(Set<ConstraintViolation<Employee>>constraintViolations)
+    private void showInputDataValidationErrorsForRoomTypetEntity(Set<ConstraintViolation<RoomType>>constraintViolations)
     {
         System.out.println("\nInput data validation error!:");
             
@@ -391,17 +469,5 @@ public class HotelOperationModule {
         System.out.println("\nPlease try again......\n");
     }
     
-    //Bean Validation methods
-    private void showInputDataValidationErrorsForPartnerEntity(Set<ConstraintViolation<Partner>>constraintViolations)
-    {
-        System.out.println("\nInput data validation error!:");
-            
-        for(ConstraintViolation constraintViolation:constraintViolations)
-        {
-            System.out.println("\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage());
-        }
-
-        System.out.println("\nPlease try again......\n");
-    }
     
 }
