@@ -423,7 +423,7 @@ public class HotelOperationModule {
         System.out.print("Confirm Delete Room Type " + roomType.getName() + " (Room Type ID: " + roomType.getRoomTypeId() + ") (Entry 'Y' to Delete)> ");
         input = scanner.nextLine().trim();
         
-        if(input.equals('Y')) {
+        if(input.equals("Y")) {
             
             try {
                 
@@ -451,10 +451,10 @@ public class HotelOperationModule {
         System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: View All Room Types ***\n");
         
         List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllRoomTypes();
-        System.out.printf("%8s%20s%20s%15s%20s%20s%8s%10s%\n", "RoomType ID", "Name", "Description", "Size", "Beds", "Capacity", "Amenities", "Inventory", "Enabled");
+        System.out.printf("%8s%20s%20s%15s%20s%20s%8s%10s\n", "RoomType ID", "Name", "Description", "Size", "Beds", "Capacity", "Amenities", "Inventory", "Enabled");
     
         for(RoomType roomType : roomTypes) {
-            System.out.printf("%8s%20s%20s%15s%20s%20s%8s%10s%\n", roomType.getRoomTypeId(), roomType.getName(), roomType.getDescription(), roomType.getSize(), roomType.getBeds(), roomType.getCapacity(), roomType.getAmenities(), roomType.getInventory(), roomType.getEnabled());
+            System.out.printf("%8s%20s%20s%15s%20s%20s%8s%10s\n", roomType.getRoomTypeId(), roomType.getName(), roomType.getDescription(), roomType.getSize(), roomType.getBeds(), roomType.getCapacity(), roomType.getAmenities(), roomType.getInventory(), roomType.getEnabled());
         }
     }
     
