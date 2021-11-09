@@ -6,14 +6,13 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
@@ -47,17 +46,22 @@ public class RoomType implements Serializable {
     private Integer capacity;
     private String amenities;
     private Integer inventory;
+    private Boolean enabled;
     
     
     // one to one, not mandatory, unidirectional
     @OneToOne
     private RoomType nextHigherRoomType;
     
-    // @OneToMany
-    // private List<RoomRates> roomRates;
-
+    @OneToMany(mappedBy = "roomTypes")
+    private List<RoomRate> roomRates;
+    
+    @OneToMany(mappedBy = "roomTypes")
+    private List<Room> rooms;
+    
     public RoomType() {
         this.inventory = 0;
+        this.enabled = true;
     }
 
     public RoomType(String name, String description, Double size, Integer beds, Integer capacity, String amenities) {
@@ -70,6 +74,7 @@ public class RoomType implements Serializable {
         this.capacity = capacity;
         this.amenities = amenities;
         this.inventory = 0;
+        this.enabled = true;
     }
 
     
@@ -141,8 +146,32 @@ public class RoomType implements Serializable {
         return nextHigherRoomType;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public void setNextHigherRoomType(RoomType nextHigherRoomType) {
         this.nextHigherRoomType = nextHigherRoomType;
+    }
+
+    public List<RoomRate> getRoomRates() {
+        return roomRates;
+    }
+
+    public void setRoomRates(List<RoomRate> roomRates) {
+        this.roomRates = roomRates;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     @Override

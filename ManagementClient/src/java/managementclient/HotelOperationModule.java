@@ -2,8 +2,8 @@ package managementclient;
 
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
-import entity.Partner;
 import entity.RoomType;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -11,6 +11,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.enumeration.AccessRight;
+import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
 import util.exception.RoomTypeNameExistException;
@@ -265,6 +266,8 @@ public class HotelOperationModule {
         RoomType roomType;
         String roomTypeName = "";
         
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: View Room Type Details ***\n");
+        
         System.out.print("Enter room type name to be viewed> ");
         roomTypeName = scanner.nextLine().trim();
         
@@ -277,8 +280,9 @@ public class HotelOperationModule {
             System.out.println("Size: " + roomType.getSize()); // put metres square here???
             System.out.println("Room capacity: " + roomType.getCapacity() + " pax");
             System.out.println("Beds: " + roomType.getBeds());
-            System.out.println("Amenities:" + roomType.getAmenities());
+            System.out.println("Amenities: " + roomType.getAmenities());
             System.out.println("");
+            System.out.println("Enabled: " + roomType.getEnabled());
             System.out.println("Inventory: " + roomType.getInventory());
             if (roomType.getNextHigherRoomType() != null) {
                 System.out.println("Next Higher Room Type: " + roomType.getNextHigherRoomType().getName());
@@ -345,7 +349,7 @@ public class HotelOperationModule {
         Scanner scanner = new Scanner(System.in);
         String input;
         
-        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Create New Room Type ***\n");
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Update Room Type ***\n");
         
         System.out.print("Enter room type name (blank if no change)> ");
         input = scanner.nextLine().trim();
@@ -412,10 +416,46 @@ public class HotelOperationModule {
     
     public void doDeleteRoomType(RoomType roomType) {
         
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Delete Room Type ***\n");
+        System.out.print("Confirm Delete Room Type " + roomType.getName() + " (Room Type ID: " + roomType.getRoomTypeId() + ") (Entry 'Y' to Delete)> ");
+        input = scanner.nextLine().trim();
+        
+        if(input.equals('Y')) {
+            
+            try {
+                
+                roomTypeSessionBeanRemote.deleteRoomType(roomType.getRoomTypeId());
+                System.out.println("Room Type deleted successfully!\n");
+            
+            } 
+            catch (RoomTypeNotFoundException | DeleteRoomTypeException ex) 
+            {
+                System.out.println("An error has occurred while deleting room type: " + ex.getMessage() + "\n");
+            }
+            
+        } else {
+            System.out.println("Room Type NOT deleted!\n");
+        }
+        
+        
     }
     
     public void doViewAllRoomTypes() {
         
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: View All Room Types ***\n");
+        
+        List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllRoomTypes();
+        System.out.printf("%8s%20s%20s%15s%20s%20s%8s%10s%\n", "RoomType ID", "Name", "Description", "Size", "Beds", "Capacity", "Amenities", "Inventory", "Enabled");
+    
+        for(RoomType roomType : roomTypes) {
+            System.out.printf("%8s%20s%20s%15s%20s%20s%8s%10s%\n", roomType.getRoomTypeId(), roomType.getName(), roomType.getDescription(), roomType.getSize(), roomType.getBeds(), roomType.getCapacity(), roomType.getAmenities(), roomType.getInventory(), roomType.getEnabled());
+        }
     }
     
     public void doCreateNewRoom() {

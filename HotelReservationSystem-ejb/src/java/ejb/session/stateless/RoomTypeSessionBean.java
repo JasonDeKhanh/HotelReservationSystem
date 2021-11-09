@@ -5,7 +5,9 @@
  */
 package ejb.session.stateless;
 
+import entity.RoomRate;
 import entity.RoomType;
+import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -17,7 +19,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import util.exception.EmployeeUsernameExistException;
+import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.RoomTypeNameExistException;
 import util.exception.RoomTypeNotFoundException;
@@ -155,6 +157,31 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         
     }
 
+    public void deleteRoomType(Long roomTypeId) throws RoomTypeNotFoundException, DeleteRoomTypeException {
+        
+        RoomType roomTypeToRemove = retrieveRoomTypeById(roomTypeId);
+        
+        if(roomTypeToRemove.getRooms().isEmpty()) {
+            for(RoomRate roomRate : roomTypeToRemove.getRoomRates()) {
+            em.remove(roomRate);
+            }
+
+            em.remove(roomTypeToRemove);
+        } else {
+            roomTypeToRemove.setEnabled(false);
+            throw new DeleteRoomTypeException("Room Type ID " + roomTypeId + " is associated with existing Room(s) and cannot be deleted!");
+        }
+    }
+    
+    
+    public List<RoomType> retrieveAllRoomTypes() {
+        
+        Query query = em.createQuery("SELECT rt FROM RoomType");
+        
+        return query.getResultList();
+    }
+    
+    
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RoomType>>constraintViolations)
     {
