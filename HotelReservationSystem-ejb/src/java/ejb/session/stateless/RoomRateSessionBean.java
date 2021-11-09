@@ -97,9 +97,9 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     }
     
     @Override
-    public List<RoomRate> retrieveAllRooms()
+    public List<RoomRate> retrieveAllRoomRates()
     {
-        Query query = em.createQuery("SELECT r FROM Room r");
+        Query query = em.createQuery("SELECT rr FROM RoomRate rr");
         
         return query.getResultList();
     }
@@ -169,7 +169,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
         
         
 
-        if(roomRateEntityToRemove.getDisabled())
+        if(!roomRateEntityToRemove.getRoomType().getEnabled())
         {
             em.remove(roomRateEntityToRemove);
         }

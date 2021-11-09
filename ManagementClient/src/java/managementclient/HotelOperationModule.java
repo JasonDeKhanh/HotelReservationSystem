@@ -469,10 +469,33 @@ public class HotelOperationModule {
         System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: View All Room Types ***\n");
         
         List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllRoomTypes();
-        System.out.printf("%8s%20s%20s%15s%20s%20s%8s%10s\n", "RoomType ID", "Name", "Description", "Size", "Beds", "Capacity", "Amenities", "Inventory", "Enabled");
     
         for(RoomType roomType : roomTypes) {
-            System.out.printf("%8s%20s%20s%15s%20s%20s%8s%10s\n", roomType.getRoomTypeId(), roomType.getName(), roomType.getDescription(), roomType.getSize(), roomType.getBeds(), roomType.getCapacity(), roomType.getAmenities(), roomType.getInventory(), roomType.getEnabled());
+            System.out.println("---------------------");
+            System.out.println("Room Type ID: " + roomType.getRoomTypeId());
+            System.out.println("Room Type Name: " + roomType.getName());
+            System.out.println("Description: " + roomType.getDescription());
+            System.out.println("Size: " + roomType.getSize()); // put metres square here???
+            System.out.println("Room capacity: " + roomType.getCapacity() + " pax");
+            System.out.println("Beds: " + roomType.getBeds());
+            System.out.println("Amenities: " + roomType.getAmenities());
+            System.out.println("");
+            System.out.println("Enabled: " + roomType.getEnabled());
+            System.out.println("Inventory: " + roomType.getInventory());
+            if (roomType.getNextHigherRoomType() != null) {
+                System.out.println("Next Higher Room Type: " + roomType.getNextHigherRoomType().getName());
+            } else {
+                System.out.println("Next Higher Room Type: This room currently the highest room type or has no higher room type indicated");
+            }
+            // show room rates
+            System.out.println("Rates: ");
+            /*
+            for ( RoomRate roomRate : roomType.getRoomRates()) {
+                System.out.println(" - " + roomRate.getName() + ": " + roomRate.getRatePerNight() + " dollars/night");
+            }
+            */
+            System.out.println("---------------------");
+            System.out.println("");
         }
     }
     
@@ -659,6 +682,7 @@ public class HotelOperationModule {
                 System.out.println("End Date: " + roomRate.getEndDate());
             }
             System.out.println("--------------------");
+            System.out.println("");
             
         } catch (RoomRateNotFoundException ex) {
             System.out.println("An error has occurred: " + ex.getMessage());
@@ -671,7 +695,25 @@ public class HotelOperationModule {
     // doDeleteRooMRate()
     
     public void doViewAllRoomRates() {
+        Scanner scanner = new Scanner(System.in);
+        String input;
         
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: View All Room Rates ***\n");
+        
+        List<RoomRate> roomRates = roomRateSessionBeanRemote.retrieveAllRoomRates();
+        
+    
+        for(RoomRate roomRate : roomRates) {
+            System.out.println("--------------------");
+            System.out.println("Room Rate ID: " + roomRate.getRoomRateId());
+            System.out.println("Room Rate Name: " + roomRate.getName());
+            System.out.println("Rate Type: " + roomRate.getRateType());
+            if(roomRate.getRateType().equals(RoomRateType.PEAK) || roomRate.getRateType().equals(RoomRateType.PROMOTION)) {
+                System.out.println("Start Date: " + roomRate.getStartDate());
+                System.out.println("End Date: " + roomRate.getEndDate());
+            }
+            System.out.println("--------------------");
+        }
     }
     
     //Bean Validation methods

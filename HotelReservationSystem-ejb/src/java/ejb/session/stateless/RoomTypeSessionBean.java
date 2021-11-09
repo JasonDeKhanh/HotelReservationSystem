@@ -183,7 +183,13 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         
         Query query = em.createQuery("SELECT rt FROM RoomType rt");
         
-        return query.getResultList();
+        List<RoomType> roomTypes = query.getResultList();
+        
+        for(RoomType roomType: roomTypes) {
+            roomType.getRoomRates().size();
+        }
+        
+        return roomTypes;
     }
     
     

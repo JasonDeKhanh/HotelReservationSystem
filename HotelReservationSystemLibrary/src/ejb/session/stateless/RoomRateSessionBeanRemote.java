@@ -24,7 +24,7 @@ public interface RoomRateSessionBeanRemote {
 
     public RoomRate createNewRoomRate(RoomRate newRoomRateEntity, String roomTypeName) throws UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException, RoomRateNameExistException;
 
-    public List<RoomRate> retrieveAllRooms();
+    public List<RoomRate> retrieveAllRoomRates();
 
     public RoomRate retrieveRoomRatesByRoomRateId(Long roomRateId) throws RoomRateNotFoundException;
 
