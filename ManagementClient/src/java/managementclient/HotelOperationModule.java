@@ -257,7 +257,7 @@ public class HotelOperationModule {
             } 
             catch(RoomTypeNameExistException ex) 
             {
-                System.out.println("An error occurred: " + ex.getMessage());
+                System.out.println("An error occurred: room type name already exists!\n");
             }
             catch(UnknownPersistenceException ex)
             {
@@ -558,7 +558,7 @@ public class HotelOperationModule {
                 } 
                 catch(RoomRateNameExistException ex) 
                 {
-                    System.out.println("An error occurred: " + ex.getMessage());
+                    System.out.println("An error occurred: the room rate name already exist!\n");
                 }
                 catch(UnknownPersistenceException ex)
                 {
@@ -580,6 +580,9 @@ public class HotelOperationModule {
     
     public void doViewRoomRateDetails() {
         
+        Scanner scanner = new Scanner(System.in);
+        RoomType roomType;
+        String roomRateName = "";
     }
     
     // doUpdateRoomRate() 
