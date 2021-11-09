@@ -12,6 +12,7 @@ import util.exception.DeleteRoomException;
 import util.exception.InputDataValidationException;
 import util.exception.RoomNotFoundException;
 import util.exception.RoomNumberExistException;
+import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
 import util.exception.UpdateRoomException;
 
@@ -22,8 +23,6 @@ import util.exception.UpdateRoomException;
 @Remote
 public interface RoomSessionBeanRemote {
 
-    public Long createNewRoom(Room newRoomEntity) throws RoomNumberExistException, UnknownPersistenceException, InputDataValidationException;
-
     public List<Room> retrieveAllRooms();
     
     public Room retrieveRoomByRoomId(Long roomId) throws RoomNotFoundException;
@@ -33,5 +32,7 @@ public interface RoomSessionBeanRemote {
     public void updateRoom(Room roomEntity) throws RoomNotFoundException, UpdateRoomException, InputDataValidationException;
 
     public void deleteRoom(Long roomId) throws RoomNotFoundException, DeleteRoomException;
+
+    public Long createNewRoom(Room newRoomEntity, String roomTypeName) throws RoomNumberExistException, UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException;
     
 }
