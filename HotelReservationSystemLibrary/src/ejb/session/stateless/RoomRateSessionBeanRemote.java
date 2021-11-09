@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Remote;
 import util.exception.DeleteRoomRateException;
 import util.exception.InputDataValidationException;
+import util.exception.RoomRateNameExistException;
 import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -21,7 +22,7 @@ import util.exception.UnknownPersistenceException;
 @Remote
 public interface RoomRateSessionBeanRemote {
 
-    public Long createNewRoomRate(RoomRate newRoomRateEntity, String roomTypeName) throws UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException;
+    public RoomRate createNewRoomRate(RoomRate newRoomRateEntity, String roomTypeName) throws UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException, RoomRateNameExistException;
 
     public List<RoomRate> retrieveAllRooms();
 

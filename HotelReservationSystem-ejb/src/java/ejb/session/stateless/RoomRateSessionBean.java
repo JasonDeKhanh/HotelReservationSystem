@@ -23,6 +23,7 @@ import javax.validation.ValidatorFactory;
 import util.exception.DeleteRoomRateException;
 import util.exception.InputDataValidationException;
 import util.exception.RoomNotFoundException;
+import util.exception.RoomRateNameExistException;
 import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -51,7 +52,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     }
     
     @Override
-    public Long createNewRoomRate(RoomRate newRoomRateEntity, String roomTypeName) throws UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException{
+    public RoomRate createNewRoomRate(RoomRate newRoomRateEntity, String roomTypeName) throws UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException, RoomRateNameExistException{
 
         RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
 
@@ -66,12 +67,26 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
                 em.persist(newRoomRateEntity);
                 em.flush();
 
-                return newRoomRateEntity.getRoomRateId();
+                return newRoomRateEntity;
             }
             catch(PersistenceException ex)
             {
                 
-                throw new UnknownPersistenceException(ex.getMessage());
+                if(ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException"))
+                {
+                    if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException"))
+                    {
+                        throw new RoomRateNameExistException();
+                    }
+                    else
+                    {
+                        throw new UnknownPersistenceException(ex.getMessage());
+                    }
+                }
+                else
+                {
+                    throw new UnknownPersistenceException(ex.getMessage());
+                }
 
             }
         }
