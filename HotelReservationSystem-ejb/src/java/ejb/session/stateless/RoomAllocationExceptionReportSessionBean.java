@@ -44,6 +44,7 @@ public class RoomAllocationExceptionReportSessionBean implements RoomAllocationE
         validator = validatorFactory.getValidator();
     }
 
+    @Override
     public RoomAllocationExceptionReport createNewRoomAllocationExceptionReport(RoomAllocationExceptionReport rEntity, Long reservationId) throws ReservationNotFoundException, UnknownPersistenceException, InputDataValidationException{
         Reservation reservation = em.find(Reservation.class, reservationId);
         

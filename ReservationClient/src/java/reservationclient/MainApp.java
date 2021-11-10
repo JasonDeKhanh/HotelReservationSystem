@@ -351,17 +351,6 @@ public class MainApp {
         
         Long guestId = currentGuest.getGuestId();
         
-        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
-        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
-        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
-        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
-        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
-        
-        
-        
-        /*
-        
-        
         List<Reservation> reservations = null;
         try {
             reservations = reservationSessionBeanRemote.retrieveAllReservations(guestId);
@@ -373,10 +362,11 @@ public class MainApp {
         
         for(Reservation reservation: reservations) 
         {
+            if(reservation.getPartner()==null){
             
-            System.out.printf("%40s%40s%40s%40s%40s\n",reservation.getType(), reservation.getRoomType().getName(), 
-                    reservation.getCheckinDate().toString(), reservation.getCheckoutDate().toString(),"");
-        
+                System.out.printf("%40s%40s%40s%40s%40s\n",reservation.getType(), reservation.getRoomType().getName(), 
+                        reservation.getCheckinDate().toString(), reservation.getCheckoutDate().toString(),"");
+            }
         }
     }
     

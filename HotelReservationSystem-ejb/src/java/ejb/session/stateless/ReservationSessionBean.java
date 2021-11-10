@@ -7,9 +7,7 @@ package ejb.session.stateless;
 
 import entity.Guest;
 import entity.Reservation;
-import entity.Room;
 import entity.RoomType;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
@@ -22,11 +20,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import util.enumeration.ReservationType;
 import util.exception.GuestNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.ReservationNotFoundException;
-import util.exception.RoomNumberExistException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
 
@@ -56,6 +52,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         validator = validatorFactory.getValidator();
     }
     
+    @Override
     public Reservation createNewReservation(Reservation reservationEntity, String roomTypeName, String guestID) throws RoomTypeNotFoundException, UnknownPersistenceException, InputDataValidationException, GuestNotFoundException{
         RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
         Guest guest = guestSessionBeanLocal.retrieveRegisteredGuestByID(guestID);
@@ -93,6 +90,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 //        Guest guest = guestSessionBeanLocal.retrieveRegisteredGuestByID(guestID);
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest.guestId = :inGuestId");
         query.setParameter("inGuestId", guestID);
+        
         
         return query.getResultList();
     }
