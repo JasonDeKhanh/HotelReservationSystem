@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Room;
+import entity.RoomRate;
 import entity.RoomType;
 import java.util.List;
 import java.util.Set;
@@ -21,10 +22,13 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.enumeration.RoomRateType;
 import util.exception.DeleteRoomException;
 import util.exception.InputDataValidationException;
+import util.exception.RoomHasNoRoomRateException;
 import util.exception.RoomNotFoundException;
 import util.exception.RoomNumberExistException;
+import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
 import util.exception.UpdateRoomException;
@@ -53,8 +57,25 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     }
 
     @Override
-    public Room createNewRoom(Room newRoomEntity, String roomTypeName) throws RoomNumberExistException, UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException{
+    public Room createNewRoom(Room newRoomEntity, String roomTypeName) throws RoomHasNoRoomRateException, RoomNumberExistException, UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException{
         RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
+        
+        boolean hasPublishedRate = false;
+        boolean hasNormalRate = false;
+        
+        for(RoomRate rr : roomType.getRoomRates()){
+            if(rr.getRateType()== RoomRateType.PUBLISHED){
+                hasPublishedRate = true;
+            }
+            
+            if(rr.getRateType()== RoomRateType.NORMAL){
+                hasNormalRate = true;
+            }
+        }
+        
+        if(!hasNormalRate || !hasPublishedRate){
+            throw new RoomHasNoRoomRateException("This room type has no room rate.");
+        }
         
         Set<ConstraintViolation<Room>>constraintViolations = validator.validate(newRoomEntity);
          
@@ -168,7 +189,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     @Override
     public void deleteRoom(Long roomId) throws RoomNotFoundException, DeleteRoomException
     {
-        Room productEntityToRemove = retrieveRoomByRoomId(roomId);
+        Room roomEntityToRemove = retrieveRoomByRoomId(roomId);
         
         //delete only when room not in use
         
