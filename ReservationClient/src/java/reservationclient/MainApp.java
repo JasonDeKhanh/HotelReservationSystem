@@ -186,6 +186,8 @@ public class MainApp {
             System.out.print("Enter Check-out Date (dd/mm/yyyy)> ");
             checkoutDate = inputDateFormat.parse(scanner.nextLine().trim());  
             
+            // do if checkin is AFTER checkout --> throw exception, catch beneath also
+            
             // call session bean here
             //
             
