@@ -334,6 +334,15 @@ public class MainApp {
         System.out.println("*** Hotel Reservation System Reservation Client :: View All My Reservations ***\n");
         
         Long guestId = currentGuest.getGuestId();
+        
+        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
+        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
+        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
+        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
+        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
+        
+        
+        
         /*
         
         List<Reservation> reservations = reservationSessionBeanRemote.retrieveAllReservationsOfGuest(guestId);
