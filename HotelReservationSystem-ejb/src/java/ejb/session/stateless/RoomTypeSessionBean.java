@@ -65,7 +65,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
             
             roomType.getNextHigherRoomType();
             // LAZY LOAD THE ROOMRATES HERE TOO ONCE YOU'VE FINISHED ROOM RATES
-            // roomType.getRoomRates().size();
+            roomType.getRoomRates().size();
             
             return roomType;
             
