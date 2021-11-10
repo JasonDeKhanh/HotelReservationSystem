@@ -33,6 +33,6 @@ public interface RoomSessionBeanRemote {
 
     public void deleteRoom(Long roomId) throws RoomNotFoundException, DeleteRoomException;
 
-    public Long createNewRoom(Room newRoomEntity, String roomTypeName) throws RoomNumberExistException, UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException;
+    public Room createNewRoom(Room newRoomEntity, String roomTypeName) throws RoomNumberExistException, UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException;
     
 }
