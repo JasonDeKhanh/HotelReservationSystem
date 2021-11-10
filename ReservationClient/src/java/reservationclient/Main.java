@@ -5,17 +5,23 @@
  */
 package reservationclient;
 
+import ejb.session.stateless.GuestSessionBeanRemote;
+import javax.ejb.EJB;
+
 /**
  *
  * @author msipc
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
+    @EJB(name = "GuestSessionBeanRemote")
+    private static GuestSessionBeanRemote guestSessionBeanRemote;
+
+    
+    
     public static void main(String[] args) {
-        // TODO code application logic here
+        MainApp mainApp = new MainApp(guestSessionBeanRemote);
+        mainApp.runApp();
     }
     
 }

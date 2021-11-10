@@ -5,14 +5,23 @@
  */
 package reservationclient;
 
-import entity.Guest;
+import ejb.session.stateless.GuestSessionBeanRemote;
+import entity.RegisteredGuest;
 import entity.RoomType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import util.exception.GuestEmailExistException;
+import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -20,11 +29,25 @@ import util.exception.InvalidLoginCredentialException;
  */
 public class MainApp {
     
+    // validator for bean validation
+    private final ValidatorFactory validatorFactory;
+    private final Validator validator;
     
-    private Guest currentGuest;
+    private GuestSessionBeanRemote guestSessionBeanRemote;
+    
+    private RegisteredGuest currentGuest;
     
     public MainApp() {
+        this.validatorFactory = Validation.buildDefaultValidatorFactory();
+        this.validator = validatorFactory.getValidator();
     }
+
+    public MainApp(GuestSessionBeanRemote guestSessionBeanRemote) {
+        this();
+        this.guestSessionBeanRemote = guestSessionBeanRemote;
+    }
+    
+    
     
     
     public void runApp() {
@@ -94,18 +117,18 @@ public class MainApp {
         System.out.print("Enter password> ");
         password = scanner.nextLine().trim();
         
-//        if(email.length() > 0 && password.length() > 0)
-//        {
-//            try{
-//                currentGuest = guestSessionBeanRemote.guestLogin(email, password);    
-//            }catch(InvalidLoginCredentialException ex){
-//                throw new InvalidLoginCredentialException();
-//            }
-//        }
-//        else
-//        {
-//            throw new InvalidLoginCredentialException("Missing login credential!");
-//        }
+        if(email.length() > 0 && password.length() > 0)
+        {
+            try{
+                currentGuest = guestSessionBeanRemote.registeredGuestLogin(email, password);    
+            }catch(InvalidLoginCredentialException ex){
+                throw new InvalidLoginCredentialException();
+            }
+        }
+        else
+        {
+            throw new InvalidLoginCredentialException("Missing login credential!");
+        }
     }
     
     private void loggedInMenu() {
@@ -165,8 +188,48 @@ public class MainApp {
 
     private void doRegisterAsGuest() {
         
+        Scanner scanner = new Scanner(System.in);
+        RegisteredGuest newRegisteredGuest = new RegisteredGuest();
+        
         System.out.println("*** Hotel Reservation System Reservation Client :: Register As Guest ***\n");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.print("Enter Name> ");
+        newRegisteredGuest.setName(scanner.nextLine().trim());
+        System.out.print("Enter Identification Number> ");
+        newRegisteredGuest.setIdentificationNumber(scanner.nextLine().trim());
+        System.out.print("Enter Email> ");
+        newRegisteredGuest.setEmail(scanner.nextLine().trim());
+        System.out.print("Enter Password> ");
+        newRegisteredGuest.setPassword(scanner.nextLine().trim());
+        
+        Set<ConstraintViolation<RegisteredGuest>>constraintViolations = validator.validate(newRegisteredGuest);
+        
+        if(constraintViolations.isEmpty()) {
+            try {
+            
+            newRegisteredGuest = guestSessionBeanRemote.registerNewRegisteredGuest(newRegisteredGuest);
+            System.out.println("Successfully created new room type " + newRegisteredGuest.getName() + " with ID " + newRegisteredGuest.getGuestId()+ "\n");
+        
+            } 
+//            catch (RoomTypeNotFoundException ex) 
+//            {
+//                System.out.println("An error occurred: " + ex.getMessage());
+//            } 
+            catch(GuestEmailExistException ex) 
+            {
+                System.out.println("An error occurred: room type name already exists!\n");
+            }
+            catch(UnknownPersistenceException ex)
+            {
+                System.out.println("An unknown error has occurred while creating the new employee!: " + ex.getMessage() + "\n");
+            }
+            catch(InputDataValidationException ex)
+            {
+                System.out.println(ex.getMessage() + "\n");
+            }
+        } else {
+            showInputDataValidationErrorsForRegisteredGuestEntity(constraintViolations);
+        }
+        
     }
 
     private void doSearchHotelRoom() {
@@ -288,4 +351,20 @@ public class MainApp {
         
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    
+    
+    //Bean Validation methods
+    private void showInputDataValidationErrorsForRegisteredGuestEntity(Set<ConstraintViolation<RegisteredGuest>>constraintViolations)
+    {
+        System.out.println("\nInput data validation error!:");
+            
+        for(ConstraintViolation constraintViolation:constraintViolations)
+        {
+            System.out.println("\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage());
+        }
+
+        System.out.println("\nPlease try again......\n");
+    }
+    
 }
