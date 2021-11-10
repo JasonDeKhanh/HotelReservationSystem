@@ -24,6 +24,7 @@ import util.exception.DeleteRoomRateException;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
+import util.exception.RoomHasNoRoomRateException;
 import util.exception.RoomNotFoundException;
 import util.exception.RoomNumberExistException;
 import util.exception.RoomRateNameExistException;
@@ -537,11 +538,7 @@ public class HotelOperationModule {
             System.out.println("Successfully created new room " + newRoom.getRoomNumber() + " with ID " + newRoom.getRoomId()+ "\n");
         
             } 
-            catch (RoomTypeNotFoundException ex) 
-            {
-                System.out.println("An error occurred: " + ex.getMessage());
-            } 
-            catch(RoomNumberExistException ex) 
+            catch (RoomTypeNotFoundException | RoomNumberExistException |  RoomHasNoRoomRateException ex) 
             {
                 System.out.println("An error occurred: " + ex.getMessage());
             }
