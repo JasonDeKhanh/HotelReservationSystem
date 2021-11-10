@@ -44,6 +44,18 @@ public class Room implements Serializable {
     @JoinColumn(nullable = false)
     private RoomType roomType;
 
+    public Room() {
+        
+    }
+
+    public Room(String roomNumber, RoomStatus roomStatus) {
+        this();
+        this.roomNumber = roomNumber;
+        this.roomStatus = roomStatus;
+    }
+    
+    
+
     public Long getRoomId() {
         return roomId;
     }
@@ -77,38 +89,6 @@ public class Room implements Serializable {
         return "entity.Room[ id=" + roomId + " ]";
     }
 
-    /**
-     * @return the roomNumber
-     */
-    public String getRoomNumber() {
-        return roomNumber;
-    }
-
-    /**
-     * @param roomNumber the roomNumber to set
-     */
-    public void setRoomNumber(String roomNumber) {
-        this.setRoomNumber(roomNumber);
-    }
-
-    /**
-     * @return the roomStatus
-     */
-    public RoomStatus getRoomStatus() {
-        return roomStatus;
-    }
-
-    /**
-     * @param roomStatus the roomStatus to set
-     */
-    public void setRoomStatus(RoomStatus roomStatus) {
-        this.setRoomStatus(roomStatus);
-    }
-
-    /**
-     * @param roomNumber the roomNumber to set
-     */
-
 
     /**
      * @return the roomType
@@ -122,6 +102,34 @@ public class Room implements Serializable {
      */
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
+    }
+
+    /**
+     * @return the roomNumber
+     */
+    public String getRoomNumber() {
+        return roomNumber;
+    }
+
+    /**
+     * @param roomNumber the roomNumber to set
+     */
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    /**
+     * @return the roomStatus
+     */
+    public RoomStatus getRoomStatus() {
+        return roomStatus;
+    }
+
+    /**
+     * @param roomStatus the roomStatus to set
+     */
+    public void setRoomStatus(RoomStatus roomStatus) {
+        this.roomStatus = roomStatus;
     }
 
 

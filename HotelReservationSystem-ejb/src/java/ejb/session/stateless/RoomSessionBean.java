@@ -53,7 +53,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     }
 
     @Override
-    public Long createNewRoom(Room newRoomEntity, String roomTypeName) throws RoomNumberExistException, UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException{
+    public Room createNewRoom(Room newRoomEntity, String roomTypeName) throws RoomNumberExistException, UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException{
         RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
         
         Set<ConstraintViolation<Room>>constraintViolations = validator.validate(newRoomEntity);
@@ -67,7 +67,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
                 em.persist(newRoomEntity);
                 em.flush();
 
-                return newRoomEntity.getRoomId();
+                return newRoomEntity;
             }
             catch(PersistenceException ex)
             {

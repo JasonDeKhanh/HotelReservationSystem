@@ -6,7 +6,12 @@
 package ejb.session.singleton;
 
 import ejb.session.stateless.EmployeeSessionBeanLocal;
+import ejb.session.stateless.RoomRateSessionBeanLocal;
+import ejb.session.stateless.RoomTypeSessionBeanLocal;
 import entity.Employee;
+import entity.RoomRate;
+import entity.RoomType;
+import java.math.BigDecimal;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -15,9 +20,12 @@ import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.enumeration.AccessRight;
-import util.exception.EmployeeNotFoundException;
+import util.enumeration.RoomRateType;
 import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
+import util.exception.RoomRateNameExistException;
+import util.exception.RoomTypeNameExistException;
+import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -30,8 +38,16 @@ import util.exception.UnknownPersistenceException;
 
 public class DataInitialisationSessionBean {
 
+    @EJB(name = "RoomRateSessionBeanLocal")
+    private RoomRateSessionBeanLocal roomRateSessionBeanLocal;
+
+    @EJB(name = "RoomTypeSessionBeanLocal")
+    private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
+
     @EJB(name = "EmployeeSessionBeanLocal")
     private EmployeeSessionBeanLocal employeeSessionBeanLocal;
+    
+    
 
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
@@ -66,6 +82,18 @@ public class DataInitialisationSessionBean {
         } catch(EmployeeUsernameExistException | UnknownPersistenceException | InputDataValidationException ex){
              ex.printStackTrace();
         }
+//        
+//        try {
+//            roomTypeSessionBeanLocal.createNewRoomType(null,new RoomType("Grand Suite","Some description..", new Double(5), 5,5,"Some amenities.."));
+//        } catch(RoomTypeNameExistException | UnknownPersistenceException | InputDataValidationException | RoomTypeNotFoundException ex){
+//             ex.printStackTrace();
+//        }
+//        
+//         try {
+//             roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Grand Suite Normal",RoomRateType.NORMAL, new BigDecimal(100), null,null),"Grand Suite");
+//        } catch(RoomRateNameExistException | UnknownPersistenceException | InputDataValidationException | RoomTypeNotFoundException ex){
+//             ex.printStackTrace();
+//        }
     }
 
 }
