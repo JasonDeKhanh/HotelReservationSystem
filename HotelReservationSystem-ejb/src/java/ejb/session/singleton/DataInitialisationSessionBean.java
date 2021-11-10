@@ -83,17 +83,23 @@ public class DataInitialisationSessionBean {
              ex.printStackTrace();
         }
         
-//        try {
-//            roomTypeSessionBeanLocal.createNewRoomType(null,new RoomType("Grand Suite","Some description..", new Double(5), 5,5,"Some amenities.."));
-//        } catch(RoomTypeNameExistException | UnknownPersistenceException | InputDataValidationException | RoomTypeNotFoundException ex){
-//             ex.printStackTrace();
-//        }
-//        
-//         try {
-//             roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Grand Suite Normal",RoomRateType.NORMAL, new BigDecimal(100), null,null),"Grand Suite");
-//        } catch(RoomRateNameExistException | UnknownPersistenceException | InputDataValidationException | RoomTypeNotFoundException ex){
-//             ex.printStackTrace();
-//        }
+        try {
+            roomTypeSessionBeanLocal.createNewRoomType("None",new RoomType("Grand Suite","Some description..", new Double(5), 5,5,"Some amenities.."));
+        } catch(RoomTypeNameExistException | UnknownPersistenceException | InputDataValidationException | RoomTypeNotFoundException ex){
+             ex.printStackTrace();
+        }
+        
+        try {
+             roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Grand Suite Normal",RoomRateType.NORMAL, new BigDecimal(250), null,null),"Grand Suite");
+        } catch(RoomRateNameExistException | UnknownPersistenceException | InputDataValidationException | RoomTypeNotFoundException ex){
+             ex.printStackTrace();
+        }
+         
+        try {
+             roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Grand Suite Published",RoomRateType.PUBLISHED, new BigDecimal(500), null,null),"Grand Suite");
+        } catch(RoomRateNameExistException | UnknownPersistenceException | InputDataValidationException | RoomTypeNotFoundException ex){
+             ex.printStackTrace();
+        }
     }
 
 }

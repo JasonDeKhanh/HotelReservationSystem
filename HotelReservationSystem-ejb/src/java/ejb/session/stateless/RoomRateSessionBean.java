@@ -169,7 +169,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
         
         
 
-        if(!roomRateEntityToRemove.getRoomType().getEnabled())
+        if(roomRateEntityToRemove.getRateType()==null)
         {
             em.remove(roomRateEntityToRemove);
         }
