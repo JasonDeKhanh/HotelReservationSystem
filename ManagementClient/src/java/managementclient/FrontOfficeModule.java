@@ -92,6 +92,11 @@ public class FrontOfficeModule {
     ///
     public void doWalkinSearchRoom() {
         
+        // call doWalkinReserveRoom() somewhere in here
+    }
+    
+    public void doWalkinReserveRoom() {
+        
     }
     
     public void doCheckinGuest() {
