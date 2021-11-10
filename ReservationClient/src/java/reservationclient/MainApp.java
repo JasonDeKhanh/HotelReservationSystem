@@ -351,6 +351,16 @@ public class MainApp {
         
         Long guestId = currentGuest.getGuestId();
         
+        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
+        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
+        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
+        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
+        // REMEMBER TO NOT VIEW THOSE BOOKED BY A PARTNER!!
+        
+        
+        
+        /*
+        
         
         List<Reservation> reservations = null;
         try {
