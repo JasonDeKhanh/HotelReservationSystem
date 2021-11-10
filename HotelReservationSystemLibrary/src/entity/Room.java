@@ -40,7 +40,7 @@ public class Room implements Serializable {
     @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus;
     
-    @ManyToOne(optional = false,fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private RoomType roomType;
 

@@ -82,7 +82,7 @@ public class DataInitialisationSessionBean {
         } catch(EmployeeUsernameExistException | UnknownPersistenceException | InputDataValidationException ex){
              ex.printStackTrace();
         }
-//        
+        
 //        try {
 //            roomTypeSessionBeanLocal.createNewRoomType(null,new RoomType("Grand Suite","Some description..", new Double(5), 5,5,"Some amenities.."));
 //        } catch(RoomTypeNameExistException | UnknownPersistenceException | InputDataValidationException | RoomTypeNotFoundException ex){

@@ -31,6 +31,7 @@ import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNameExistException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
+import util.exception.UpdateRoomException;
 import util.exception.UpdateRoomTypeException;
 
 public class HotelOperationModule {
@@ -245,11 +246,11 @@ public class HotelOperationModule {
         // inventory automatically initialized as 0
         
         // read nextHigherRoomType
-        List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllRoomTypes();
-            System.out.println("Available room type:");
-            for(int i = 0; i <= roomTypes.size(); i++){
-                System.out.println("- " + roomTypes.get(i).getName());
-            }
+//        List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllRoomTypes();
+//            System.out.println("Available room type:");
+//            for(int i = 0; i <= roomTypes.size(); i++){
+//                System.out.println("- " + roomTypes.get(i).getName());
+//            }
         System.out.print("Enter next higher room type name. Enter 'None' if there is no higher room type.> ");
         String nextHigherRoomTypeName = scanner.nextLine().trim();
         
@@ -560,7 +561,67 @@ public class HotelOperationModule {
     }
     
     public void doUpdateRoom() {
+        Scanner scanner = new Scanner(System.in);
+        Room room = new Room();
         
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Update Room ***\n");
+        
+        System.out.print("Enter room number> ");
+        String roomNumber = scanner.nextLine().trim();
+        
+        try {
+            
+            room = roomSessionBeanRemote.retrieveRoomByRoomNumber(roomNumber);
+        
+            System.out.println("--------------------");
+            System.out.println("Room ID: " + room.getRoomId());
+            System.out.println("Room Number: " + room.getRoomNumber());
+            System.out.println("Rate Status: " + room.getRoomStatus());
+            System.out.println("--------------------");
+            System.out.println("");
+            
+            
+        } catch (RoomNotFoundException ex) {
+            System.out.println("An error has occurred: " + ex.getMessage());
+        }
+        
+        try {
+            String input;
+
+            System.out.print("Enter room number (blank if no change)> ");
+            input = scanner.nextLine().trim();
+            
+            if(input.length() > 0) {
+                room.setRoomNumber(input);
+            }
+
+            while(true)
+            {
+                System.out.print("Select availability (1: Avalaible, 2: Unavailable ) (blank if no change)> ");
+                input = scanner.nextLine().trim();
+                if(input.length() > 0) {
+                    if(Integer.parseInt(input) >= 1 && Integer.parseInt(input) <= 2)
+                    {
+                        room.setRoomStatus(RoomStatus.values()[Integer.parseInt(input)-1]);
+                        break;
+                    }
+                    else
+                    {
+                        System.out.println("Invalid option, please try again!\n");
+                    }
+                }
+                
+            }
+
+            
+            
+            roomSessionBeanRemote.updateRoom(room);
+            System.out.println("Room updated successfully!\n");
+        
+        
+        }catch (RoomNotFoundException |UpdateRoomException |InputDataValidationException ex) {
+            System.out.println("An error occurred: " + ex.getMessage());
+        }
     }
     
     public void doDeleteRoom() {
@@ -580,8 +641,8 @@ public class HotelOperationModule {
             System.out.println("--------------------");
             System.out.println("Room ID: " + room.getRoomId());
             System.out.println("Room Number: " + room.getRoomNumber());
-            System.out.println("Room Type: " + room.getRoomType());
-            System.out.println("Room Type: " + room.getRoomStatus());
+            System.out.println("Room Type: " + room.getRoomType().getName());
+            System.out.println("Room Status: " + room.getRoomStatus());
             System.out.println("--------------------");
         }
     }

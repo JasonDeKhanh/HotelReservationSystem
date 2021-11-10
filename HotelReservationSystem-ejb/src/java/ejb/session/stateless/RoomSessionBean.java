@@ -144,15 +144,15 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
             {
                 Room roomEntityToUpdate = retrieveRoomByRoomId(roomEntity.getRoomId());
 
-                if(roomEntityToUpdate.getRoomNumber().equals(roomEntity.getRoomNumber()))
-                {
+//                if(roomEntityToUpdate.getRoomNumber().equals(roomEntity.getRoomNumber()))
+//                {
                     roomEntityToUpdate.setRoomNumber(roomEntity.getRoomNumber());
                     roomEntityToUpdate.setRoomStatus(roomEntity.getRoomStatus());
-                }
-                else
-                {
-                    throw new UpdateRoomException("Room Number of the room record to be updated does not match the existing record");
-                }
+//                }
+//                else
+//                {
+//                    throw new UpdateRoomException("Room Number of the room record to be updated does not match the existing record");
+//                }
             }
             else
             {
