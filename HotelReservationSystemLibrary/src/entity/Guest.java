@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -19,12 +21,13 @@ import javax.validation.constraints.Size;
  * @author xqy11
  */
 @Entity
-public class Guest implements Serializable {
+@Inheritance(strategy=InheritanceType.JOINED)
+public abstract class Guest implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long guestId;
+    protected Long guestId;
     @Column(nullable = false, length = 32)
     @NotNull
     @Size(min = 1, max = 32)
@@ -34,6 +37,16 @@ public class Guest implements Serializable {
     @Size(min = 9, max = 9)
     private String identificationNumber;
 
+    public Guest() {
+    }
+
+    public Guest(String name, String identificationNumber) {
+        this.name = name;
+        this.identificationNumber = identificationNumber;
+    }
+
+    
+    
     public Long getGuestId() {
         return guestId;
     }
