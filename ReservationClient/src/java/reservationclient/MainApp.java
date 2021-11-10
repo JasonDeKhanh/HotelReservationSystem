@@ -6,7 +6,9 @@
 package reservationclient;
 
 import ejb.session.stateless.GuestSessionBeanRemote;
+import ejb.session.stateless.ReservationSessionBeanRemote;
 import entity.RegisteredGuest;
+import entity.Reservation;
 import entity.RoomType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,13 +16,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.GuestEmailExistException;
+import util.exception.GuestNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.ReservationNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -34,6 +40,7 @@ public class MainApp {
     private final Validator validator;
     
     private GuestSessionBeanRemote guestSessionBeanRemote;
+    private ReservationSessionBeanRemote reservationSessionBeanRemote;
     
     private RegisteredGuest currentGuest;
     
@@ -42,9 +49,10 @@ public class MainApp {
         this.validator = validatorFactory.getValidator();
     }
 
-    public MainApp(GuestSessionBeanRemote guestSessionBeanRemote) {
+    public MainApp(GuestSessionBeanRemote guestSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote) {
         this();
         this.guestSessionBeanRemote = guestSessionBeanRemote;
+        this.reservationSessionBeanRemote = reservationSessionBeanRemote;
     }
     
     
@@ -319,37 +327,47 @@ public class MainApp {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void doViewMyReservationDetails() {
+    private void doViewMyReservationDetails(){
         
         // Reservation reservation;
         // how to search view reservation details??? Like search by what
 //        String  = "";
+        Scanner scanner = new Scanner(System.in);
+        Long reservationId = null;
+        
         System.out.println("*** Hotel Reservation System Reservation Client :: View My Reservation Details ***\n");
+        System.out.print("Enter reservation ID> ");
+        reservationId = new Long(scanner.nextLine().trim());
         
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            Reservation r = reservationSessionBeanRemote.retrieveReservationById(reservationId);
+        } catch (ReservationNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     private void doViewAllMyReservations() {
         System.out.println("*** Hotel Reservation System Reservation Client :: View All My Reservations ***\n");
         
         Long guestId = currentGuest.getGuestId();
-        /*
         
-        List<Reservation> reservations = reservationSessionBeanRemote.retrieveAllReservationsOfGuest(guestId);
         
-        System.out.printf("%20s%15s%10s%15s%16s   %s\n", "Reservation Type", "Room Type", "Rate Type", "Check-in Date", "Check-out Date", "Number of Rooms Booked");
+        List<Reservation> reservations = null;
+        try {
+            reservations = reservationSessionBeanRemote.retrieveAllReservations(guestId);
+        } catch (GuestNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        System.out.printf("%40s%40s%40s%40s%40s\n", "Reservation Type", "Room Type", "Check-in Date", "Check-out Date", "Rate");
         
         for(Reservation reservation: reservations) 
         {
             
-            // print out shit here
+            System.out.printf("%40s%40s%40s%40s%40s\n",reservation.getType(), reservation.getRoomType().getName(), 
+                    reservation.getCheckinDate().toString(), reservation.getCheckoutDate().toString(),"");
         
         }
-        
-        */
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

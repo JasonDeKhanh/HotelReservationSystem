@@ -6,6 +6,7 @@
 package reservationclient;
 
 import ejb.session.stateless.GuestSessionBeanRemote;
+import ejb.session.stateless.ReservationSessionBeanRemote;
 import javax.ejb.EJB;
 
 /**
@@ -14,13 +15,16 @@ import javax.ejb.EJB;
  */
 public class Main {
 
+    @EJB(name = "ReservationSessionBeanRemote")
+    private static ReservationSessionBeanRemote reservationSessionBeanRemote;
+
     @EJB(name = "GuestSessionBeanRemote")
     private static GuestSessionBeanRemote guestSessionBeanRemote;
 
     
     
     public static void main(String[] args) {
-        MainApp mainApp = new MainApp(guestSessionBeanRemote);
+        MainApp mainApp = new MainApp(guestSessionBeanRemote,reservationSessionBeanRemote);
         mainApp.runApp();
     }
     
