@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -42,10 +43,22 @@ public class RoomType implements Serializable {
     @DecimalMin("0.000")
     @Digits(integer = 3, fraction = 3)
     private Double size;
+    @Column(nullable = false)
+    @NotNull
     private Integer beds;
+    @Column(nullable = false)
+    @NotNull
     private Integer capacity;
-    private String amenities;
+    @Column(nullable = false, length = 240)
+    @NotNull
+    @Size(min = 0, max = 240)
+    private String amenities; // amenities can null?
+    @Column(nullable = false)
+    @NotNull
+    @Min(0)
     private Integer inventory;
+    @Column(nullable = false)
+    @NotNull
     private Boolean enabled;
     
     
