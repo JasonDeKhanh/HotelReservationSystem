@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -39,13 +42,20 @@ public class Room implements Serializable {
     @NotNull
     @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus;
+    @Column(nullable = false)
+    @NotNull
+    private Boolean disabled;
     
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private RoomType roomType;
+    
+    @ManyToMany(mappedBy = "rooms")
+    private List<Reservation> reservations;
 
     public Room() {
-        
+        this.disabled = false;
+        reservations = new ArrayList<Reservation>();
     }
 
     public Room(String roomNumber, RoomStatus roomStatus) {
@@ -130,6 +140,34 @@ public class Room implements Serializable {
      */
     public void setRoomStatus(RoomStatus roomStatus) {
         this.roomStatus = roomStatus;
+    }
+
+    /**
+     * @return the reservations
+     */
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    /**
+     * @param reservations the reservations to set
+     */
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
+    /**
+     * @return the disabled
+     */
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    /**
+     * @param disabled the disabled to set
+     */
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
     }
 
 

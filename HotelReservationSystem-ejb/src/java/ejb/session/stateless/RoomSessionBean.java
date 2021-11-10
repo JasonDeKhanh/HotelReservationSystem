@@ -23,12 +23,13 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.enumeration.RoomRateType;
+import util.enumeration.RoomStatus;
 import util.exception.DeleteRoomException;
 import util.exception.InputDataValidationException;
 import util.exception.RoomHasNoRoomRateException;
 import util.exception.RoomNotFoundException;
 import util.exception.RoomNumberExistException;
-import util.exception.RoomRateNotFoundException;
+import util.exception.RoomTypeDisabledException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
 import util.exception.UpdateRoomException;
@@ -57,7 +58,8 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     }
 
     @Override
-    public Room createNewRoom(Room newRoomEntity, String roomTypeName) throws RoomHasNoRoomRateException, RoomNumberExistException, UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException{
+    public Room createNewRoom(Room newRoomEntity, String roomTypeName) throws RoomTypeDisabledException, RoomHasNoRoomRateException, 
+            RoomNumberExistException, UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException{
         RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
         
         boolean hasPublishedRate = false;
@@ -77,6 +79,10 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
             throw new RoomHasNoRoomRateException("This room type has no room rate.");
         }
         
+        if(!roomType.getEnabled()){
+            throw new RoomTypeDisabledException("This room type is disabled.");
+        }
+        
         Set<ConstraintViolation<Room>>constraintViolations = validator.validate(newRoomEntity);
          
         if(constraintViolations.isEmpty())
@@ -85,6 +91,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
             {
                 newRoomEntity.setRoomType(roomType);
                 roomType.getRooms().add(newRoomEntity);
+                roomType.setInventory(roomType.getInventory()+1);
                 em.persist(newRoomEntity);
                 em.flush();
 
@@ -191,18 +198,23 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     {
         Room roomEntityToRemove = retrieveRoomByRoomId(roomId);
         
+        //!!!!!!!!!!!!!!!-----inventory need to minus one-----
+        
+        
         //delete only when room not in use
         
-//        List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = saleTransactionEntitySessionBeanLocal.retrieveSaleTransactionLineItemsByProductId(productId);
-//        
-//        if(saleTransactionLineItemEntities.isEmpty())
-//        {
-//            em.remove(productEntityToRemove);
-//        }
-//        else
-//        {
-//            throw new DeleteProductException("Product ID " + productId + " is associated with existing sale transaction line item(s) and cannot be deleted!");
-//        }
+        
+        if(roomEntityToRemove.getReservations().isEmpty())
+        {
+            roomEntityToRemove.getRoomType().setInventory(roomEntityToRemove.getRoomType().getInventory()-1);
+            roomEntityToRemove.getRoomType().getRooms().remove(roomEntityToRemove);
+            em.remove(roomEntityToRemove);
+        }
+        else
+        {
+            roomEntityToRemove.setDisabled(true);
+            throw new DeleteRoomException("Room ID " + roomId + " is associated with existing reservation and cannot be deleted. It is Disabled now.");
+        }
     }
      
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Room>>constraintViolations)

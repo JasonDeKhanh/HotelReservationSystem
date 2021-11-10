@@ -37,11 +37,11 @@ public class Partner implements Serializable {
     @Size(min = 8, max = 32)
     private String password;
     
-//    @OneToMany(mappedBy = "partner")
-//    private List<Reservation> reservations;
+    @OneToMany(mappedBy = "partner")
+    private List<Reservation> reservations;
 
     public Partner() {
-//       reservations = new ArrayList<>();
+       reservations = new ArrayList<>();
     }
 
     public Partner(String username, String password) {
@@ -111,6 +111,20 @@ public class Partner implements Serializable {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * @return the reservations
+     */
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    /**
+     * @param reservations the reservations to set
+     */
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
     
 }
