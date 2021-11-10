@@ -54,6 +54,17 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         }
     }
     
+    public RegisteredGuest retrieveRegisteredGuestByID(String ID) throws GuestNotFoundException {
+        Query query = em.createQuery("SELECT rg FROM RegisteredGuest rg WHERE rg.identificationNumber = :inID");
+        query.setParameter("inID", ID);
+        
+        try {
+            return (RegisteredGuest) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new GuestNotFoundException("Guest ID " + ID + " does not exist!");
+        }
+    }
+    
     public RegisteredGuest registeredGuestLogin(String email, String password) throws InvalidLoginCredentialException {
         try
         {

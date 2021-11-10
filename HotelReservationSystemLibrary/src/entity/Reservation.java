@@ -47,22 +47,29 @@ public class Reservation implements Serializable {
     @Column(nullable = true)
     private Date checkoutDate;
     
-    @ManyToMany
-    private List<Room> rooms;
+    @ManyToOne(optional = true)
+    @JoinColumn(nullable = true)
+    private Room room; 
     
     @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private RoomType roomType;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Guest guest;
+    
+    @ManyToOne(optional = true)
     @JoinColumn(nullable = true)
     private Partner partner;
     
-    @OneToOne
+    @OneToOne(optional = true)
     private RoomAllocationExceptionReport roomAllocationExceptionReport;
 
     public Reservation() {
-        rooms = new ArrayList<Room>();
     }
 
     public Reservation(ReservationType type, Date checkinDate, Date checkoutDate) {
-        this();
         this.type = type;
         this.checkinDate = checkinDate;
         this.checkoutDate = checkoutDate;
@@ -144,17 +151,17 @@ public class Reservation implements Serializable {
     }
 
     /**
-     * @return the rooms
+     * @return the room
      */
-    public List<Room> getRooms() {
-        return rooms;
+    public Room getRoom() {
+        return room;
     }
 
     /**
-     * @param rooms the rooms to set
+     * @param room the rooms to set
      */
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     /**
@@ -183,6 +190,34 @@ public class Reservation implements Serializable {
      */
     public void setPartner(Partner partner) {
         this.partner = partner;
+    }
+
+    /**
+     * @return the roomType
+     */
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    /**
+     * @param roomType the roomType to set
+     */
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
+    /**
+     * @return the guest
+     */
+    public Guest getGuest() {
+        return guest;
+    }
+
+    /**
+     * @param guest the guest to set
+     */
+    public void setGuest(Guest guest) {
+        this.guest = guest;
     }
     
 }

@@ -38,7 +38,7 @@ public class RoomAllocationExceptionReport implements Serializable {
     @Size(min = 1, max = 250)
     private String reason;
     
-    @OneToOne(mappedBy = "roomAllocationExceptionReport")
+    @OneToOne(mappedBy = "roomAllocationExceptionReport",optional = true)
     private Reservation reservation;
 
     public RoomAllocationExceptionReport() {

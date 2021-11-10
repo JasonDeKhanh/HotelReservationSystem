@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import util.enumeration.RoomStatus;
@@ -50,7 +51,7 @@ public class Room implements Serializable {
     @JoinColumn(nullable = false)
     private RoomType roomType;
     
-    @ManyToMany(mappedBy = "rooms")
+    @OneToMany(mappedBy = "room")
     private List<Reservation> reservations;
 
     public Room() {

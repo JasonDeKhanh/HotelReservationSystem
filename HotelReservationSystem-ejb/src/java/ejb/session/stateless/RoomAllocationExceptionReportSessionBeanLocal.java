@@ -5,17 +5,13 @@
  */
 package ejb.session.stateless;
 
-import entity.RegisteredGuest;
 import javax.ejb.Local;
-import util.exception.GuestNotFoundException;
 
 /**
  *
- * @author msipc
+ * @author xqy11
  */
 @Local
-public interface GuestSessionBeanLocal {
-
-    public RegisteredGuest retrieveRegisteredGuestByID(String ID) throws GuestNotFoundException;
+public interface RoomAllocationExceptionReportSessionBeanLocal {
     
 }

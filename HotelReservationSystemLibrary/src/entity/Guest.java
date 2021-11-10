@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -36,11 +39,16 @@ public abstract class Guest implements Serializable {
     @NotNull
     @Size(min = 9, max = 9)
     private String identificationNumber;
+    
+    @OneToMany(mappedBy = "guest")
+    private List<Reservation> reservations;
 
     public Guest() {
+        reservations = new ArrayList<>();
     }
 
     public Guest(String name, String identificationNumber) {
+        this();
         this.name = name;
         this.identificationNumber = identificationNumber;
     }
@@ -106,6 +114,20 @@ public abstract class Guest implements Serializable {
      */
     public void setIdentificationNumber(String identificationNumber) {
         this.identificationNumber = identificationNumber;
+    }
+
+    /**
+     * @return the reservations
+     */
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    /**
+     * @param reservations the reservations to set
+     */
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
     
 }
