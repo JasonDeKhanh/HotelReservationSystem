@@ -286,7 +286,7 @@ public class MainApp {
                 // like do a roomType.getRateToBeApplied() <-- if-else inside there
                 number += 1;
                 System.out.print(number + " ");
-                System.out.printf("%14s%22s   %s\n", roomType.getName(), roomType.getSize(), roomType.getBeds());//"Rate Type Applied", "Rate Per Night($)");
+                System.out.printf("%14s%22s   %s\n", "Room Type Name", "Rate Type Applied", "Rate Per Night($)");
             }
             
             System.out.println("------------------------");
