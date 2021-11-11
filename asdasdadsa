@@ -1,0 +1,555 @@
+[33mcommit b15ce5dc83c82db9549ce9a166a4de0c4479b266[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Merge: be39055 c65e70f
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Fri Nov 12 02:28:50 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    test
+
+[33mcommit be39055845be1b1c39bf037bdfac6fdf51248454[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Fri Nov 12 02:28:45 2021 +0800
+
+    test delete holiday
+
+[33mcommit c65e70f335c1c9adf5283c307cffc817aa66ebf8[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Fri Nov 12 02:28:05 2021 +0800
+
+    inventory fix
+
+[33mcommit 70e648ee821fea62909390f2106f705b90ab6dbe[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Fri Nov 12 02:26:11 2021 +0800
+
+    fixed properties file idk
+
+[33mcommit aa118cd1d9ef0be153db1d0d3552faf505b391c7[m
+Merge: e36a11a 5eb3bf9
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Fri Nov 12 02:06:05 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    yes
+
+[33mcommit 5eb3bf90f5610c0e8d8cdbf1a15f04d59444fc86[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Fri Nov 12 02:05:14 2021 +0800
+
+    inventory fix
+
+[33mcommit e36a11a4aaea0b274832372254761603e98e7e23[m
+Merge: 777730a 6c97569
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Fri Nov 12 01:55:07 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    yes
+
+[33mcommit 777730ace65b04349a343bcff7d69692f4721a7b[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Fri Nov 12 01:55:02 2021 +0800
+
+    reservation client stuff
+
+[33mcommit 6c97569886b6cb062f04398393049b9fcb21edea[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Fri Nov 12 01:54:05 2021 +0800
+
+    data init
+
+[33mcommit 9e0670aaa1d64d5455498f6ef729301bdd7b6878[m
+Merge: 3728caa 40c7cc1
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Fri Nov 12 01:21:38 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    yes
+
+[33mcommit 3728caa99987dc2536944425664eda5cdddec43c[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Fri Nov 12 01:20:00 2021 +0800
+
+    post pull commit stuff
+
+[33mcommit e9a5f15e213177b34d1e9c84a3ff26004f0be044[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Fri Nov 12 01:18:16 2021 +0800
+
+    search available room types method done but not tested
+
+[33mcommit 40c7cc1fd4f09aa4d3449e5c68b94764e10ce941[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Fri Nov 12 01:18:12 2021 +0800
+
+    web service
+
+[33mcommit 752b0255f29bbc16a9bcf095d632e20cb7e04538[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Thu Nov 11 23:23:17 2021 +0800
+
+    room addded no of room
+
+[33mcommit d7ca7cfb29527be2bb00247a3f9a06cf765edca7[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Thu Nov 11 04:16:23 2021 +0800
+
+    changes
+
+[33mcommit 308f82dc568d17c29454c508b8776e1e586161b9[m
+Merge: 965f51e 98ac346
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Thu Nov 11 04:07:03 2021 +0800
+
+    Merge origin/main into main
+
+[33mcommit 965f51e3e17b7a2b60347aa590a58b06bb0436eb[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Thu Nov 11 04:06:43 2021 +0800
+
+    changes
+
+[33mcommit 8894037d69c223062f7a17955e1714484ccc9463[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Thu Nov 11 04:06:32 2021 +0800
+
+    changes
+
+[33mcommit ad78a3dcbaadd97e16c2da57d79ea98784bce855[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Thu Nov 11 04:04:27 2021 +0800
+
+    changes
+
+[33mcommit 98ac3465a343bad73c297d3e667d074acf8023cd[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Thu Nov 11 01:32:35 2021 +0800
+
+    added warning for do view all my reservations reserve client
+
+[33mcommit 8e8c56ee6bbf4adc11f1615158d113f04d11f04b[m
+Merge: cef617b ba4a449
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Thu Nov 11 01:14:27 2021 +0800
+
+    fixed merge conflict
+
+[33mcommit ba4a44930e5f295d9e3eacdaafa3706237ee1808[m
+Merge: b3d5ac5 15ccd9c
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Thu Nov 11 01:10:18 2021 +0800
+
+    Merge origin/main into main
+
+[33mcommit cef617bd24dc8579e3289449ce5bc8f3297f2aab[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Thu Nov 11 01:09:59 2021 +0800
+
+    Registered Guest register and login
+
+[33mcommit b3d5ac5c80c43bf81f5009b469a2a63d0b91f0b3[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Thu Nov 11 01:09:58 2021 +0800
+
+    fix room entity
+
+[33mcommit 15ccd9ce45bd018206351579f8f1e0617d868ac8[m
+Merge: 7646249 95df078
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Thu Nov 11 00:12:31 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    yes
+
+[33mcommit 7646249eca3a07c4bd7a06132e30e4c3bd6649cf[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Thu Nov 11 00:12:00 2021 +0800
+
+    created RegisteredGuest and UnregisteredGuest
+
+[33mcommit 95df078687f5346678ea4fa188b7d5fd2440a7dd[m
+Merge: 2ba3c31 71d009a
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 23:01:37 2021 +0800
+
+    Merge origin/main into main
+
+[33mcommit 2ba3c31f779b6ebad2c607446f6f4da614eb18be[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 23:01:15 2021 +0800
+
+    update room front end
+
+[33mcommit 71d009a0f7de3663bbbd854fb111bbcdf5ee121a[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 22:54:42 2021 +0800
+
+    do some search front office module
+
+[33mcommit 66ddac7c79b2fe946ca266ae946e39be6230f04e[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 21:55:24 2021 +0800
+
+    added blank doWalkinReserveRoom() method front office
+
+[33mcommit 9a3c50ca522e4538f900c72bfaa25f54e13e8ff7[m
+Merge: e001991 55b5b6b
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 21:53:19 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    yes
+
+[33mcommit e001991c2be4bbbfdf4334368acb2427c081eba1[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 21:53:12 2021 +0800
+
+    worked on Reservation Client frontend
+
+[33mcommit 55b5b6b58f794001a1c0d4370c1e26d8afe6f1c7[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 19:08:41 2021 +0800
+
+    update room front end
+
+[33mcommit cfe7fefcd1e63b1a7f393265a6830cbd8118fb23[m
+Merge: 3d7f335 0ce2f89
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 18:23:41 2021 +0800
+
+    Merge origin/main into main
+
+[33mcommit 3d7f33569a04875056a6ee71da29f2e439b066b4[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 18:22:35 2021 +0800
+
+    create room front end
+
+[33mcommit 0ce2f896fcda3bcccdd17c4e9376cb98e5c349d1[m
+Merge: 2269097 8bf8e18
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 17:13:51 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    yes
+
+[33mcommit 2269097c94ef867447ddbe26e2ce24c2d0b57d45[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 17:13:24 2021 +0800
+
+    stuff
+
+[33mcommit 8bf8e1834869571aa56d801804d7ef17c27a260c[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 03:16:34 2021 +0800
+
+    reservation client
+
+[33mcommit 8af34e9a8a134c4f78406098f4b5fba8b0ed6e88[m
+Merge: 092a29c e4ef063
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 02:49:23 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    yes
+
+[33mcommit 092a29c0cc83c547f28eb8d8377d2fe9c1e4721c[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 02:49:19 2021 +0800
+
+    changed RoomRate stuff
+
+[33mcommit e4ef0633d22b3a4c6cbb9b82fac907f0f389a011[m
+Merge: d23e4c0 8123f53
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 02:48:41 2021 +0800
+
+    Merge origin/main into main
+
+[33mcommit d23e4c01ad53fd2abe92d5faeb23a01b5596b7c7[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 02:46:48 2021 +0800
+
+    guest
+
+[33mcommit 8123f533f15819c6e0bdbf704eba7a20209a0540[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 02:21:41 2021 +0800
+
+    completed Create new RoomRate and View Room Rate details
+
+[33mcommit 05152dfd64288b55a5fc78cd02c0cfa3b9b9e9ad[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 01:41:35 2021 +0800
+
+    fix merging erros
+
+[33mcommit db1db6d74d386e3f2cc5123e1d9d24369588a083[m
+Merge: dbefb8e a6308cc
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 01:40:36 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    yes
+
+[33mcommit dbefb8ed162ff2c7fbd9d719213494af8a110686[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 01:40:29 2021 +0800
+
+    commit stuff
+
+[33mcommit a6308cc0c358966aa55ad15201a73e12c7580bae[m
+Merge: a086093 dfd6c4c
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 01:39:41 2021 +0800
+
+    Merge branch 'temp'
+    
+    ok
+
+[33mcommit a086093052c3ea26f6feda2c51f7d5d0ff452ffd[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 01:27:57 2021 +0800
+
+    HotelOpereation
+
+[33mcommit dfd6c4c4ec6dcacd7810dc62f8a13dc7cce73a97[m[33m ([m[1;31morigin/temp[m[33m)[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 01:27:08 2021 +0800
+
+    added session beans to main
+
+[33mcommit c459b3a900b5f451dfac3acacce4b129d562bf9d[m
+Merge: 628a653 33276a6
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 01:06:02 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    yey
+
+[33mcommit 628a65396bd906d469373bafc8643957e7e81fa4[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 01:05:49 2021 +0800
+
+    commit
+
+[33mcommit 33276a6c99cdd44b940178dd7a0daef4f14b0c4c[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 01:03:21 2021 +0800
+
+    Updated Room createNewRoom
+
+[33mcommit ce06f5e95da43808a4a0d9d98ccee50d387e5ec1[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 00:53:33 2021 +0800
+
+    Updated RoomRate some stuff
+
+[33mcommit 5a9ca89154988219b66e9ed0d595da9931c9033c[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 00:39:08 2021 +0800
+
+    Room Rate create and delete updated
+
+[33mcommit e24cd59d0bc659c8a23b3598e2bd62be5368b1ed[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 00:38:17 2021 +0800
+
+    fixed delete RoomType
+
+[33mcommit 94e455f13d2b644ea3b757fc67b8183268daafea[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 00:15:29 2021 +0800
+
+    changed line 334 hotel op module
+
+[33mcommit bd01e2926d2fcaabe3bf5b1ea3568af7e4c0d71d[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 00:13:45 2021 +0800
+
+    commit
+
+[33mcommit dfe6f8a6962ac4b9ec1751fd9302dd25435c73cb[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 10 00:12:42 2021 +0800
+
+    smol fix
+
+[33mcommit 1aef040e04f485bd8676303d744681738eb6786c[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Wed Nov 10 00:03:18 2021 +0800
+
+    fix retrieve all room types
+
+[33mcommit c423768fdbc59064c992322f54fabf75145c36d7[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Tue Nov 9 23:59:30 2021 +0800
+
+    commit stuff
+
+[33mcommit efd575612d1c23d0a2a23e5bb76103ef124d7f53[m
+Merge: f279db7 af6090d
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Tue Nov 9 23:37:19 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    Merge work is important
+
+[33mcommit f279db7eb9260946de3fc21889b2882490d5812e[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Tue Nov 9 23:37:12 2021 +0800
+
+    RoomType use cases
+
+[33mcommit af6090d723f9d8ff3e9c6192453ab69787d33c29[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Tue Nov 9 23:36:57 2021 +0800
+
+    Added Room details
+
+[33mcommit 27aa5465d93a0b05ffff346b32c153d8f1a53a29[m
+Merge: 36742d7 025aac1
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Tue Nov 9 22:55:46 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    Merge work
+
+[33mcommit 025aac1856acca007de61fdd53cf67d7e6df1e10[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Tue Nov 9 22:53:34 2021 +0800
+
+    Added Room details
+
+[33mcommit 36742d72d61a0747fffe909fcf6bb5ea7a9753ae[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Tue Nov 9 22:44:49 2021 +0800
+
+    Complete update RoomType
+
+[33mcommit 8f35bc35cad5b8860fab6a71592b051eaade5e37[m
+Merge: 8cb8ff6 bd10f61
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Tue Nov 9 21:43:18 2021 +0800
+
+    Merge branch 'main' of https://github.com/JasonDeKhanh/HotelReservationSystem
+    Merge work together
+
+[33mcommit bd10f61564610ce3ff739cbd16c57ab56520e561[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Tue Nov 9 15:29:00 2021 +0800
+
+    created room and roomType entity
+
+[33mcommit 8cb8ff698fa983795b58833190a236795d3e1cdc[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Mon Nov 8 04:03:20 2021 +0800
+
+    completed View Room Type Details for now. Add room rate later
+
+[33mcommit 2c3ae4835d9f5f4fc22aa128cc96eb7e0e63734d[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Mon Nov 8 02:45:14 2021 +0800
+
+    Completed Use Case create new room type
+
+[33mcommit edeb630a7356e6dad0d6291996cf518f6b1405af[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Mon Nov 8 01:15:50 2021 +0800
+
+    did doCreateNewRoomType use case. Created RoomTypeSessionBean
+
+[33mcommit 13ef12551aa7189c905c68a6263f9ae6365be828[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Sun Nov 7 06:53:14 2021 +0800
+
+    fixed issue with front office module idk
+
+[33mcommit 1430b78a4b55f339c6d85b78109fc31af4e25386[m
+Author: Le Hoang Gia Khanh Jason <76771972+JasonDeKhanh@users.noreply.github.com>
+Date:   Sun Nov 7 05:50:09 2021 +0700
+
+    Delete frontOfficeModule.java
+
+[33mcommit a214573a6acf7979241ba63a9b3060dd798f4578[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Sun Nov 7 06:48:06 2021 +0800
+
+    small client changes. Created RoomTypeSessionBean
+
+[33mcommit 3428987392121815b5fc43b205861bc102ed53d3[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Sun Nov 7 06:43:29 2021 +0800
+
+    finish skeleton for HotelOperationModule and FrontOfficeModule client
+
+[33mcommit 0f8b7573256f2c9d8916c8207c4b3aba02b8f74b[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Sat Nov 6 03:17:55 2021 +0800
+
+    Added Partner entity, partnerSeesionBean (only remote),
+    Added createPartner and viewAllPartners methods
+
+[33mcommit eadc6ae81855e098ed07bb9c2c734d51e4fc74b1[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Sat Nov 6 02:25:17 2021 +0800
+
+[33mcommit 61b7eac0e181f4960b7c020e7bd241714b38ffa3[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Sat Nov 6 02:22:54 2021 +0800
+
+    Added Partner entity
+
+[33mcommit 7f9cd0542e28e37c899b01d0ea6ce83c103492ad[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Sat Nov 6 02:05:03 2021 +0800
+
+    Created createNewEmployee and login methods in SystemAdmin(client)
+
+[33mcommit b18e34315cc7d4d46a2fe4706cb9944f70cfdd2b[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Fri Nov 5 22:23:25 2021 +0800
+
+    Created createNewEmployee and login methods
+
+[33mcommit ecfaca8601ae96d0b5b7382f9457dc678bd0b56c[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Fri Nov 5 16:29:12 2021 +0800
+
+    Created EmployeeSessionBean with some methods
+
+[33mcommit 9e58f2872b45f297a692c0f04a0f1dafeec9920f[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Fri Nov 5 16:28:37 2021 +0800
+
+    Created Employee entity with methods and related exceptions
+
+[33mcommit 920878fbed5fa73834d151e2fdc25e655608bffe[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Fri Nov 5 16:28:27 2021 +0800
+
+    some client updates
+
+[33mcommit b634bdd369799cd1fbfbe81f2e056df9e292d312[m
+Author: Qingyi <xqy1115@gmail.com>
+Date:   Wed Nov 3 15:25:46 2021 +0800
+
+    created 5 enum classes
+
+[33mcommit 74be78e9d0a544b3d180d1037d40d460df880982[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Tue Nov 2 02:06:20 2021 +0800
+
+    more client stuff id rmb anymore
+
+[33mcommit 1977bd29f039561aaa38205e6ac0b312a9e18988[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Mon Nov 1 21:11:47 2021 +0800
+
+    Minor management MainApp tweak. Add SystemAdmin module
+
+[33mcommit e9a8e69278afff881b769664705df9de6ecfe4a5[m
+Author: JasonDeKhanh <giakhanh.lehoang@gmail.com>
+Date:   Mon Nov 1 20:37:35 2021 +0800
+
+    added MainApp, InvalidLoginCredential exception. Did some work DataInitialisation

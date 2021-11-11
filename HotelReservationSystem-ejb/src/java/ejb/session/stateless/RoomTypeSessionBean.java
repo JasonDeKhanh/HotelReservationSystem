@@ -210,7 +210,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         */
         List<RoomType> roomTypeToReturn = new ArrayList<>();
         
-        Query queryRoomType = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.enabled = :inEnabled");
+        Query queryRoomType = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.enabled = : inEnabled");
         queryRoomType.setParameter("inEnabled", true);
         
         List<RoomType> roomTypes = (List<RoomType>) queryRoomType.getResultList();
