@@ -303,6 +303,7 @@ public class MainApp {
             {
                 if(currentGuest != null)
                 {
+                    Reservation newReservation = new Reservation();
                     // String response = "";
                     String roomTypeName = "";
                     Integer numOfRooms = 0;
@@ -315,6 +316,8 @@ public class MainApp {
                     roomTypeName = scanner.nextLine().trim();
                     System.out.print("Enter number of rooms you want to book> ");
                     numOfRooms = Integer.parseInt(scanner.nextLine().trim());
+                    
+                    newReservation = reservationSessionBeanRemote.createNewReservation(newReservation, roomTypeName, currentGuest.);
                 }
                 else
                 {
