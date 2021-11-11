@@ -32,4 +32,6 @@ public interface RoomTypeSessionBeanRemote {
     public List<RoomType> retrieveAllRoomTypes();
 
     public List<RoomType> searchAvailableRoomTypeForReservation(Date checkinDate, Date checkoutDate, Integer numberOfRooms) throws NoRoomTypeAvaiableForReservationException;
+
+    public Integer getTrueInventory(Long roomTypeId) throws RoomTypeNotFoundException;
 }

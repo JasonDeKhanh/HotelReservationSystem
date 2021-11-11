@@ -276,6 +276,7 @@ public class MainApp {
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
             // Should we show number of rooms left able to be booked also? The inventory of room type
+            System.out.printf("%2s", "");
             System.out.printf("%9s%22s   %s\n", "Room Type", "Rate Type Applied", "Rate Per Night");
             
             Integer number = 0;
@@ -285,8 +286,8 @@ public class MainApp {
                 // rate type applied depends also. Need to do if-else
                 // like do a roomType.getRateToBeApplied() <-- if-else inside there
                 number += 1;
-                System.out.print(number + " ");
-                System.out.printf("%14s%22s   %s\n", "Room Type Name", "Rate Type Applied", "Rate Per Night($)");
+                System.out.printf("%2s", number);
+                System.out.printf("%14s%22s   %s\n", roomType.getName(), "Rate Type Applied", "Rate Per Night($)");
             }
             
             System.out.println("------------------------");
@@ -294,6 +295,7 @@ public class MainApp {
             System.out.println("2: Back\n");
             System.out.print("> ");
             response = scanner.nextInt();
+            scanner.nextInt();
             
             if(response == 1)
             {

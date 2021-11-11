@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Reservation;
+import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.enumeration.RoomStatus;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.NoRoomTypeAvaiableForReservationException;
@@ -210,7 +212,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         */
         List<RoomType> roomTypeToReturn = new ArrayList<>();
         
-        Query queryRoomType = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.enabled = : inEnabled");
+        Query queryRoomType = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.enabled = :inEnabled");
         queryRoomType.setParameter("inEnabled", true);
         
         List<RoomType> roomTypes = (List<RoomType>) queryRoomType.getResultList();
@@ -221,7 +223,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         
         for(RoomType roomType: roomTypes) {
             Query query = em.createQuery("SELECT res FROM Reservation res WHERE res.roomType = :inRoomType");
-            query.setParameter(":inRoomType", roomType);
+            query.setParameter("inRoomType", roomType);
         
             List<Reservation> reservations = (List<Reservation>) query.getResultList();
 
@@ -263,12 +265,12 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
                 }
                 
                 
-                Integer numberOfRoomsThisRoomTypeAvailable = roomType.getInventory() - countReservationsAffecting;
-                
-                if(numberOfRoomsThisRoomTypeAvailable >= numberOfRooms) {
-                    roomTypeToReturn.add(roomType);
-                }
-
+            }
+            
+            Integer numberOfRoomsThisRoomTypeAvailable = roomType.getInventory() - countReservationsAffecting;
+            System.out.println("Roomtype: " + roomType.getName() + " with numberAvailable: " + numberOfRoomsThisRoomTypeAvailable);
+            if(numberOfRoomsThisRoomTypeAvailable >= numberOfRooms) {
+                roomTypeToReturn.add(roomType);
             }
         }
         
@@ -279,6 +281,19 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         }
     }
     
+    
+    public Integer getTrueInventory(Long roomTypeId) throws RoomTypeNotFoundException {
+        RoomType roomType = retrieveRoomTypeById(roomTypeId);
+        
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType = :inRoomType AND r.roomStatus = :inStatus AND r.disabled = :inDisabled");
+        query.setParameter("inRoomType", roomType);
+        query.setParameter("inStatus", RoomStatus.AVAILABLE);
+        query.setParameter("inDisabled", false);
+        
+        List<Room> rooms = (List<Room>) query.getResultList();
+        
+        return rooms.size(); //roomType.getInventory() - rooms.size();
+    }
     
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RoomType>>constraintViolations)

@@ -22,7 +22,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.DeleteRoomRateException;
 import util.exception.InputDataValidationException;
-import util.exception.RoomNotFoundException;
 import util.exception.RoomRateNameExistException;
 import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNotFoundException;

@@ -313,7 +313,7 @@ public class HotelOperationModule {
             System.out.println("Amenities: " + roomType.getAmenities());
             System.out.println("");
             System.out.println("Enabled: " + roomType.getEnabled());
-            System.out.println("Inventory: " + roomType.getInventory());
+            System.out.println("Inventory: " + roomTypeSessionBeanRemote.getTrueInventory(roomType.getRoomTypeId()));
             if (roomType.getNextHigherRoomType() != null) {
                 System.out.println("Next Higher Room Type: " + roomType.getNextHigherRoomType().getName());
             } else {
