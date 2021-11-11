@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Partner;
+import entity.Reservation;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
@@ -19,9 +20,11 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.GuestNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.PartnerUsernameExistException;
+import util.exception.ReservationNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -143,6 +146,33 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         return msg;
     }
 
+    @Override
+    public List<Reservation> retrieveAllReservationsByPartnerId(Long partnerId)
+    {
+        Partner partner = em.find(Partner.class, partnerId);
+        partner.getReservations().size();
+//        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest.guestId = :inGuestId");
+//        query.setParameter("inGuestId", guestID);
+        
+        
+        return partner.getReservations();
+    }
+    
+    @Override
+    public Reservation retrieveReservationsByReservationId(Long reservationId) throws ReservationNotFoundException
+    {
+        Reservation reservation = em.find(Reservation.class, reservationId);
+        
+        if(reservation != null)
+        {
+            return reservation;
+        }
+        else
+        {
+            throw new ReservationNotFoundException("Reservation ID " + reservationId + " does not exist!");
+        }               
+    }
+    
     public void persist(Object object) {
         em.persist(object);
     }

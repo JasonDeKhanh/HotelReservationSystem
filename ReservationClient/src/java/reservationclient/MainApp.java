@@ -286,8 +286,9 @@ public class MainApp {
                 // rate type applied depends also. Need to do if-else
                 // like do a roomType.getRateToBeApplied() <-- if-else inside there
                 number += 1;
+
                 System.out.printf("%2s", number);
-                System.out.printf("%14s%22s   %s\n", roomType.getName(), "Rate Type Applied", "Rate Per Night($)");
+                System.out.printf("%14s%22s   %s\n", roomType.getName(), roomType.getSize(), roomType.getBeds());
             }
             
             System.out.println("------------------------");
