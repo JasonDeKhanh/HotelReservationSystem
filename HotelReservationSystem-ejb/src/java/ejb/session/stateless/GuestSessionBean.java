@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Guest;
 import entity.RegisteredGuest;
 import java.util.Set;
 import javax.ejb.Stateless;
@@ -42,6 +43,20 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
+    
+    public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException {
+        
+        Guest guest = em.find(Guest.class, guestId);
+        
+        if(guest != null)
+        {
+            return guest;
+        }
+        else
+        {
+            throw new GuestNotFoundException("Guest ID " + guestId + " does not exist!");
+        }   
+    }
 
     public RegisteredGuest retrieveRegisteredGuestByEmail(String email) throws GuestNotFoundException {
         Query query = em.createQuery("SELECT rg FROM RegisteredGuest rg WHERE rg.email = :inEmail");
@@ -54,7 +69,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         }
     }
     
-    public RegisteredGuest retrieveRegisteredGuestByID(String ID) throws GuestNotFoundException {
+    public RegisteredGuest retrieveRegisteredGuestByIdentificationNumber(String ID) throws GuestNotFoundException {
         Query query = em.createQuery("SELECT rg FROM RegisteredGuest rg WHERE rg.identificationNumber = :inID");
         query.setParameter("inID", ID);
         

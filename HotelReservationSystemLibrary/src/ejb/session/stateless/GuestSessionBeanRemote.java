@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Guest;
 import entity.RegisteredGuest;
 import javax.ejb.Remote;
 import util.exception.GuestEmailExistException;
@@ -23,6 +24,8 @@ public interface GuestSessionBeanRemote {
     public RegisteredGuest registeredGuestLogin(String email, String password) throws InvalidLoginCredentialException;
 
     public RegisteredGuest registerNewRegisteredGuest(RegisteredGuest newRegisteredGuest) throws GuestEmailExistException, UnknownPersistenceException, InputDataValidationException;
-    public RegisteredGuest retrieveRegisteredGuestByID(String ID) throws GuestNotFoundException;
+    public RegisteredGuest retrieveRegisteredGuestByIdentificationNumber(String ID) throws GuestNotFoundException;
+
+   public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException;
     
 }

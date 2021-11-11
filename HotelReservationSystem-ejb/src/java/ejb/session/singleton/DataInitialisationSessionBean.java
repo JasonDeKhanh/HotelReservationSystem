@@ -11,10 +11,14 @@ import ejb.session.stateless.RoomRateSessionBeanLocal;
 import ejb.session.stateless.RoomSessionBeanLocal;
 import ejb.session.stateless.RoomTypeSessionBeanLocal;
 import entity.Employee;
+import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -23,9 +27,11 @@ import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.enumeration.AccessRight;
+import util.enumeration.ReservationType;
 import util.enumeration.RoomRateType;
 import util.enumeration.RoomStatus;
 import util.exception.EmployeeUsernameExistException;
+import util.exception.GuestNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.RoomHasNoRoomRateException;
 import util.exception.RoomNumberExistException;
@@ -156,8 +162,32 @@ public class DataInitialisationSessionBean {
         }
         
 //        try {
-//            reservationSessionBeanLocal.createNewReservation(reservationEntity, "Deluxe Room", guestID)
-//        } catch(EmployeeUsernameExistException | UnknownPersistenceException | InputDataValidationException ex){
+//            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+//            Date checkinDate = inputDateFormat.parse("5/10/2021");
+//            Date checkoutDate = inputDateFormat.parse("8/10/2021");
+//            
+//            reservationSessionBeanLocal.createNewReservation(new Reservation(ReservationType.ONLINE,checkinDate, checkoutDate,1), "Deluxe Room", "A1234567B");
+//        } catch(InputDataValidationException | RoomTypeNotFoundException | UnknownPersistenceException| GuestNotFoundException | ParseException ex){
+//             ex.printStackTrace();
+//        }
+//        
+//        try {
+//            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+//            Date checkinDate = inputDateFormat.parse("7/10/2021");
+//            Date checkoutDate = inputDateFormat.parse("10/10/2021");
+//            
+//            reservationSessionBeanLocal.createNewReservation(new Reservation(ReservationType.ONLINE,checkinDate, checkoutDate,1), "Deluxe Room", "A1234567B");
+//        } catch(InputDataValidationException | RoomTypeNotFoundException | UnknownPersistenceException| GuestNotFoundException | ParseException ex){
+//             ex.printStackTrace();
+//        }
+//        
+//        try {
+//            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+//            Date checkinDate = inputDateFormat.parse("8/10/2021");
+//            Date checkoutDate = inputDateFormat.parse("9/10/2021");
+//            
+//            reservationSessionBeanLocal.createNewReservation(new Reservation(ReservationType.ONLINE,checkinDate, checkoutDate,1), "Deluxe Room", "A1234567B");
+//        } catch(InputDataValidationException | RoomTypeNotFoundException | UnknownPersistenceException| GuestNotFoundException | ParseException ex){
 //             ex.printStackTrace();
 //        }
     }

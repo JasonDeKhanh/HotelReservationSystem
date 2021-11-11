@@ -5,9 +5,14 @@
  */
 package ejb.session.stateless;
 
+import entity.Guest;
 import entity.RegisteredGuest;
 import javax.ejb.Local;
+import util.exception.GuestEmailExistException;
 import util.exception.GuestNotFoundException;
+import util.exception.InputDataValidationException;
+import util.exception.InvalidLoginCredentialException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -16,6 +21,10 @@ import util.exception.GuestNotFoundException;
 @Local
 public interface GuestSessionBeanLocal {
 
-    public RegisteredGuest retrieveRegisteredGuestByID(String ID) throws GuestNotFoundException;
-    
+    public RegisteredGuest registeredGuestLogin(String email, String password) throws InvalidLoginCredentialException;
+
+    public RegisteredGuest registerNewRegisteredGuest(RegisteredGuest newRegisteredGuest) throws GuestEmailExistException, UnknownPersistenceException, InputDataValidationException;
+    public RegisteredGuest retrieveRegisteredGuestByIdentificationNumber(String ID) throws GuestNotFoundException;
+
+    public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException;
 }

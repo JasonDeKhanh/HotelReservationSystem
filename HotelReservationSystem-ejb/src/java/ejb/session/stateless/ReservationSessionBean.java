@@ -57,9 +57,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     @Override
-    public Reservation createNewReservation(Reservation reservationEntity, String roomTypeName, String guestID) throws RoomTypeNotFoundException, UnknownPersistenceException, InputDataValidationException, GuestNotFoundException{
+    public Reservation createNewReservation(Reservation reservationEntity, String roomTypeName, Long guestID) throws RoomTypeNotFoundException, UnknownPersistenceException, InputDataValidationException, GuestNotFoundException{
         RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
-        Guest guest = guestSessionBeanLocal.retrieveRegisteredGuestByID(guestID);
+        Guest guest = guestSessionBeanLocal.retrieveGuestById(guestID);
         
         Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(reservationEntity);
          
@@ -95,8 +95,20 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest.guestId = :inGuestId");
         query.setParameter("inGuestId", guestID);
         
+        List<Reservation> reservations = query.getResultList();
         
-        return query.getResultList();
+        reservations.size();
+        
+        return reservations;
+        
+//        try
+//        {
+//            return query.getResultList();
+//        }
+//        catch(NoResultException | NonUniqueResultException ex)
+//        {
+//            throw new ReservationNotFoundException("Guest ID " + guestID + " does not exist!");
+//        }
     }
 //    
 //    @Override
