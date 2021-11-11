@@ -303,21 +303,22 @@ public class MainApp {
             {
                 if(currentGuest != null)
                 {
-                    Reservation newReservation = new Reservation();
                     // String response = "";
                     String roomTypeName = "";
                     Integer numOfRooms = 0;
-                    // Reservation newReservation = new Reservation();
-                    // newReservation.setType(ReservationType.ONLINE);
-                    // newReservation.setCheckinDate(checkinDate);
-                    // newReservation.setCheckoutDate(checkoutDate);
+                    Reservation newReservation = new Reservation();
+                    newReservation.setType(ReservationType.ONLINE);
+                    newReservation.setCheckinDate(checkinDate);
+                    newReservation.setCheckoutDate(checkoutDate);
 
                     System.out.print("Enter Room Type Name you want to book> ");
                     roomTypeName = scanner.nextLine().trim();
                     System.out.print("Enter number of rooms you want to book> ");
                     numOfRooms = Integer.parseInt(scanner.nextLine().trim());
                     
-                    newReservation = reservationSessionBeanRemote.createNewReservation(newReservation, roomTypeName, currentGuest.);
+                    newReservation.setNoOfRoom(numOfRooms);
+                    
+                    newReservation = reservationSessionBeanRemote.createNewReservation(newReservation, roomTypeName, currentGuest.getGuestId());
                 }
                 else
                 {
