@@ -35,7 +35,7 @@ public abstract class Guest implements Serializable {
     @NotNull
     @Size(min = 1, max = 32)
     private String name;
-    @Column(nullable = false, unique = true, length = 9)
+    @Column(nullable = false, length = 9)
     @NotNull
     @Size(min = 9, max = 9)
     private String identificationNumber;

@@ -29,7 +29,7 @@ import util.exception.UnknownPersistenceException;
  * @author xqy11
  */
 @Stateless
-public class PartnerSessionBean implements PartnerSessionBeanRemote {   
+public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSessionBeanLocal {   
     
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
