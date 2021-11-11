@@ -6,6 +6,7 @@
 package ejb.session.singleton;
 
 import ejb.session.stateless.EmployeeSessionBeanLocal;
+import ejb.session.stateless.ReservationSessionBeanLocal;
 import ejb.session.stateless.RoomRateSessionBeanLocal;
 import ejb.session.stateless.RoomSessionBeanLocal;
 import ejb.session.stateless.RoomTypeSessionBeanLocal;
@@ -43,6 +44,9 @@ import util.exception.UnknownPersistenceException;
 @Startup
 
 public class DataInitialisationSessionBean {
+
+    @EJB(name = "ReservationSessionBeanLocal")
+    private ReservationSessionBeanLocal reservationSessionBeanLocal;
 
     @EJB(name = "RoomSessionBeanLocal")
     private RoomSessionBeanLocal roomSessionBeanLocal;
@@ -150,6 +154,12 @@ public class DataInitialisationSessionBean {
                 |RoomTypeDisabledException | RoomNumberExistException ex){
              ex.printStackTrace();
         }
+        
+//        try {
+//            reservationSessionBeanLocal.createNewReservation(reservationEntity, "Deluxe Room", guestID)
+//        } catch(EmployeeUsernameExistException | UnknownPersistenceException | InputDataValidationException ex){
+//             ex.printStackTrace();
+//        }
     }
 
 }
