@@ -9,7 +9,10 @@ import entity.Reservation;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.GuestNotFoundException;
+import util.exception.InputDataValidationException;
 import util.exception.ReservationNotFoundException;
+import util.exception.RoomTypeNotFoundException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -18,7 +21,10 @@ import util.exception.ReservationNotFoundException;
 @Local
 public interface ReservationSessionBeanLocal {
     public Reservation retrieveReservationById(Long reservationId) throws ReservationNotFoundException;
-
+    
     public List<Reservation> retrieveAllReservationsByGuestId(Long guestID) throws GuestNotFoundException;
+
+    public Reservation createNewReservation(Reservation reservationEntity, String roomTypeName, String guestID) throws RoomTypeNotFoundException, UnknownPersistenceException, InputDataValidationException, GuestNotFoundException;
+    
     
 }
