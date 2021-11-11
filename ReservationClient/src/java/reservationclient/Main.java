@@ -16,6 +16,7 @@ import javax.ejb.EJB;
  */
 public class Main {
 
+
     @EJB(name = "RoomTypeSessionBeanRemote")
     private static RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
 

@@ -392,7 +392,8 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
                 if(!roomRates.isEmpty()) {
                     
                     for(RoomRate roomRate: roomRates) {
-                        if(roomRate.getStartDate().before(tempDate) && roomRate.getEndDate().after(tempDate)) {
+                        if((roomRate.getStartDate().before(tempDate)||roomRate.getStartDate().equals(tempDate)) 
+                                && (roomRate.getEndDate().after(tempDate)||roomRate.getEndDate().equals(tempDate))) {
                             finalAmount = finalAmount.add(roomRate.getRatePerNight());
                             addedToday = true;
                             break;
@@ -407,7 +408,8 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
                     roomRates = (List<RoomRate>) query2.getResultList();
                     
                     for(RoomRate roomRate: roomRates) {
-                        if(roomRate.getStartDate().before(tempDate) && roomRate.getEndDate().after(tempDate)) {
+                        if((roomRate.getStartDate().before(tempDate)||roomRate.getStartDate().equals(tempDate)) 
+                                && (roomRate.getEndDate().after(tempDate)||roomRate.getEndDate().equals(tempDate))) {
                             finalAmount = finalAmount.add(roomRate.getRatePerNight());
                             addedToday = true;
                             break;
