@@ -353,7 +353,7 @@ public class MainApp {
         
         List<Reservation> reservations = null;
         try {
-            reservations = reservationSessionBeanRemote.retrieveAllReservations(guestId);
+            reservations = reservationSessionBeanRemote.retrieveAllReservationsByGuestId(guestId);
         } catch (GuestNotFoundException ex) {
             System.out.println(ex.getMessage());
         }

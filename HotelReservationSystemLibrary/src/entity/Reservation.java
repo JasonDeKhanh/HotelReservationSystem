@@ -22,6 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import util.enumeration.ReservationType;
 
@@ -46,10 +47,13 @@ public class Reservation implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true)
     private Date checkoutDate;
+    @Column(nullable = false)
+    @NotNull
+    @Min(1)
+    private Integer noOfRoom;
     
-    @ManyToOne(optional = true)
-    @JoinColumn(nullable = true)
-    private Room room; 
+    @ManyToMany
+    private List<Room> rooms; 
     
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
@@ -62,18 +66,23 @@ public class Reservation implements Serializable {
     @ManyToOne(optional = true)
     @JoinColumn(nullable = true)
     private Partner partner;
-    
+     
     @OneToOne(optional = true)
     private RoomAllocationExceptionReport roomAllocationExceptionReport;
 
     public Reservation() {
+        rooms = new ArrayList<>();
     }
 
-    public Reservation(ReservationType type, Date checkinDate, Date checkoutDate) {
+    public Reservation(ReservationType type, Date checkinDate, Date checkoutDate, Integer noOfRoom) {
+        this();
         this.type = type;
         this.checkinDate = checkinDate;
         this.checkoutDate = checkoutDate;
+        this.noOfRoom = noOfRoom;
     }
+    
+    
 
     public Long getReservationId() {
         return reservationId;
@@ -150,19 +159,6 @@ public class Reservation implements Serializable {
         this.checkoutDate = checkoutDate;
     }
 
-    /**
-     * @return the room
-     */
-    public Room getRoom() {
-        return room;
-    }
-
-    /**
-     * @param room the rooms to set
-     */
-    public void setRoom(Room room) {
-        this.room = room;
-    }
 
     /**
      * @return the roomAllocationExceptionReport
@@ -218,6 +214,34 @@ public class Reservation implements Serializable {
      */
     public void setGuest(Guest guest) {
         this.guest = guest;
+    }
+
+    /**
+     * @return the rooms
+     */
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    /**
+     * @param rooms the rooms to set
+     */
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
+
+    /**
+     * @return the noOfRoom
+     */
+    public Integer getNoOfRoom() {
+        return noOfRoom;
+    }
+
+    /**
+     * @param noOfRoom the noOfRoom to set
+     */
+    public void setNoOfRoom(Integer noOfRoom) {
+        this.noOfRoom = noOfRoom;
     }
     
 }

@@ -85,7 +85,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     @Override
-    public List<Reservation> retrieveAllReservations(Long guestID) throws GuestNotFoundException
+    public List<Reservation> retrieveAllReservationsByGuestId(Long guestID) throws GuestNotFoundException
     {
 //        Guest guest = guestSessionBeanLocal.retrieveRegisteredGuestByID(guestID);
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest.guestId = :inGuestId");

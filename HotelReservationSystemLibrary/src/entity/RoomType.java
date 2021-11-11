@@ -45,9 +45,11 @@ public class RoomType implements Serializable {
     private Double size;
     @Column(nullable = false)
     @NotNull
+    @Min(1)
     private Integer beds;
     @Column(nullable = false)
     @NotNull
+    @Min(1)
     private Integer capacity;
     @Column(nullable = false, length = 240)
     @NotNull
@@ -55,7 +57,7 @@ public class RoomType implements Serializable {
     private String amenities; // amenities can null?
     @Column(nullable = false)
     @NotNull
-    @Min(0)
+    @Min(1)
     private Integer inventory;
     @Column(nullable = false)
     @NotNull

@@ -17,8 +17,8 @@ import util.exception.ReservationNotFoundException;
  */
 @Local
 public interface ReservationSessionBeanLocal {
-    public List<Reservation> retrieveAllReservations(Long guestID) throws GuestNotFoundException;
-
     public Reservation retrieveReservationById(Long reservationId) throws ReservationNotFoundException;
+
+    public List<Reservation> retrieveAllReservationsByGuestId(Long guestID) throws GuestNotFoundException;
     
 }
