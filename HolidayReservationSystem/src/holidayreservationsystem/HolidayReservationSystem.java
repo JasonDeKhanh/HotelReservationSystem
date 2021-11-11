@@ -17,7 +17,7 @@ import ws.client.PartnerEntityWebService_Service;
 
 /**
  *
- * @author xqy1111
+ * @author xqy11
  */
 public class HolidayReservationSystem {
     
@@ -29,8 +29,7 @@ public class HolidayReservationSystem {
     public static void main(String[] args) {
         
         MainApp mainApp = new MainApp();
-        
-        mainApp.runApp(); 
+        mainApp.runApp();
         
     }
     
