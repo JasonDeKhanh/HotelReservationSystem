@@ -23,6 +23,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.enumeration.ReservationType;
 import util.exception.CheckinCheckoutSameDayException;
 import util.exception.GuestEmailExistException;
 import util.exception.GuestNotFoundException;
@@ -30,6 +31,7 @@ import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.NoRoomTypeAvaiableForReservationException;
 import util.exception.ReservationNotFoundException;
+import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -265,19 +267,19 @@ public class MainApp {
             if(checkinDate.equals(checkoutDate)){
                 throw new CheckinCheckoutSameDayException("Check-in Date and Check-out Date cannot be the same day");
             }
-            System.out.print("Enter number of rooms to book> ");
-            numberOfRooms = Integer.parseInt(scanner.nextLine().trim());
+//            System.out.print("Enter number of rooms to book> ");
+//            numberOfRooms = Integer.parseInt(scanner.nextLine().trim());
             // do if checkin is AFTER checkout --> throw exception, catch beneath also
             
             // call session bean here
             //
             
-            List<RoomType> availableRoomTypes = roomTypeSessionBeanRemote.searchAvailableRoomTypeForReservation(checkinDate, checkoutDate, numberOfRooms);
+            List<RoomType> availableRoomTypes = roomTypeSessionBeanRemote.searchAvailableRoomTypeForReservation(checkinDate, checkoutDate);
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
             // Should we show number of rooms left able to be booked also? The inventory of room type
             System.out.printf("%2s", "");
-            System.out.printf("%9s%22s   %s\n", "Room Type", "Rate Type Applied", "Rate Per Night");
+            System.out.printf("%14s%22s   %s\n", "Room Type", "Number of Rooms Available", "Rate Per Night");
             
             Integer number = 0;
             for(RoomType roomType: availableRoomTypes)
@@ -288,15 +290,14 @@ public class MainApp {
                 number += 1;
 
                 System.out.printf("%2s", number);
-                System.out.printf("%14s%22s   %s\n", roomType.getName(), roomType.getSize(), roomType.getBeds());
+                System.out.printf("%14s%22s   %s\n", roomType.getName(), roomTypeSessionBeanRemote.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId()), roomTypeSessionBeanRemote.getReservationAmount(checkinDate, checkoutDate, ReservationType.ONLINE, roomType.getRoomTypeId()));
             }
             
             System.out.println("------------------------");
             System.out.println("1: Make Reservation. (A room type previously shown as avaiable may become unavailable as you make the reservation");
             System.out.println("2: Back\n");
             System.out.print("> ");
-            response = scanner.nextInt();
-            scanner.nextInt();
+            response = Integer.parseInt(scanner.nextLine().trim());
             
             if(response == 1)
             {
@@ -324,7 +325,7 @@ public class MainApp {
             
             
         } 
-        catch(NoRoomTypeAvaiableForReservationException ex)
+        catch(NoRoomTypeAvaiableForReservationException | RoomTypeNotFoundException ex)
         {
             System.out.println("An error occurred: " + ex.getMessage());
         }

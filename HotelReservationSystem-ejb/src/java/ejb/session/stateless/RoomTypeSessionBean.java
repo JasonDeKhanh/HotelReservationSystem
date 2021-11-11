@@ -9,10 +9,16 @@ import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -23,6 +29,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.enumeration.ReservationType;
+import util.enumeration.RoomRateType;
 import util.enumeration.RoomStatus;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
@@ -200,7 +208,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     
     
     @Override
-    public List<RoomType> searchAvailableRoomTypeForReservation(Date checkinDate, Date checkoutDate, Integer numberOfRooms) throws NoRoomTypeAvaiableForReservationException {
+    public List<RoomType> searchAvailableRoomTypeForReservation(Date checkinDate, Date checkoutDate) throws NoRoomTypeAvaiableForReservationException, RoomTypeNotFoundException {
         
         /*
             for each Room Type that is enabled, go through all reservations with that room type
@@ -222,54 +230,57 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         }
         
         for(RoomType roomType: roomTypes) {
-            Query query = em.createQuery("SELECT res FROM Reservation res WHERE res.roomType = :inRoomType");
-            query.setParameter("inRoomType", roomType);
-        
-            List<Reservation> reservations = (List<Reservation>) query.getResultList();
-
-//            if (reservations.isEmpty()) {
-//                throw new NoRoomTypeAvaiableForReservationException("There is no avaialble room type available for reserving!");
-//            } 
-
-            Integer countReservationsAffecting = 0;
-
-            for(Reservation otherReservation: reservations) {
-                Date otherCheckinDate = otherReservation.getCheckinDate();
-                Date otherCheckoutDate = otherReservation.getCheckoutDate();
-
-                if ( (otherCheckinDate.before(checkinDate) || otherCheckinDate.equals(checkinDate)) 
-                        && (otherCheckoutDate.after(checkinDate))) {
-
-                    countReservationsAffecting += 1; // affect reservation
-
-                } else if ( (otherCheckinDate.after(checkinDate) || otherCheckinDate.equals(checkinDate))
-                            && (otherCheckoutDate.before(checkoutDate)||otherCheckoutDate.equals(checkoutDate))) {
-
-                    countReservationsAffecting += 1; // affect reservation
-
-                } else if ( (otherCheckinDate.before(checkinDate) && 
-                        (otherCheckoutDate.before(checkinDate) || otherCheckoutDate.equals(checkinDate)))) {
-
-                    // do nothing
-
-                } else if ( (otherCheckinDate.after(checkoutDate) || otherCheckinDate.equals(checkoutDate)) 
-                        && (otherCheckoutDate.after(checkoutDate))) {
-
-                    // do nothing
-
-                } else if ( (otherCheckinDate.before(checkoutDate)) 
-                        && ( otherCheckoutDate.after(checkoutDate) || otherCheckoutDate.equals(checkoutDate) )) {
-
-                    countReservationsAffecting += 1; // affect reservation
-
-                }
-                
-                
-            }
+//            Query query = em.createQuery("SELECT res FROM Reservation res WHERE res.roomType = :inRoomType");
+//            query.setParameter("inRoomType", roomType);
+//        
+//            List<Reservation> reservations = (List<Reservation>) query.getResultList();
+//
+////            if (reservations.isEmpty()) {
+////                throw new NoRoomTypeAvaiableForReservationException("There is no avaialble room type available for reserving!");
+////            } 
+//
+//            Integer countReservationsAffecting = 0;
+//
+//            for(Reservation otherReservation: reservations) {
+//                Date otherCheckinDate = otherReservation.getCheckinDate();
+//                Date otherCheckoutDate = otherReservation.getCheckoutDate();
+//
+//                if ( (otherCheckinDate.before(checkinDate) || otherCheckinDate.equals(checkinDate)) 
+//                        && (otherCheckoutDate.after(checkinDate))) {
+//
+//                    countReservationsAffecting += 1; // affect reservation
+//
+//                } else if ( (otherCheckinDate.after(checkinDate) || otherCheckinDate.equals(checkinDate))
+//                            && (otherCheckoutDate.before(checkoutDate)||otherCheckoutDate.equals(checkoutDate))) {
+//
+//                    countReservationsAffecting += 1; // affect reservation
+//
+//                } else if ( (otherCheckinDate.before(checkinDate) && 
+//                        (otherCheckoutDate.before(checkinDate) || otherCheckoutDate.equals(checkinDate)))) {
+//
+//                    // do nothing
+//
+//                } else if ( (otherCheckinDate.after(checkoutDate) || otherCheckinDate.equals(checkoutDate)) 
+//                        && (otherCheckoutDate.after(checkoutDate))) {
+//
+//                    // do nothing
+//
+//                } else if ( (otherCheckinDate.before(checkoutDate)) 
+//                        && ( otherCheckoutDate.after(checkoutDate) || otherCheckoutDate.equals(checkoutDate) )) {
+//
+//                    countReservationsAffecting += 1; // affect reservation
+//
+//                }
+//                
+//                
+//            }
             
-            Integer numberOfRoomsThisRoomTypeAvailable = roomType.getInventory() - countReservationsAffecting;
-            System.out.println("Roomtype: " + roomType.getName() + " with numberAvailable: " + numberOfRoomsThisRoomTypeAvailable);
-            if(numberOfRoomsThisRoomTypeAvailable >= numberOfRooms) {
+            Integer numberOfRoomsThisRoomTypeAvailable = getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId());
+//            System.out.println("Roomtype: " + roomType.getName() + " with numberAvailable: " + numberOfRoomsThisRoomTypeAvailable);
+//            if(numberOfRoomsThisRoomTypeAvailable >= numberOfRooms) {
+//                roomTypeToReturn.add(roomType);
+//            }
+            if(numberOfRoomsThisRoomTypeAvailable > 0) {
                 roomTypeToReturn.add(roomType);
             }
         }
@@ -282,6 +293,64 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     }
     
     
+    public Integer getNumberOfRoomsThisRoomTypeAvailableForReserve(Date checkinDate, Date checkoutDate, Long roomTypeId) throws RoomTypeNotFoundException {
+        
+        RoomType roomType = retrieveRoomTypeById(roomTypeId);
+        
+        Query query = em.createQuery("SELECT res FROM Reservation res WHERE res.roomType = :inRoomType");
+        query.setParameter("inRoomType", roomType);
+
+        List<Reservation> reservations = (List<Reservation>) query.getResultList();
+
+//            if (reservations.isEmpty()) {
+//                throw new NoRoomTypeAvaiableForReservationException("There is no avaialble room type available for reserving!");
+//            } 
+
+        Integer countReservationsAffecting = 0;
+
+        for(Reservation otherReservation: reservations) {
+            Date otherCheckinDate = otherReservation.getCheckinDate();
+            Date otherCheckoutDate = otherReservation.getCheckoutDate();
+
+            if ( (otherCheckinDate.before(checkinDate) || otherCheckinDate.equals(checkinDate)) 
+                    && (otherCheckoutDate.after(checkinDate))) {
+
+                countReservationsAffecting += 1; // affect reservation
+
+            } else if ( (otherCheckinDate.after(checkinDate) || otherCheckinDate.equals(checkinDate))
+                        && (otherCheckoutDate.before(checkoutDate)||otherCheckoutDate.equals(checkoutDate))) {
+
+                countReservationsAffecting += 1; // affect reservation
+
+            } else if ( (otherCheckinDate.before(checkinDate) && 
+                    (otherCheckoutDate.before(checkinDate) || otherCheckoutDate.equals(checkinDate)))) {
+
+                // do nothing
+
+            } else if ( (otherCheckinDate.after(checkoutDate) || otherCheckinDate.equals(checkoutDate)) 
+                    && (otherCheckoutDate.after(checkoutDate))) {
+
+                // do nothing
+
+            } else if ( (otherCheckinDate.before(checkoutDate)) 
+                    && ( otherCheckoutDate.after(checkoutDate) || otherCheckoutDate.equals(checkoutDate) )) {
+
+                countReservationsAffecting += 1; // affect reservation
+
+            }
+
+
+        }
+
+        Integer numberOfRoomsThisRoomTypeAvailable = getTrueInventory(roomType.getRoomTypeId()) - countReservationsAffecting;
+//        System.out.println("Roomtype: " + roomType.getName() + " with numberAvailable: " + numberOfRoomsThisRoomTypeAvailable);
+        
+        return numberOfRoomsThisRoomTypeAvailable;
+//        if(numberOfRoomsThisRoomTypeAvailable >= numberOfRooms) {
+//            roomTypeToReturn.add(roomType);
+//        }
+    }
+    
     public Integer getTrueInventory(Long roomTypeId) throws RoomTypeNotFoundException {
         RoomType roomType = retrieveRoomTypeById(roomTypeId);
         
@@ -293,6 +362,99 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         List<Room> rooms = (List<Room>) query.getResultList();
         
         return rooms.size(); //roomType.getInventory() - rooms.size();
+    }
+    
+    
+    @Override
+    public BigDecimal getReservationAmount(Date checkinDate, Date checkoutDate, ReservationType reservationType, Long roomTypeId) throws RoomTypeNotFoundException, ParseException {
+        
+        RoomType roomType = retrieveRoomTypeById(roomTypeId);
+        
+        BigDecimal finalAmount = new BigDecimal(0);
+//        List<RoomRate> roomRates = roomType.getRoomRates();
+
+//        Query query 
+
+        Date tempDate = checkinDate;
+
+        if(reservationType.equals(ReservationType.ONLINE)) 
+        {
+            
+            while(tempDate.before(checkoutDate)) {
+                
+                Boolean addedToday = false;
+                List<RoomRate> roomRates;
+                Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType = :inRoomType AND rr.rateType = :inRateType");
+                query.setParameter("inRoomType", roomType);
+                query.setParameter("inRateType", RoomRateType.PROMOTION);
+                roomRates = (List<RoomRate>) query.getResultList();
+                
+                if(!roomRates.isEmpty()) {
+                    
+                    for(RoomRate roomRate: roomRates) {
+                        if(roomRate.getStartDate().before(tempDate) && roomRate.getEndDate().after(tempDate)) {
+                            finalAmount = finalAmount.add(roomRate.getRatePerNight());
+                            addedToday = true;
+                            break;
+                        }
+                    }
+                    
+                } 
+                if (!addedToday) {
+                    Query query2 = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType = :inRoomType AND rr.rateType = :inRateType");
+                    query2.setParameter("inRoomType", roomType);
+                    query2.setParameter("inRateType", RoomRateType.PEAK);
+                    roomRates = (List<RoomRate>) query2.getResultList();
+                    
+                    for(RoomRate roomRate: roomRates) {
+                        if(roomRate.getStartDate().before(tempDate) && roomRate.getEndDate().after(tempDate)) {
+                            finalAmount = finalAmount.add(roomRate.getRatePerNight());
+                            addedToday = true;
+                            break;
+                        }
+                    }
+                    
+                } 
+                
+                if (!addedToday) {
+                    Query query2 = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType = :inRoomType AND rr.rateType = :inRateType");
+                    query2.setParameter("inRoomType", roomType);
+                    query2.setParameter("inRateType", RoomRateType.NORMAL);
+                    RoomRate normalRate = (RoomRate) query2.getSingleResult();
+                    finalAmount = finalAmount.add(normalRate.getRatePerNight());
+                }
+                
+                tempDate = addDays(tempDate, 1);
+            }
+        } 
+        else 
+        { // Walk-in Reservation
+            
+            Query query2 = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType = :inRoomType AND rr.rateType = :inRateType");
+            query2.setParameter("inRoomType", roomType);
+            query2.setParameter("inRateType", RoomRateType.PUBLISHED);
+            RoomRate publishedRate = (RoomRate) query2.getSingleResult();
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+            Date firstDate = sdf.parse(checkinDate.toString());
+            Date secondDate = sdf.parse(checkoutDate.toString());
+
+            long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
+            long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) - 1;
+            
+            finalAmount = new BigDecimal(diff).multiply(publishedRate.getRatePerNight());
+            
+        }
+        
+        return finalAmount;
+    }
+    
+    public static Date addDays(Date date, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
     }
     
     

@@ -6,9 +6,12 @@
 package ejb.session.stateless;
 
 import entity.RoomType;
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
+import util.enumeration.ReservationType;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.NoRoomTypeAvaiableForReservationException;
@@ -31,7 +34,11 @@ public interface RoomTypeSessionBeanRemote {
 
     public List<RoomType> retrieveAllRoomTypes();
 
-    public List<RoomType> searchAvailableRoomTypeForReservation(Date checkinDate, Date checkoutDate, Integer numberOfRooms) throws NoRoomTypeAvaiableForReservationException;
+    public List<RoomType> searchAvailableRoomTypeForReservation(Date checkinDate, Date checkoutDate) throws NoRoomTypeAvaiableForReservationException, RoomTypeNotFoundException;
 
     public Integer getTrueInventory(Long roomTypeId) throws RoomTypeNotFoundException;
+
+    public Integer getNumberOfRoomsThisRoomTypeAvailableForReserve(Date checkinDate, Date checkoutDate, Long roomTypeId) throws RoomTypeNotFoundException;
+
+    public BigDecimal getReservationAmount(Date checkinDate, Date checkoutDate, ReservationType reservationType, Long roomTypeId) throws RoomTypeNotFoundException, ParseException;
 }
