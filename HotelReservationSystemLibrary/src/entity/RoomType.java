@@ -57,7 +57,7 @@ public class RoomType implements Serializable {
     private String amenities; // amenities can null?
     @Column(nullable = false)
     @NotNull
-    @Min(1)
+    @Min(0)
     private Integer inventory;
     @Column(nullable = false)
     @NotNull
