@@ -79,7 +79,7 @@ public class MainApp {
             System.out.println("4: Exit\n");
             response = 0;
             
-            while(response < 1 || response > 2) {
+            while(response < 1 || response > 4) {
                 
                 System.out.print("> ");
                 
