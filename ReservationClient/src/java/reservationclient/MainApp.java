@@ -318,7 +318,7 @@ public class MainApp {
                     
                     newReservation.setNoOfRoom(numOfRooms);
                     
-                    newReservation = reservationSessionBeanRemote.createNewReservation(newReservation, roomTypeName, currentGuest.getGuestId());
+                    //newReservation = reservationSessionBeanRemote.createNewReservation(newReservation, roomTypeName, currentGuest.getGuestId());
                 }
                 else
                 {
