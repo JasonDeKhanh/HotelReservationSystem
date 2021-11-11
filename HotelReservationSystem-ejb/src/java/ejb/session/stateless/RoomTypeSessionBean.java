@@ -5,8 +5,11 @@
  */
 package ejb.session.stateless;
 
+import entity.Reservation;
 import entity.RoomRate;
 import entity.RoomType;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
@@ -21,6 +24,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
+import util.exception.NoRoomTypeAvaiableForReservationException;
 import util.exception.RoomTypeNameExistException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -190,6 +194,89 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         }
         
         return roomTypes;
+    }
+    
+    
+    @Override
+    public List<RoomType> searchAvailableRoomTypeForReservation(Date checkinDate, Date checkoutDate, Integer numberOfRooms) throws NoRoomTypeAvaiableForReservationException {
+        
+        /*
+            for each Room Type that is enabled, go through all reservations with that room type
+            check which one affects the current room reservation
+            if that (roomType.inventory - count of room affect reservation) >= numberOfRooms, then
+            this roomType is available for booking.
+            **need to check again during reservation
+            
+        */
+        List<RoomType> roomTypeToReturn = new ArrayList<>();
+        
+        Query queryRoomType = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.enabled = : inEnabled");
+        queryRoomType.setParameter("inEnabled", true);
+        
+        List<RoomType> roomTypes = (List<RoomType>) queryRoomType.getResultList();
+        
+        if(roomTypes.isEmpty()) {
+            throw new NoRoomTypeAvaiableForReservationException("There is no available room type available");
+        }
+        
+        for(RoomType roomType: roomTypes) {
+            Query query = em.createQuery("SELECT res FROM Reservation res WHERE res.roomType = :inRoomType");
+            query.setParameter(":inRoomType", roomType);
+        
+            List<Reservation> reservations = (List<Reservation>) query.getResultList();
+
+//            if (reservations.isEmpty()) {
+//                throw new NoRoomTypeAvaiableForReservationException("There is no avaialble room type available for reserving!");
+//            } 
+
+            Integer countReservationsAffecting = 0;
+
+            for(Reservation otherReservation: reservations) {
+                Date otherCheckinDate = otherReservation.getCheckinDate();
+                Date otherCheckoutDate = otherReservation.getCheckoutDate();
+
+                if ( (otherCheckinDate.before(checkinDate) || otherCheckinDate.equals(checkinDate)) 
+                        && (otherCheckoutDate.after(checkinDate))) {
+
+                    countReservationsAffecting += 1; // affect reservation
+
+                } else if ( (otherCheckinDate.after(checkinDate) || otherCheckinDate.equals(checkinDate))
+                            && (otherCheckoutDate.before(checkoutDate)||otherCheckoutDate.equals(checkoutDate))) {
+
+                    countReservationsAffecting += 1; // affect reservation
+
+                } else if ( (otherCheckinDate.before(checkinDate) && 
+                        (otherCheckoutDate.before(checkinDate) || otherCheckoutDate.equals(checkinDate)))) {
+
+                    // do nothing
+
+                } else if ( (otherCheckinDate.after(checkoutDate) || otherCheckinDate.equals(checkoutDate)) 
+                        && (otherCheckoutDate.after(checkoutDate))) {
+
+                    // do nothing
+
+                } else if ( (otherCheckinDate.before(checkoutDate)) 
+                        && ( otherCheckoutDate.after(checkoutDate) || otherCheckoutDate.equals(checkoutDate) )) {
+
+                    countReservationsAffecting += 1; // affect reservation
+
+                }
+                
+                
+                Integer numberOfRoomsThisRoomTypeAvailable = roomType.getInventory() - countReservationsAffecting;
+                
+                if(numberOfRoomsThisRoomTypeAvailable >= numberOfRooms) {
+                    roomTypeToReturn.add(roomType);
+                }
+
+            }
+        }
+        
+        if(roomTypeToReturn.isEmpty()) {
+            throw new NoRoomTypeAvaiableForReservationException("There is no avaialble room type available for reserving!");
+        } else {
+            return roomTypeToReturn;
+        }
     }
     
     

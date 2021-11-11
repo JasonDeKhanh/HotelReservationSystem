@@ -7,6 +7,7 @@ package reservationclient;
 
 import ejb.session.stateless.GuestSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
+import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.RegisteredGuest;
 import entity.Reservation;
 import entity.RoomType;
@@ -22,10 +23,12 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.CheckinCheckoutSameDayException;
 import util.exception.GuestEmailExistException;
 import util.exception.GuestNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.NoRoomTypeAvaiableForReservationException;
 import util.exception.ReservationNotFoundException;
 import util.exception.UnknownPersistenceException;
 
@@ -41,6 +44,7 @@ public class MainApp {
     
     private GuestSessionBeanRemote guestSessionBeanRemote;
     private ReservationSessionBeanRemote reservationSessionBeanRemote;
+    private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     
     private RegisteredGuest currentGuest;
     
@@ -49,10 +53,11 @@ public class MainApp {
         this.validator = validatorFactory.getValidator();
     }
 
-    public MainApp(GuestSessionBeanRemote guestSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote) {
+    public MainApp(GuestSessionBeanRemote guestSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote) {
         this();
         this.guestSessionBeanRemote = guestSessionBeanRemote;
         this.reservationSessionBeanRemote = reservationSessionBeanRemote;
+        this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
     }
     
     
@@ -251,19 +256,23 @@ public class MainApp {
             SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
             Date checkinDate;
             Date checkoutDate;
+            Integer numberOfRooms;
             
             System.out.print("Enter Check-in Date (dd/mm/yyyy)> ");
             checkinDate = inputDateFormat.parse(scanner.nextLine().trim());
             System.out.print("Enter Check-out Date (dd/mm/yyyy)> ");
             checkoutDate = inputDateFormat.parse(scanner.nextLine().trim());  
-            
+            if(checkinDate.equals(checkoutDate)){
+                throw new CheckinCheckoutSameDayException("Check-in Date and Check-out Date cannot be the same day");
+            }
+            System.out.print("Enter number of rooms to book> ");
+            numberOfRooms = Integer.parseInt(scanner.nextLine().trim());
             // do if checkin is AFTER checkout --> throw exception, catch beneath also
             
             // call session bean here
             //
             
-            /*
-            List<RoomType> availableRoomTypes = roomTypeSessionBeanRemote.searchAvailableRoomType(checkinDate, checkoutDate);
+            List<RoomType> availableRoomTypes = roomTypeSessionBeanRemote.searchAvailableRoomTypeForReservation(checkinDate, checkoutDate, numberOfRooms);
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
             // Should we show number of rooms left able to be booked also? The inventory of room type
@@ -272,22 +281,36 @@ public class MainApp {
             Integer number = 0;
             for(RoomType roomType: availableRoomTypes)
             {
+                // need to calculate the total rate here
+                // rate type applied depends also. Need to do if-else
+                // like do a roomType.getRateToBeApplied() <-- if-else inside there
                 number += 1;
                 System.out.print(number + " ");
                 System.out.printf("%14s%22s   %s\n", "Room Type Name", "Rate Type Applied", "Rate Per Night($)");
             }
             
             System.out.println("------------------------");
-            System.out.println("1: Make Reservation");
+            System.out.println("1: Make Reservation. (A room type previously shown as avaiable may become unavailable as you make the reservation");
             System.out.println("2: Back\n");
             System.out.print("> ");
             response = scanner.nextInt();
             
             if(response == 1)
             {
-                if(currentCustomer != null)
+                if(currentGuest != null)
                 {
-                    doReserveHotelRoom(checkinDate, checkoutDate, availableRoomTypes);
+                    // String response = "";
+                    String roomTypeName = "";
+                    Integer numOfRooms = 0;
+                    // Reservation newReservation = new Reservation();
+                    // newReservation.setType(ReservationType.ONLINE);
+                    // newReservation.setCheckinDate(checkinDate);
+                    // newReservation.setCheckoutDate(checkoutDate);
+
+                    System.out.print("Enter Room Type Name you want to book> ");
+                    roomTypeName = scanner.nextLine().trim();
+                    System.out.print("Enter number of rooms you want to book> ");
+                    numOfRooms = Integer.parseInt(scanner.nextLine().trim());
                 }
                 else
                 {
@@ -295,37 +318,46 @@ public class MainApp {
                 }
             }
             
-            */
             
-        } catch (ParseException ex) {
-            System.out.println("Invalid date input!\n");
+            
+        } 
+        catch(NoRoomTypeAvaiableForReservationException ex)
+        {
+            System.out.println("An error occurred: " + ex.getMessage());
         }
+        catch (CheckinCheckoutSameDayException ex)
+        {
+            System.out.println(ex.getMessage() + "\n");
+        }
+        catch (ParseException ex) {
+            System.out.println("Invalid date input!\n");
+        } 
 
         // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    private void doReserveHotelRoom(Date checkinDate, Date checkoutDate, List<RoomType> availableRoomTypes) {
-        
-        Scanner scanner = new Scanner(System.in);
-        String response = "";
-        String roomTypeName = "";
-        Integer numOfRooms = 0;
-        // Reservation newReservation = new Reservation();
-        // newReservation.setType(ReservationType.ONLINE);
-        // newReservation.setCheckinDate(checkinDate);
-        // newReservation.setCheckoutDate(checkoutDate);
-        
-        System.out.print("Enter Room Type Name you want to book> ");
-        roomTypeName = scanner.nextLine().trim();
-        System.out.print("Enter number of rooms you want to book> ");
-        numOfRooms = Integer.parseInt(scanner.nextLine().trim());
-        // newReservation.setNumberOfRooms(numOfRooms);
-        
-        // call session bean to reserve room
-        // newReservation = reservationSessionBeanRemote.reserveNewRoom(checkinDate, checkoutDate, 
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    private void doReserveHotelRoom(Date checkinDate, Date checkoutDate, List<RoomType> availableRoomTypes) {
+//        
+//        Scanner scanner = new Scanner(System.in);
+//        String response = "";
+//        String roomTypeName = "";
+//        Integer numOfRooms = 0;
+//        // Reservation newReservation = new Reservation();
+//        // newReservation.setType(ReservationType.ONLINE);
+//        // newReservation.setCheckinDate(checkinDate);
+//        // newReservation.setCheckoutDate(checkoutDate);
+//        
+//        System.out.print("Enter Room Type Name you want to book> ");
+//        roomTypeName = scanner.nextLine().trim();
+//        System.out.print("Enter number of rooms you want to book> ");
+//        numOfRooms = Integer.parseInt(scanner.nextLine().trim());
+//        // newReservation.setNumberOfRooms(numOfRooms);
+//        
+//        // call session bean to reserve room
+//        // newReservation = reservationSessionBeanRemote.reserveNewRoom(checkinDate, checkoutDate, 
+//        
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 
     private void doViewMyReservationDetails(){
         
