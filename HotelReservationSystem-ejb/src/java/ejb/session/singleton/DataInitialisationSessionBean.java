@@ -106,8 +106,8 @@ public class DataInitialisationSessionBean {
         try {
             roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Grand Suite Normal",RoomRateType.NORMAL, new BigDecimal(250), null,null),"Grand Suite");
             roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Grand Suite Published",RoomRateType.PUBLISHED, new BigDecimal(500), null,null),"Grand Suite");
-            roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Junior Suite Normal",RoomRateType.NORMAL, new BigDecimal(200), null,null),"Premier Room");
-            roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Junior Suite Published",RoomRateType.PUBLISHED, new BigDecimal(400), null,null),"Premier Room");
+            roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Junior Suite Normal",RoomRateType.NORMAL, new BigDecimal(200), null,null),"Junior Suite");
+            roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Junior Suite Published",RoomRateType.PUBLISHED, new BigDecimal(400), null,null),"Junior Suite");
             roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Family Room Normal",RoomRateType.NORMAL, new BigDecimal(150), null,null),"Family Room");
             roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Family Room Published",RoomRateType.PUBLISHED, new BigDecimal(300), null,null),"Family Room");
             roomRateSessionBeanLocal.createNewRoomRate(new RoomRate("Premier Room Normal",RoomRateType.NORMAL, new BigDecimal(100), null,null),"Premier Room");
