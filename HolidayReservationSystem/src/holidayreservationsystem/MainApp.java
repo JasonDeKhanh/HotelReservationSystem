@@ -232,7 +232,7 @@ public class MainApp {
     private void doViewAllMyReservations() {
         System.out.println("*** Hotel Reservation System Reservation Client :: View All My Reservations ***\n");
         
-//        Long guestId = currentGuest.getGuestId();
+//        Long guestId = currentPartner.getGuestId();
 //        
 //        List<Reservation> reservations = null;
 //        try {
