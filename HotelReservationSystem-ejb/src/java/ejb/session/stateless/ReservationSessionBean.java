@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Employee;
 import entity.Guest;
 import entity.Reservation;
 import entity.RoomType;
@@ -13,6 +14,8 @@ import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -20,6 +23,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.EmployeeNotFoundException;
 import util.exception.GuestNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.ReservationNotFoundException;
@@ -94,6 +98,22 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
         return query.getResultList();
     }
+//    
+//    @Override
+//    public Reservation retrieveReservationsByReservationId(Long reservationId) throws ReservationNotFoundException
+//    {
+//        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.reservationId = :inReservationId");
+//        query.setParameter("inReservationId", reservationId);
+//        
+//        try
+//        {
+//            return (Reservation) query.getSingleResult();
+//        }
+//        catch(NoResultException | NonUniqueResultException ex)
+//        {
+//            throw new ReservationNotFoundException("Reservation ID " + reservationId + " does not exist!");
+//        }
+//    }
     
     @Override
     public Reservation retrieveReservationById(Long reservationId) throws ReservationNotFoundException
