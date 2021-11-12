@@ -266,9 +266,17 @@ public class FrontOfficeModule {
 //    }
     
     public void doCheckinGuest() {
-        
         System.out.println("*** Hotel Reservation System Management Client :: Front Office :: Check-in Guest ***");
-        
+        Scanner scanner = new Scanner(System.in);
+            
+        System.out.print("Enter Guest Identification Number)> ");
+        String guestID = scanner.nextLine().trim();
+        try{
+            String output = guestSessionBeanRemote.guestCheckin(guestID);
+            System.out.println(output);
+        }catch(GuestNotFoundException ex){
+            System.out.println(ex.getMessage().toString());
+        }
     }
     
     public void doCheckoutGuest() {
