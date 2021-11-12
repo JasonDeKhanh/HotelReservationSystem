@@ -937,6 +937,7 @@ public class HotelOperationModule {
             System.out.println("Room Rate ID: " + roomRate.getRoomRateId());
             System.out.println("Room Rate Name: " + roomRate.getName());
             System.out.println("Rate Type: " + roomRate.getRateType());
+            System.out.println("Rate Per Night: S$" + roomRate.getRatePerNight());
             if(roomRate.getRateType().equals(RoomRateType.PEAK) || roomRate.getRateType().equals(RoomRateType.PROMOTION)) {
                 System.out.println("Start Date: " + roomRate.getStartDate());
                 System.out.println("End Date: " + roomRate.getEndDate());

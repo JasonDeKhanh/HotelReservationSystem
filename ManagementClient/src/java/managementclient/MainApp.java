@@ -88,7 +88,7 @@ public class MainApp {
                             
                         } else {
                             // frontOfficeModule
-                            frontOfficeModule = new FrontOfficeModule(currentEmployee);
+                            frontOfficeModule = new FrontOfficeModule(currentEmployee, roomTypeSessionBeanRemote);
                             frontOfficeModule.menuFrontOffice();
                             
                         }
