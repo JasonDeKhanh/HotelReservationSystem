@@ -10,6 +10,7 @@ import entity.RoomType;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -25,6 +26,7 @@ import util.exception.DeleteRoomRateException;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
+import util.exception.ReservationNotFoundException;
 import util.exception.RoomHasNoRoomRateException;
 import util.exception.RoomNotFoundException;
 import util.exception.RoomNumberExistException;
@@ -97,10 +99,12 @@ public class HotelOperationModule {
                 System.out.println("7: View All Rooms");
                 System.out.println("8: View Room Allocation Exception Report");
                 System.out.println("---------------------------------------");
-                System.out.println("9: Back");
+                System.out.println("9: Allocate Room To A Day's Reservations");
+                System.out.println("---------------------------------------");
+                System.out.println("10: Back");
                 response = 0;
 
-                while (response < 1 || response > 9) {
+                while (response < 1 || response > 10) {
 
                     System.out.print("> ");
 
@@ -139,6 +143,10 @@ public class HotelOperationModule {
                         doViewRoomAllocationExceptionReport();
                         
                     } else if (response == 9) {
+
+                        doAllocateRoomToADaysReservation();
+                        
+                    } else if (response == 10) {
                         // Back
                         break;
 
@@ -149,7 +157,7 @@ public class HotelOperationModule {
                     }
                 }
 
-                if (response == 9) { // same number as the Back option
+                if (response == 10) { // same number as the Back option
                     // back
                     break;
                 }
@@ -692,7 +700,48 @@ public class HotelOperationModule {
         
     }
     
+    public void doAllocateRoomToADaysReservation() {
+        
+        try {
+            Scanner scanner = new Scanner (System.in);
+            String inputDate = "";
+
+            System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: View All Rooms ***\n");
+
+    //        System.out.print("Enter date to allocate room> ");
+    //        inputDate = scanner.nextLine().trim();
+
+            Date checkinDate;
+
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+
+            System.out.print("Enter Check-in Date (dd/mm/yyyy)> ");
+            checkinDate = inputDateFormat.parse(scanner.nextLine().trim());
+
+
+            roomSessionBeanRemote.allocateRoomToReservation(checkinDate);
+
+        } 
+        catch (ParseException ex) 
+        {
+            System.out.println("Invalid date input!");
+        } 
+        catch (ReservationNotFoundException ex) 
+        {
+            System.out.println("An error occurred: " + ex.getMessage());
+        } 
+        catch(UnknownPersistenceException ex)
+        {
+            System.out.println("An unknown error has occurred while creating the new employee!: " + ex.getMessage() + "\n");
+        }
+        catch(InputDataValidationException ex)
+        {
+            System.out.println(ex.getMessage() + "\n");
+        }
+    }
+    
     ////
+    //// SALES MANAGER DOWN ONWARDS
     ////
     public void doCreateNewRoomRate() {
         
