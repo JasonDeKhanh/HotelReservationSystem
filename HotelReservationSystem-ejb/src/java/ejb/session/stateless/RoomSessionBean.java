@@ -285,8 +285,8 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
                 List<Room> roomsTemp2 = (List<Room>) queryRoomHigher.getResultList();
                 List<Room> roomsHigherQuery = new ArrayList<>();
                 for(Room room: roomsTemp2) {
-                    if(!isRoomFree(room)) {
-                        roomsHigherQuery.remove(room);
+                    if(isRoomFree(room)) {
+                        roomsHigherQuery.add(room);
                     }
                 }
                 
