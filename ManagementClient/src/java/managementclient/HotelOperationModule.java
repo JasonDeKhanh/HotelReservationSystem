@@ -424,8 +424,8 @@ public class HotelOperationModule {
 //            roomType.setInventory(Integer.parseInt(input));
 //        }
         
-        System.out.print("Enter next higher room type name. Enter 'None' if there is no higher room type. (blank if no change)> ");
-        String nextHigherRoomTypeName = scanner.nextLine().trim();
+//        System.out.print("Enter next higher room type name. Enter 'None' if there is no higher room type. (blank if no change)> ");
+//        String nextHigherRoomTypeName = scanner.nextLine().trim();
         
         
         Set<ConstraintViolation<RoomType>>constraintViolations = validator.validate(roomType);
@@ -433,8 +433,8 @@ public class HotelOperationModule {
         if(constraintViolations.isEmpty()) {
             try {
                 
-                RoomType nextHigherRoomType = roomTypeSessionBeanRemote.retrieveRoomTypeByName(nextHigherRoomTypeName);
-                roomType.setNextHigherRoomType(nextHigherRoomType);
+//                RoomType nextHigherRoomType = roomTypeSessionBeanRemote.retrieveRoomTypeByName(nextHigherRoomTypeName);
+//                roomType.setNextHigherRoomType(nextHigherRoomType);
                 roomTypeSessionBeanRemote.updateRoomType(roomType);
                 System.out.println("Room type updated successfully!\n");
         

@@ -153,7 +153,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
                     roomtypeToUpdate.setCapacity(roomType.getCapacity());
                     roomtypeToUpdate.setAmenities(roomType.getAmenities());
 //                    roomtypeToUpdate.setInventory(roomType.getInventory());
-                    roomtypeToUpdate.setNextHigherRoomType(roomType.getNextHigherRoomType());
+//                    roomtypeToUpdate.setNextHigherRoomType(roomType.getNextHigherRoomType());
                 } 
                 else 
                 {
