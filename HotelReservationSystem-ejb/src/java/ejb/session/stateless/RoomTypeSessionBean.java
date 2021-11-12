@@ -145,7 +145,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
                 
                 RoomType roomtypeToUpdate = retrieveRoomTypeById(roomType.getRoomTypeId());
                 
-                if(roomtypeToUpdate.getName().equals(roomType.getName())) {
+//                if(roomtypeToUpdate.getName().equals(roomType.getName())) {
                     roomtypeToUpdate.setName(roomType.getName());
                     roomtypeToUpdate.setDescription(roomType.getDescription());
                     roomtypeToUpdate.setSize(roomType.getSize());
@@ -154,11 +154,11 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
                     roomtypeToUpdate.setAmenities(roomType.getAmenities());
 //                    roomtypeToUpdate.setInventory(roomType.getInventory());
 //                    roomtypeToUpdate.setNextHigherRoomType(roomType.getNextHigherRoomType());
-                } 
-                else 
-                {
-                    throw new UpdateRoomTypeException("Username of room type record to be updated does not match the existing record");
-                }
+//                } 
+//                else 
+//                {
+//                    throw new UpdateRoomTypeException("Name of room type record to be updated does not match the existing record");
+//                }
             } else {
                 throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
             }
