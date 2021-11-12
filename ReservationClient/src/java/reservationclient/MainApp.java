@@ -401,7 +401,12 @@ public class MainApp {
         reservationId = new Long(scanner.nextLine().trim());
         
         try {
-            Reservation r = reservationSessionBeanRemote.retrieveReservationById(reservationId);
+            Reservation reservation = reservationSessionBeanRemote.retrieveReservationById(reservationId);
+            
+            System.out.printf("%5s%20s%20s%40s%40s%20s\n","ID", "Reservation Type", "Room Type", "Check-in Date", "Check-out Date", "Total Price");
+            System.out.printf("%5s%20s%20s%40s%40s%20s\n",reservation.getReservationId(),reservation.getType(), reservation.getRoomType().getName(), 
+                        reservation.getCheckinDate().toString(), reservation.getCheckoutDate().toString(),reservation.getPrice());
+            
         } catch (ReservationNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
@@ -419,14 +424,14 @@ public class MainApp {
             System.out.println(ex.getMessage());
         }
         
-        System.out.printf("%40s%40s%40s%40s%40s\n", "Reservation Type", "Room Type", "Check-in Date", "Check-out Date", "Rate");
+        System.out.printf("%5s%20s%20s%40s%40s%20s\n","ID", "Reservation Type", "Room Type", "Check-in Date", "Check-out Date", "Total Price");
         
         for(Reservation reservation: reservations) 
         {
             if(reservation.getPartner()==null){
             
-                System.out.printf("%40s%40s%40s%40s%40s\n",reservation.getType(), reservation.getRoomType().getName(), 
-                        reservation.getCheckinDate().toString(), reservation.getCheckoutDate().toString(),"");
+                System.out.printf("%5s%20s%20s%40s%40s%20s\n",reservation.getReservationId(),reservation.getType(), reservation.getRoomType().getName(), 
+                        reservation.getCheckinDate().toString(), reservation.getCheckoutDate().toString(),reservation.getPrice());
             }
         }
     }

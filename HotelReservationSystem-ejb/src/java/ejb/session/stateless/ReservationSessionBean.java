@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.Guest;
 import entity.Reservation;
+import entity.Room;
 import entity.RoomType;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -92,6 +93,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     
     
     
+    @Override
     public Reservation reserveNewReservation(Reservation newReservation, String roomTypeName, Long guestId) throws RoomTypeNotFoundException, GuestNotFoundException, NotEnoughRoomException, UnknownPersistenceException, InputDataValidationException, ParseException {
         
         RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
@@ -191,4 +193,16 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         return msg;
     }
     
+    
+    private Boolean isRoomFree(Room room){
+        List<Reservation> reservations = room.getReservations();
+        Boolean isFree = true;
+        for(Reservation r : reservations){
+            if(r.getCheckoutDate().after(new Date())){
+                isFree = false;
+                break;
+            }
+        }
+        return isFree;
+    }
 }

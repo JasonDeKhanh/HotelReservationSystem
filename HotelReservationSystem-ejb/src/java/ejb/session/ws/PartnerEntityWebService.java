@@ -81,7 +81,7 @@ public class PartnerEntityWebService {
      * @throws util.exception.RoomTypeNotFoundException
      */
     @WebMethod(operationName = "partnerSearchRoom")
-    public List<RoomType> partnerSearchRoom(@WebParam(name = "checkinDate") String checkinDate, @WebParam(name = "checkoutDate") String checkoutDate) throws ParseException, NoRoomTypeAvaiableForReservationException, RoomTypeNotFoundException {
+    public List<RoomType> partnerSearchRoom(@WebParam(name = "checkinDate") String checkinDate, @WebParam(name = "checkoutDate") String checkoutDate, @WebParam(name = "noOfRoom") Integer noOfRoom) throws ParseException, NoRoomTypeAvaiableForReservationException, RoomTypeNotFoundException {
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
   
         Date inDate = inputDateFormat.parse(checkinDate);
@@ -91,7 +91,7 @@ public class PartnerEntityWebService {
         
         // must pass in number of rooms for the third parameter!!!! CHANGE LATERR
         // client must enter number of rooms
-        List<RoomType> availableRoomTypes = roomTypeSessionBeanLocal.searchAvailableRoomTypeForReservation(inDate, outDate, 1);
+        List<RoomType> availableRoomTypes = roomTypeSessionBeanLocal.searchAvailableRoomTypeForReservation(inDate, outDate, noOfRoom);
         
         for(RoomType roomType : availableRoomTypes){
             em.detach(roomType);
