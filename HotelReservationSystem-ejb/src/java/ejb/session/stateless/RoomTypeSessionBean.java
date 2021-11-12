@@ -316,12 +316,12 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
             if ( (otherCheckinDate.before(checkinDate) || otherCheckinDate.equals(checkinDate)) 
                     && (otherCheckoutDate.after(checkinDate))) {
 
-                countReservationsAffecting += 1; // affect reservation
+                countReservationsAffecting += otherReservation.getNoOfRoom(); // affect reservation
 
             } else if ( (otherCheckinDate.after(checkinDate) || otherCheckinDate.equals(checkinDate))
                         && (otherCheckoutDate.before(checkoutDate)||otherCheckoutDate.equals(checkoutDate))) {
 
-                countReservationsAffecting += 1; // affect reservation
+                countReservationsAffecting += otherReservation.getNoOfRoom(); // affect reservation
 
             } else if ( (otherCheckinDate.before(checkinDate) && 
                     (otherCheckoutDate.before(checkinDate) || otherCheckoutDate.equals(checkinDate)))) {
@@ -336,7 +336,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
             } else if ( (otherCheckinDate.before(checkoutDate)) 
                     && ( otherCheckoutDate.after(checkoutDate) || otherCheckoutDate.equals(checkoutDate) )) {
 
-                countReservationsAffecting += 1; // affect reservation
+                countReservationsAffecting += otherReservation.getNoOfRoom(); // affect reservation
 
             }
 
