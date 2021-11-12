@@ -11,14 +11,13 @@ import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.RegisteredGuest;
 import entity.Reservation;
 import entity.RoomType;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -223,7 +222,7 @@ public class MainApp {
             try {
             
             newRegisteredGuest = guestSessionBeanRemote.registerNewRegisteredGuest(newRegisteredGuest);
-            System.out.println("Successfully created new room type " + newRegisteredGuest.getName() + " with ID " + newRegisteredGuest.getGuestId()+ "\n");
+            System.out.println("Successfully created new guest account for " + newRegisteredGuest.getName() + " with ID " + newRegisteredGuest.getGuestId()+ "\n");
         
             } 
 //            catch (RoomTypeNotFoundException ex) 
@@ -279,7 +278,7 @@ public class MainApp {
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
             // Should we show number of rooms left able to be booked also? The inventory of room type
-            System.out.printf("%2s", "");
+            System.out.printf("%4s", "ID");
             System.out.printf("%14s%22s   %s\n", "Room Type", "Number of Rooms Available", "Rate Per Night");
             
             Integer number = 0;
@@ -290,7 +289,7 @@ public class MainApp {
                 // like do a roomType.getRateToBeApplied() <-- if-else inside there
                 number += 1;
 
-                System.out.printf("%2s", number);
+                System.out.printf("%4s", roomType.getRoomTypeId());
                 System.out.printf("%14s%22s   %s\n", roomType.getName(), roomTypeSessionBeanRemote.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId()), roomTypeSessionBeanRemote.getReservationAmount(checkinDate, checkoutDate, ReservationType.ONLINE, roomType.getRoomTypeId()));
             }
             
@@ -317,11 +316,15 @@ public class MainApp {
                     System.out.print("Enter number of rooms you want to book> ");
                     numOfRooms = Integer.parseInt(scanner.nextLine().trim());
                     
+                    newReservation.setPrice(BigDecimal.ONE);
+//                    BigDecimal totalAmount = roomTypeSessionBeanRemote.getReservationAmount(checkinDate, checkoutDate, ReservationType.ONLINE, roomType.getRoomTypeId());
+                    
                     newReservation.setNoOfRoom(numOfRooms);
                     
                     Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(newReservation);
                     
                     if(constraintViolations.isEmpty()) {
+                        // total amount is set inside the method
                         newReservation = reservationSessionBeanRemote.reserveNewReservation(newReservation, roomTypeName, currentGuest.getGuestId());
                         System.out.println("Reservation with ID " + newReservation.getReservationId() + " successfully created!");
                     } else {
