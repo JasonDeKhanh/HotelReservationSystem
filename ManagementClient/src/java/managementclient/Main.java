@@ -7,6 +7,7 @@ package managementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
+import ejb.session.stateless.RoomAllocationExceptionReportSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
@@ -17,6 +18,9 @@ import javax.ejb.EJB;
  * @author msipc
  */
 public class Main {
+
+    @EJB(name = "RoomAllocationExceptionReportSessionBeaRemote")
+    private static RoomAllocationExceptionReportSessionBeanRemote roomAllocationExceptionReportSessionBeaRemote;
 
     @EJB(name = "RoomSessionBeanRemote")
     private static RoomSessionBeanRemote roomSessionBeanRemote;
@@ -33,12 +37,13 @@ public class Main {
     @EJB(name = "EmployeeSessionBeanRemote")
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
 
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         MainApp mainApp = new MainApp(employeeSessionBeanRemote, partnerSessionBeanRemote, roomTypeSessionBean,
-            roomRateSessionBeanRemote, roomSessionBeanRemote);
+            roomRateSessionBeanRemote, roomSessionBeanRemote, roomAllocationExceptionReportSessionBeaRemote);
         mainApp.runApp();
     }
     

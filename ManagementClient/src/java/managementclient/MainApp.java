@@ -2,6 +2,7 @@ package managementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
+import ejb.session.stateless.RoomAllocationExceptionReportSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
@@ -22,7 +23,7 @@ public class MainApp {
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     private RoomSessionBeanRemote roomSessionBeanRemote;
-    
+    private RoomAllocationExceptionReportSessionBeanRemote roomAllocationExceptionReportSessionBeaRemote;
     
     // Queue and ConnectionFactory for MDB
     
@@ -36,6 +37,8 @@ public class MainApp {
     private Employee currentEmployee;
     
     
+    
+    
     public MainApp() {
     }
     
@@ -43,12 +46,14 @@ public class MainApp {
     public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote,
             RoomTypeSessionBeanRemote roomTypeSessionBeanRemote,
                 RoomRateSessionBeanRemote roomRateSessionBeanRemote,
-                    RoomSessionBeanRemote roomSessionBeanRemote) {
+                    RoomSessionBeanRemote roomSessionBeanRemote,
+                     RoomAllocationExceptionReportSessionBeanRemote roomAllocationExceptionReportSessionBeaRemote) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
+        this.roomAllocationExceptionReportSessionBeaRemote=roomAllocationExceptionReportSessionBeaRemote;
     }
     
     public void runApp() {
@@ -83,7 +88,7 @@ public class MainApp {
                             
                         } else if (currentEmployee != null && (currentEmployee.getAccessRight()==AccessRight.OPERATION_MANAGER || currentEmployee.getAccessRight()==AccessRight.SALES_MANAGER)){
                             // hotelOperationModule
-                            hotelOperationModule = new HotelOperationModule(currentEmployee, roomTypeSessionBeanRemote, roomRateSessionBeanRemote, roomSessionBeanRemote);
+                            hotelOperationModule = new HotelOperationModule(currentEmployee, roomTypeSessionBeanRemote, roomRateSessionBeanRemote, roomSessionBeanRemote,roomAllocationExceptionReportSessionBeaRemote);
                             hotelOperationModule.menuHotelOperation();
                             
                         } else {

@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.RoomAllocationExceptionReport;
+import java.util.List;
 import javax.ejb.Remote;
 import util.exception.InputDataValidationException;
 import util.exception.ReservationNotFoundException;
@@ -19,5 +20,7 @@ import util.exception.UnknownPersistenceException;
 public interface RoomAllocationExceptionReportSessionBeanRemote {
 
     public RoomAllocationExceptionReport createNewRoomAllocationExceptionReport(RoomAllocationExceptionReport rEntity, Long reservationId) throws ReservationNotFoundException, UnknownPersistenceException, InputDataValidationException;
+
+    public List<RoomAllocationExceptionReport> retriveRoomAllocationExceptionReport();
     
 }

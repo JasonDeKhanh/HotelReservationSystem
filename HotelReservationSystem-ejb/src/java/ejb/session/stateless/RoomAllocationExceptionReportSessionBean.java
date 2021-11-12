@@ -7,12 +7,14 @@ package ejb.session.stateless;
 
 import entity.Reservation;
 import entity.RoomAllocationExceptionReport;
+import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -77,6 +79,12 @@ public class RoomAllocationExceptionReportSessionBean implements RoomAllocationE
         {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
+    }
+    
+    public List<RoomAllocationExceptionReport> retriveRoomAllocationExceptionReport(){
+        Query query = em.createQuery("SELECT e FROM RoomAllocationExceptionReport e");
+        
+        return query.getResultList();
     }
     
 
