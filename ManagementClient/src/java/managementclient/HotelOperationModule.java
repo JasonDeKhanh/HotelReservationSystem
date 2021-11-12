@@ -1,10 +1,12 @@
 package managementclient;
 
+import ejb.session.stateless.RoomAllocationExceptionReportSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
+import entity.RoomAllocationExceptionReport;
 import entity.RoomRate;
 import entity.RoomType;
 import java.math.BigDecimal;
@@ -19,6 +21,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.enumeration.AccessRight;
+import util.enumeration.RoomAllocationExceptionType;
 import util.enumeration.RoomRateType;
 import util.enumeration.RoomStatus;
 import util.exception.DeleteRoomException;
@@ -49,6 +52,7 @@ public class HotelOperationModule {
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     private RoomSessionBeanRemote roomSessionBeanRemote;
+    private RoomAllocationExceptionReportSessionBeanRemote roomAllocationExceptionReportSessionBeaRemote;
     
     
     
@@ -64,12 +68,14 @@ public class HotelOperationModule {
     public HotelOperationModule(Employee currentEmployee,
             RoomTypeSessionBeanRemote roomTypeSessionBeanRemote,
                 RoomRateSessionBeanRemote roomRateSessionBeanRemote,
-                    RoomSessionBeanRemote roomSessionBeanRemote) {
+                    RoomSessionBeanRemote roomSessionBeanRemote,
+                    RoomAllocationExceptionReportSessionBeanRemote roomAllocationExceptionReportSessionBeaRemote) {
         this();
         this.currentEmployee = currentEmployee;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
+        this.roomAllocationExceptionReportSessionBeaRemote= roomAllocationExceptionReportSessionBeaRemote;
 
     }
 
@@ -697,7 +703,21 @@ public class HotelOperationModule {
     }
     
     public void doViewRoomAllocationExceptionReport() {
-        
+        System.out.printf("%5s%20s%20s\n","Exception ID", "Exception Type", "Reservation ID");
+        for(RoomAllocationExceptionReport e : roomAllocationExceptionReportSessionBeaRemote.retriveRoomAllocationExceptionReport()){
+            
+            
+//            if(e.getReservation().getCheckinDate().equals(new Date())){
+                
+            System.out.printf("%5s%20s%20s\n",e.getRoomAllocationExceptionReportId(),e.getType().toString(), e.getReservation().getReservationId());
+//                if(e.getType()==RoomAllocationExceptionType.FREE_UPGRADE){
+//                    System.out.println("Free upgrade: ");
+//                }else{
+//                    
+//                }
+                
+//            }
+        }
     }
     
     public void doAllocateRoomToADaysReservation() {
@@ -707,7 +727,7 @@ public class HotelOperationModule {
             String inputDate = "";
 
             System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: View All Rooms ***\n");
-
+            
     //        System.out.print("Enter date to allocate room> ");
     //        inputDate = scanner.nextLine().trim();
 
