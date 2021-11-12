@@ -279,7 +279,7 @@ public class MainApp {
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
             // Should we show number of rooms left able to be booked also? The inventory of room type
             System.out.printf("%4s", "ID");
-            System.out.printf("%14s%22s   %s\n", "Room Type", "Number of Rooms Available", "Rate Per Night");
+            System.out.printf("%30s%28s   %25s\n", "Room Type Name", "Number of Rooms Available", "Total Rate Per Room");
             
             Integer number = 0;
             for(RoomType roomType: availableRoomTypes)
@@ -290,7 +290,7 @@ public class MainApp {
                 number += 1;
 
                 System.out.printf("%4s", roomType.getRoomTypeId());
-                System.out.printf("%14s%22s   %s\n", roomType.getName(), roomTypeSessionBeanRemote.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId()), roomTypeSessionBeanRemote.getReservationAmount(checkinDate, checkoutDate, ReservationType.ONLINE, roomType.getRoomTypeId()));
+                System.out.printf("%30s%28s   %25s\n", roomType.getName(), roomTypeSessionBeanRemote.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId()), roomTypeSessionBeanRemote.getReservationAmount(checkinDate, checkoutDate, ReservationType.ONLINE, roomType.getRoomTypeId()));
             }
             
             System.out.println("------------------------");

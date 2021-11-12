@@ -376,7 +376,8 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
 
 //        Query query 
 
-        Date tempDate = checkinDate;
+        //Date tempDate = checkinDate;
+        Date tempDate = new Date(checkinDate.getYear(), checkinDate.getMonth(), checkinDate.getDate());
 
         if(reservationType.equals(ReservationType.ONLINE)) 
         {
@@ -416,7 +417,6 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
                             break;
                         }
                     }
-                    
                 } 
                 
                 if (!addedToday) {
