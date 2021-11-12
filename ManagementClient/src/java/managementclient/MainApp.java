@@ -1,7 +1,9 @@
 package managementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.GuestSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
+import ejb.session.stateless.ReservationSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
@@ -22,6 +24,8 @@ public class MainApp {
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     private RoomSessionBeanRemote roomSessionBeanRemote;
+    private ReservationSessionBeanRemote reservationSessionBeanRemote;
+    private GuestSessionBeanRemote guestSessionBeanRemote;
     
     
     // Queue and ConnectionFactory for MDB
@@ -43,12 +47,16 @@ public class MainApp {
     public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote,
             RoomTypeSessionBeanRemote roomTypeSessionBeanRemote,
                 RoomRateSessionBeanRemote roomRateSessionBeanRemote,
-                    RoomSessionBeanRemote roomSessionBeanRemote) {
+                    RoomSessionBeanRemote roomSessionBeanRemote,
+                        ReservationSessionBeanRemote reservationSessionBeanRemote,
+                            GuestSessionBeanRemote guestSessionBeanRemote) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
+        this.reservationSessionBeanRemote = reservationSessionBeanRemote;
+        this.guestSessionBeanRemote = guestSessionBeanRemote;
     }
     
     public void runApp() {
@@ -88,7 +96,7 @@ public class MainApp {
                             
                         } else {
                             // frontOfficeModule
-                            frontOfficeModule = new FrontOfficeModule(currentEmployee, roomTypeSessionBeanRemote);
+                            frontOfficeModule = new FrontOfficeModule(currentEmployee, roomTypeSessionBeanRemote, reservationSessionBeanRemote, guestSessionBeanRemote);
                             frontOfficeModule.menuFrontOffice();
                             
                         }
