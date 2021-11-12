@@ -20,6 +20,7 @@ import javax.validation.ValidatorFactory;
 import util.enumeration.AccessRight;
 import util.enumeration.RoomRateType;
 import util.enumeration.RoomStatus;
+import util.exception.DeleteRoomException;
 import util.exception.DeleteRoomRateException;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
@@ -629,6 +630,42 @@ public class HotelOperationModule {
     }
     
     public void doDeleteRoom() {
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        
+        System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: Delete Room ***\n");
+        
+        
+        System.out.print("Enter room to be deleted> ");
+        String roomNumber = scanner.nextLine().trim();
+        
+        try {
+            
+            Room room = roomSessionBeanRemote.retrieveRoomByRoomNumber(roomNumber);
+        
+            System.out.print("Confirm Delete Room Number " + room.getRoomNumber() + " (Room ID: " + room.getRoomId()+ ") (Entry 'Y' to Delete)> ");
+            input = scanner.nextLine().trim();
+
+            if(input.equals("Y")) {
+
+                try {
+
+                    roomSessionBeanRemote.deleteRoom(room.getRoomId());
+                    System.out.println("Room deleted successfully!\n");
+
+                } 
+                catch (RoomNotFoundException | DeleteRoomException ex) 
+                {
+                    System.out.println("An error has occurred while deleting room type: " + ex.getMessage() + "\n");
+                }
+
+            } else {
+                System.out.println("Room NOT deleted!\n");
+            }
+
+        } catch (RoomNotFoundException ex) {
+            System.out.println("An error has occurred: " + ex.getMessage());
+        }
     
     }
 

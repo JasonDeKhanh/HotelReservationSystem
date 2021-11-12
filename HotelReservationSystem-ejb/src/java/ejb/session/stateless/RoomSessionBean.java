@@ -208,6 +208,10 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         {
             roomEntityToRemove.getRoomType().setInventory(roomEntityToRemove.getRoomType().getInventory()-1);
             roomEntityToRemove.getRoomType().getRooms().remove(roomEntityToRemove);
+            roomEntityToRemove.getReservations().clear();
+            
+            roomEntityToRemove.getRoomType().getRooms().remove(roomEntityToRemove);
+//            roomEntityToRemove.setRoomType(null);
             em.remove(roomEntityToRemove);
         }
         else
