@@ -127,12 +127,14 @@ public class MainApp {
             checkinDate = scanner.nextLine().trim();
             System.out.print("Enter Check-out Date (dd/mm/yyyy)> ");
             checkoutDate = scanner.nextLine().trim();
+            System.out.print("Enter Check-out Date (dd/mm/yyyy)> ");
+            Integer noOfRoom = Integer.parseInt(scanner.nextLine().trim());
 
             // do if checkin is AFTER checkout --> throw exception, catch beneath also
 
             // call session bean here
             //
-            List<RoomType> availableRoomTypes = service.getPartnerEntityWebServicePort().partnerSearchRoom(checkinDate, checkoutDate);
+            List<RoomType> availableRoomTypes = service.getPartnerEntityWebServicePort().partnerSearchRoom(checkinDate, checkoutDate,noOfRoom);
 //            System.out.println(availableRoomTypes.get(0).getName());
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$

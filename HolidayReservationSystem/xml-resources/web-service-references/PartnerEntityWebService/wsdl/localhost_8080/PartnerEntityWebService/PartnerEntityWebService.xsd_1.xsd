@@ -94,6 +94,7 @@
 <xs:element name="guest" type="tns:guest" minOccurs="0"/>
 <xs:element name="noOfRoom" type="xs:int" minOccurs="0"/>
 <xs:element name="partner" type="tns:partner" minOccurs="0"/>
+<xs:element name="price" type="xs:decimal" minOccurs="0"/>
 <xs:element name="reservationId" type="xs:long" minOccurs="0"/>
 <xs:element name="roomAllocationExceptionReport" type="tns:roomAllocationExceptionReport" minOccurs="0"/>
 <xs:element name="roomType" type="tns:roomType" minOccurs="0"/>
@@ -171,6 +172,7 @@
 <xs:sequence>
 <xs:element name="checkinDate" type="xs:string" minOccurs="0"/>
 <xs:element name="checkoutDate" type="xs:string" minOccurs="0"/>
+<xs:element name="noOfRoom" type="xs:int" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
