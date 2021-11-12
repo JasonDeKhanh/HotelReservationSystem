@@ -223,7 +223,7 @@ public class MainApp {
             try {
             
             newRegisteredGuest = guestSessionBeanRemote.registerNewRegisteredGuest(newRegisteredGuest);
-            System.out.println("Successfully created new room type " + newRegisteredGuest.getName() + " with ID " + newRegisteredGuest.getGuestId()+ "\n");
+            System.out.println("Successfully created new guest account for " + newRegisteredGuest.getName() + " with ID " + newRegisteredGuest.getGuestId()+ "\n");
         
             } 
 //            catch (RoomTypeNotFoundException ex) 
@@ -322,6 +322,7 @@ public class MainApp {
                     Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(newReservation);
                     
                     if(constraintViolations.isEmpty()) {
+                        // total amount is set inside the method
                         newReservation = reservationSessionBeanRemote.reserveNewReservation(newReservation, roomTypeName, currentGuest.getGuestId());
                         System.out.println("Reservation with ID " + newReservation.getReservationId() + " successfully created!");
                     } else {

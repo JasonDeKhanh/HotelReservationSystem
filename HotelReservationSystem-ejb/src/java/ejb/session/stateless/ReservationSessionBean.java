@@ -110,7 +110,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
         // if reservation made after 2 am, then call allocation method;
         //
-        //
+        // if curDate = check in date && curTime after 2am
+        // call allocation
         
         return newReservation;
     }
