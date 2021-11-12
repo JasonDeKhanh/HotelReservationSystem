@@ -8,6 +8,8 @@ package ejb.session.stateless;
 import entity.Guest;
 import entity.Reservation;
 import entity.RoomType;
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -90,7 +92,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     
     
     
-    public Reservation reserveNewReservation(Reservation newReservation, String roomTypeName, Long guestId) throws RoomTypeNotFoundException, GuestNotFoundException, NotEnoughRoomException, UnknownPersistenceException, InputDataValidationException {
+    public Reservation reserveNewReservation(Reservation newReservation, String roomTypeName, Long guestId) throws RoomTypeNotFoundException, GuestNotFoundException, NotEnoughRoomException, UnknownPersistenceException, InputDataValidationException, ParseException {
         
         RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
         Guest guest = guestSessionBeanLocal.retrieveGuestById(guestId);
@@ -98,12 +100,17 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         Date checkinDate = newReservation.getCheckinDate();
         Date checkoutDate = newReservation.getCheckoutDate();
         
+        
+                
         Integer numberOfRoomsAvailable = roomTypeSessionBeanLocal.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, guestId);
         
         if(numberOfRoomsAvailable < newReservation.getNoOfRoom()) 
         {
             throw new NotEnoughRoomException("There is not enough number of rooms available for booking!");
         }
+        
+        BigDecimal totalAmount = roomTypeSessionBeanLocal.getReservationAmount(checkinDate, checkoutDate, newReservation.getType(), guestId);
+        newReservation.setPrice(totalAmount);
         
         // associate
         newReservation = createNewReservation(newReservation, roomTypeName, guestId);
