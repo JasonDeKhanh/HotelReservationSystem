@@ -7,8 +7,10 @@ package ejb.session.stateless;
 
 import entity.Guest;
 import entity.RegisteredGuest;
+import entity.UnregisteredGuest;
 import javax.ejb.Remote;
 import util.exception.GuestEmailExistException;
+import util.exception.GuestIdentificationNumberExistException;
 import util.exception.GuestNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
@@ -29,5 +31,7 @@ public interface GuestSessionBeanRemote {
    public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException;
 
     public String guestCheckin(String guestID) throws GuestNotFoundException;
+
+    public UnregisteredGuest createNewUnregisteredGuestGuest(UnregisteredGuest newGuest) throws GuestIdentificationNumberExistException, UnknownPersistenceException, InputDataValidationException;
     
 }

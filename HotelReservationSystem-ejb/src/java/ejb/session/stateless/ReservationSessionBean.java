@@ -115,8 +115,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             throw new NotEnoughRoomException("There is not enough number of rooms available for booking!");
         }
         
-        BigDecimal totalAmount = roomTypeSessionBeanLocal.getReservationAmount(checkinDate, checkoutDate, newReservation.getType(), guestId);
-        newReservation.setPrice(totalAmount);
+        BigDecimal totalAmountPerRoom = roomTypeSessionBeanLocal.getReservationAmount(checkinDate, checkoutDate, newReservation.getType(), roomType.getRoomTypeId());
+        newReservation.setPrice(totalAmountPerRoom.multiply(new BigDecimal(newReservation.getNoOfRoom())));
+//        newReservation.setPrice(new BigDecimal(17891789));
         
         // associate
         newReservation = createNewReservation(newReservation, roomTypeName, guestId);

@@ -6,8 +6,10 @@
 package managementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.GuestSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.RoomAllocationExceptionReportSessionBeanRemote;
+import ejb.session.stateless.ReservationSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
@@ -21,6 +23,12 @@ public class Main {
 
     @EJB(name = "RoomAllocationExceptionReportSessionBeaRemote")
     private static RoomAllocationExceptionReportSessionBeanRemote roomAllocationExceptionReportSessionBeaRemote;
+
+    @EJB(name = "GuestSessionBeanRemote")
+    private static GuestSessionBeanRemote guestSessionBeanRemote;
+
+    @EJB(name = "ReservationSessionBeanRemote")
+    private static ReservationSessionBeanRemote reservationSessionBeanRemote;
 
     @EJB(name = "RoomSessionBeanRemote")
     private static RoomSessionBeanRemote roomSessionBeanRemote;
@@ -43,7 +51,7 @@ public class Main {
      */
     public static void main(String[] args) {
         MainApp mainApp = new MainApp(employeeSessionBeanRemote, partnerSessionBeanRemote, roomTypeSessionBean,
-            roomRateSessionBeanRemote, roomSessionBeanRemote, roomAllocationExceptionReportSessionBeaRemote);
+            roomRateSessionBeanRemote, roomSessionBeanRemote, roomAllocationExceptionReportSessionBeaRemote, reservationSessionBeanRemote, guestSessionBeanRemote);
         mainApp.runApp();
     }
     
