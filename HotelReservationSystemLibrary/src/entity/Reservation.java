@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +52,11 @@ public class Reservation implements Serializable {
     @NotNull
     @Min(1)
     private Integer noOfRoom;
+    @Column(nullable = false)
+    @NotNull
+    @Min(0)
+    private BigDecimal price;
+    
     
     @ManyToMany
     private List<Room> rooms; 
@@ -74,12 +80,13 @@ public class Reservation implements Serializable {
         rooms = new ArrayList<>();
     }
 
-    public Reservation(ReservationType type, Date checkinDate, Date checkoutDate, Integer noOfRoom) {
+    public Reservation(ReservationType type, Date checkinDate, Date checkoutDate, Integer noOfRoom, BigDecimal totalPrice) {
         this();
         this.type = type;
         this.checkinDate = checkinDate;
         this.checkoutDate = checkoutDate;
         this.noOfRoom = noOfRoom;
+        this.price = totalPrice;
     }
     
     
@@ -242,6 +249,20 @@ public class Reservation implements Serializable {
      */
     public void setNoOfRoom(Integer noOfRoom) {
         this.noOfRoom = noOfRoom;
+    }
+
+    /**
+     * @return the price
+     */
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    /**
+     * @param price the price to set
+     */
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
     
 }
