@@ -24,7 +24,7 @@ public interface GuestSessionBeanRemote {
     public RegisteredGuest registeredGuestLogin(String email, String password) throws InvalidLoginCredentialException;
 
     public RegisteredGuest registerNewRegisteredGuest(RegisteredGuest newRegisteredGuest) throws GuestEmailExistException, UnknownPersistenceException, InputDataValidationException;
-    public RegisteredGuest retrieveRegisteredGuestByIdentificationNumber(String ID) throws GuestNotFoundException;
+    public Guest retrieveRegisteredGuestByIdentificationNumber(String ID) throws GuestNotFoundException;
 
    public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException;
     
