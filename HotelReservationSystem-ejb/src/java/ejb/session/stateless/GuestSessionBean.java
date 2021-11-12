@@ -7,7 +7,10 @@ package ejb.session.stateless;
 
 import entity.Guest;
 import entity.RegisteredGuest;
+import entity.Reservation;
+import entity.Room;
 import entity.UnregisteredGuest;
+import java.util.Date;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -20,6 +23,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.enumeration.RoomAllocationExceptionType;
 import util.exception.GuestEmailExistException;
 import util.exception.GuestIdentificationNumberExistException;
 import util.exception.GuestNotFoundException;
@@ -185,6 +189,31 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         }
     }
     
+    public String guestCheckin(String guestID) throws GuestNotFoundException{
+        Guest guest = retrieveRegisteredGuestByIdentificationNumber(guestID);
+        Boolean checkedIn = false;
+        String output ="";
+        for(Reservation r : guest.getReservations()){
+            if(r.getCheckinDate().equals(new Date())){
+                if(r.getRooms().size()>0){
+                    for(Room room: r.getRooms()){
+                        output+="Allocated room: "+room.getRoomNumber()+". \n";
+                    }
+                }else if(r.getRoomAllocationExceptionReport()!=null){
+                    if(r.getRoomAllocationExceptionReport().getType()==RoomAllocationExceptionType.NO_UPGRADE){
+                        output = "Sorry, we do not have enough room to allocate to you!";
+                    }
+                } else{
+                    output="Something went wrong.";
+                }
+                checkedIn = true;
+            }
+        }
+        if(checkedIn == false){
+            output="You dont have reservation today.";
+        }
+        return output;
+    }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RegisteredGuest>>constraintViolations)
     {
