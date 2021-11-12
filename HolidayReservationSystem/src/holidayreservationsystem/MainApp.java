@@ -8,10 +8,22 @@ package holidayreservationsystem;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import ws.client.InvalidLoginCredentialException_Exception;
+import ws.client.NoRoomTypeAvaiableForReservationException;
+import ws.client.NoRoomTypeAvaiableForReservationException_Exception;
+import ws.client.ParseException_Exception;
 import ws.client.Partner;
 import ws.client.PartnerEntityWebService_Service;
+import ws.client.Reservation;
+import ws.client.ReservationType;
+import ws.client.RoomType;
+import ws.client.RoomTypeNotFoundException;
+import ws.client.RoomTypeNotFoundException_Exception;
 
 /**
  *
@@ -54,7 +66,11 @@ public class MainApp {
                     }
                 
                 } else if (response == 2) {
-                    doSearchHotelRoom();
+                    try{
+                        doSearchHotelRoom();
+                    }catch(NoRoomTypeAvaiableForReservationException_Exception| DatatypeConfigurationException|ParseException_Exception| RoomTypeNotFoundException_Exception ex){
+                        System.out.println(ex.getMessage());
+                    }
                     
                 }else if (response == 3) {
                     // Exit
@@ -98,54 +114,80 @@ public class MainApp {
 //        }
     }
     
-    private void doSearchHotelRoom() {
+    private void doSearchHotelRoom() throws NoRoomTypeAvaiableForReservationException_Exception, ParseException_Exception, RoomTypeNotFoundException_Exception, DatatypeConfigurationException {
         
-        try {
-            
             System.out.println("*** Hotel Reservation System Reservation Client :: Search Hotel Room ***\n");
             Scanner scanner = new Scanner(System.in);
             Integer response = 0;
             SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
             SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-            Date checkinDate;
-            Date checkoutDate;
-            
+            String checkinDate;
+            String checkoutDate;
             System.out.print("Enter Check-in Date (dd/mm/yyyy)> ");
-            checkinDate = inputDateFormat.parse(scanner.nextLine().trim());
+            checkinDate = scanner.nextLine().trim();
             System.out.print("Enter Check-out Date (dd/mm/yyyy)> ");
-            checkoutDate = inputDateFormat.parse(scanner.nextLine().trim());  
-            
+            checkoutDate = scanner.nextLine().trim();
+
             // do if checkin is AFTER checkout --> throw exception, catch beneath also
-            
+
             // call session bean here
             //
-            
-            /*
-            List<RoomType> availableRoomTypes = roomTypeSessionBeanRemote.searchAvailableRoomType(checkinDate, checkoutDate);
+            List<RoomType> availableRoomTypes = service.getPartnerEntityWebServicePort().partnerSearchRoom(checkinDate, checkoutDate);
+//            System.out.println(availableRoomTypes.get(0).getName());
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
             // Should we show number of rooms left able to be booked also? The inventory of room type
-            System.out.printf("%9s%22s   %s\n", "Room Type", "Rate Type Applied", "Rate Per Night");
+            System.out.printf("%2s", "");
+            System.out.printf("%14s%22s   %s\n", "Room Type", "Number of Rooms Available", "Rate Per Night");
             
             Integer number = 0;
             for(RoomType roomType: availableRoomTypes)
             {
+                // need to calculate the total rate here
+                // rate type applied depends also. Need to do if-else
+                // like do a roomType.getRateToBeApplied() <-- if-else inside there
                 number += 1;
-                System.out.print(number + " ");
-                System.out.printf("%14s%22s   %s\n", "Room Type Name", "Rate Type Applied", "Rate Per Night($)");
+
+                System.out.printf("%2s", number);
+                System.out.printf("%14s%22s   %s\n", roomType.getName(), service.getPartnerEntityWebServicePort().getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId()), service.getPartnerEntityWebServicePort().getReservationAmount(checkinDate, checkoutDate, roomType.getRoomTypeId()));
             }
             
             System.out.println("------------------------");
-            System.out.println("1: Make Reservation");
+            System.out.println("1: Make Reservation. (A room type previously shown as avaiable may become unavailable as you make the reservation");
             System.out.println("2: Back\n");
             System.out.print("> ");
-            response = scanner.nextInt();
+            response = Integer.parseInt(scanner.nextLine().trim());
             
             if(response == 1)
             {
-                if(currentCustomer != null)
+                if(currentPartner != null)
                 {
-                    doReserveHotelRoom(checkinDate, checkoutDate, availableRoomTypes);
+                    // String response = "";
+                    String roomTypeName = "";
+                    Integer numOfRooms = 0;
+                    Reservation newReservation = new Reservation();
+                    newReservation.setType(ReservationType.ONLINE);
+                    
+
+  
+//                    Date inDate = inputDateFormat.parse(checkinDate);
+//
+//                    Date outDate = inputDateFormat.parse(checkoutDate); 
+                    
+                    XMLGregorianCalendar inDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(checkinDate);
+                    XMLGregorianCalendar outDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(checkinDate);
+                    
+                    newReservation.setCheckinDate(inDate);
+                    newReservation.setCheckoutDate(outDate);
+
+                    System.out.print("Enter Room Type Name you want to book> ");
+                    roomTypeName = scanner.nextLine().trim();
+                    System.out.print("Enter number of rooms you want to book> ");
+                    numOfRooms = Integer.parseInt(scanner.nextLine().trim());
+                    
+                    newReservation.setNoOfRoom(numOfRooms);
+                    
+                    //newReservation = reservationSessionBeanRemote.createNewReservation(newReservation, roomTypeName, currentGuest.getGuestId());
                 }
                 else
                 {
@@ -153,11 +195,10 @@ public class MainApp {
                 }
             }
             
-            */
             
-        } catch (ParseException ex) {
-            System.out.println("Invalid date input!\n");
-        }
+            
+        
+        
     }
     
     private void loggedInMenu() {
@@ -184,7 +225,11 @@ public class MainApp {
 
                 if(response == 1)
                 {
-                    doSearchHotelRoom();
+                    try{
+                        doSearchHotelRoom();
+                    }catch(NoRoomTypeAvaiableForReservationException_Exception|DatatypeConfigurationException| ParseException_Exception| RoomTypeNotFoundException_Exception ex){
+                        System.out.println(ex.getMessage());
+                    }
                 }
                 else if (response == 2)
                 {

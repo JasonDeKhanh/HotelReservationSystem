@@ -145,9 +145,7 @@ public class FrontOfficeModule {
                 number += 1;
 
                 System.out.printf("%2s", number);
-                System.out.println("yo");
                 System.out.printf("%14s%22s   %s\n", roomType.getName(), roomTypeSessionBeanRemote.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId()), roomTypeSessionBeanRemote.getReservationAmount(checkinDate, checkoutDate, ReservationType.WALKIN, roomType.getRoomTypeId()));
-                System.out.println("yoyo");
             }
             
             System.out.println("------------------------");
