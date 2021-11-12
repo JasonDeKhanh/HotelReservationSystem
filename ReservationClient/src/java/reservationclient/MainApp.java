@@ -267,14 +267,14 @@ public class MainApp {
             if(checkinDate.equals(checkoutDate)){
                 throw new CheckinCheckoutSameDayException("Check-in Date and Check-out Date cannot be the same day");
             }
-//            System.out.print("Enter number of rooms to book> ");
-//            numberOfRooms = Integer.parseInt(scanner.nextLine().trim());
+            System.out.print("Enter number of rooms to book> ");
+            numberOfRooms = Integer.parseInt(scanner.nextLine().trim());
             // do if checkin is AFTER checkout --> throw exception, catch beneath also
             
             // call session bean here
             //
             
-            List<RoomType> availableRoomTypes = roomTypeSessionBeanRemote.searchAvailableRoomTypeForReservation(checkinDate, checkoutDate);
+            List<RoomType> availableRoomTypes = roomTypeSessionBeanRemote.searchAvailableRoomTypeForReservation(checkinDate, checkoutDate, numberOfRooms);
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
             // Should we show number of rooms left able to be booked also? The inventory of room type

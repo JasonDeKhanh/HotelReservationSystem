@@ -88,7 +88,10 @@ public class PartnerEntityWebService {
 
         Date outDate = inputDateFormat.parse(checkoutDate); 
         
-        List<RoomType> availableRoomTypes = roomTypeSessionBeanLocal.searchAvailableRoomTypeForReservation(inDate, outDate);
+        
+        // must pass in number of rooms for the third parameter!!!! CHANGE LATERR
+        // client must enter number of rooms
+        List<RoomType> availableRoomTypes = roomTypeSessionBeanLocal.searchAvailableRoomTypeForReservation(inDate, outDate, 1);
         
         for(RoomType roomType : availableRoomTypes){
             em.detach(roomType);

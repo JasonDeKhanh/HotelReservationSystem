@@ -209,7 +209,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     
     
     @Override
-    public List<RoomType> searchAvailableRoomTypeForReservation(Date checkinDate, Date checkoutDate) throws NoRoomTypeAvaiableForReservationException, RoomTypeNotFoundException {
+    public List<RoomType> searchAvailableRoomTypeForReservation(Date checkinDate, Date checkoutDate, Integer numberOfRooms) throws NoRoomTypeAvaiableForReservationException, RoomTypeNotFoundException {
         
         /*
             for each Room Type that is enabled, go through all reservations with that room type
@@ -278,12 +278,12 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
             
             Integer numberOfRoomsThisRoomTypeAvailable = getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId());
 //            System.out.println("Roomtype: " + roomType.getName() + " with numberAvailable: " + numberOfRoomsThisRoomTypeAvailable);
-//            if(numberOfRoomsThisRoomTypeAvailable >= numberOfRooms) {
-//                roomTypeToReturn.add(roomType);
-//            }
-            if(numberOfRoomsThisRoomTypeAvailable > 0) {
+            if(numberOfRoomsThisRoomTypeAvailable >= numberOfRooms) {
                 roomTypeToReturn.add(roomType);
             }
+//            if(numberOfRoomsThisRoomTypeAvailable > 0) {
+//                roomTypeToReturn.add(roomType);
+//            }
         }
         
         if(roomTypeToReturn.isEmpty()) {
