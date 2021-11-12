@@ -438,9 +438,12 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
             query2.setParameter("inRateType", RoomRateType.PUBLISHED);
             RoomRate publishedRate = (RoomRate) query2.getSingleResult();
             
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-            Date firstDate = sdf.parse(checkinDate.toString());
-            Date secondDate = sdf.parse(checkoutDate.toString());
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/yyyy", Locale.ENGLISH);
+//            Date firstDate = sdf.parse(checkinDate.toString());
+//            Date secondDate = sdf.parse(checkoutDate.toString());
+            
+            Date firstDate = checkinDate;
+            Date secondDate = checkoutDate;
 
             long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
             long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) - 1;
