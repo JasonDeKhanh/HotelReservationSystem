@@ -5,7 +5,11 @@
  */
 package ejb.session.stateless;
 
+import entity.RoomAllocationExceptionReport;
 import javax.ejb.Local;
+import util.exception.InputDataValidationException;
+import util.exception.ReservationNotFoundException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -13,5 +17,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface RoomAllocationExceptionReportSessionBeanLocal {
+    
+    public RoomAllocationExceptionReport createNewRoomAllocationExceptionReport(RoomAllocationExceptionReport rEntity, Long reservationId) throws ReservationNotFoundException, UnknownPersistenceException, InputDataValidationException;
     
 }

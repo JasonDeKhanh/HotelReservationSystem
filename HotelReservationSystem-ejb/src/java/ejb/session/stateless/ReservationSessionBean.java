@@ -38,11 +38,15 @@ import util.exception.UnknownPersistenceException;
 @Stateless
 public class ReservationSessionBean implements ReservationSessionBeanRemote, ReservationSessionBeanLocal {
 
+    @EJB(name = "RoomSessionBeanLocal")
+    private RoomSessionBeanLocal roomSessionBeanLocal;
+
     @EJB(name = "GuestSessionBeanLocal")
     private GuestSessionBeanLocal guestSessionBeanLocal;
 
     @EJB(name = "roomTypeSessionBeanLocal")
     private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
+    
 
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
@@ -94,7 +98,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     
     
     @Override
-    public Reservation reserveNewReservation(Reservation newReservation, String roomTypeName, Long guestId) throws RoomTypeNotFoundException, GuestNotFoundException, NotEnoughRoomException, UnknownPersistenceException, InputDataValidationException, ParseException {
+    public Reservation reserveNewReservation(Reservation newReservation, String roomTypeName, Long guestId) throws RoomTypeNotFoundException, GuestNotFoundException, NotEnoughRoomException, UnknownPersistenceException, InputDataValidationException, ParseException, ReservationNotFoundException {
         
         RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
         Guest guest = guestSessionBeanLocal.retrieveGuestById(guestId);
@@ -121,6 +125,16 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         //
         // if curDate = check in date && curTime after 2am
         // call allocation
+        
+        Date resDate = newReservation.getCheckinDate();
+        Date curDate = new Date();
+        if((curDate.getDate()==resDate.getDate() && curDate.getMonth()==resDate.getMonth() && curDate.getYear()==resDate.getYear()) // same date
+                && ((curDate.getHours() > 2) // time hour is later than 2o clock
+                    || (curDate.getHours()==2 && curDate.getMinutes() > 0))) 
+        {
+//            System.out.println("hello");
+            roomSessionBeanLocal.allocateRoomToReservation(checkinDate);
+        }
         
         return newReservation;
     }
@@ -194,15 +208,5 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     
-    private Boolean isRoomFree(Room room){
-        List<Reservation> reservations = room.getReservations();
-        Boolean isFree = true;
-        for(Reservation r : reservations){
-            if(r.getCheckoutDate().after(new Date())){
-                isFree = false;
-                break;
-            }
-        }
-        return isFree;
-    }
+    
 }

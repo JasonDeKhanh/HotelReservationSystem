@@ -6,10 +6,12 @@
 package ejb.session.stateless;
 
 import entity.Room;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.DeleteRoomException;
 import util.exception.InputDataValidationException;
+import util.exception.ReservationNotFoundException;
 import util.exception.RoomHasNoRoomRateException;
 import util.exception.RoomNotFoundException;
 import util.exception.RoomNumberExistException;
@@ -37,4 +39,6 @@ public interface RoomSessionBeanLocal {
 
     public Room createNewRoom(Room newRoomEntity, String roomTypeName) throws RoomTypeDisabledException, RoomHasNoRoomRateException, RoomNumberExistException, UnknownPersistenceException, InputDataValidationException, RoomTypeNotFoundException;
     
+    public void allocateRoomToReservation(Date checkinDate) throws ReservationNotFoundException, UnknownPersistenceException, InputDataValidationException;
+   
 }

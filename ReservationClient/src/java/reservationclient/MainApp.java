@@ -342,7 +342,7 @@ public class MainApp {
             
             
         } 
-        catch(NoRoomTypeAvaiableForReservationException | RoomTypeNotFoundException | GuestNotFoundException | NotEnoughRoomException ex)
+        catch(NoRoomTypeAvaiableForReservationException | RoomTypeNotFoundException | GuestNotFoundException | NotEnoughRoomException | ReservationNotFoundException ex)
         {
             System.out.println("An error occurred: " + ex.getMessage());
         }
