@@ -442,19 +442,18 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
 //            Date firstDate = sdf.parse(checkinDate.toString());
 //            Date secondDate = sdf.parse(checkoutDate.toString());
             
-//            Date firstDate = checkinDate;
-//            Date secondDate = checkoutDate;
-//
-//            long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
-//            long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) - 1;
+            Date firstDate = checkinDate;
+            Date secondDate = checkoutDate;
 
-            tempDate = checkinDate;
-            while(tempDate.before(checkoutDate)) {
-                finalAmount.add(publishedRate.getRatePerNight());
-                tempDate = addDays(tempDate, 1);
-            }
+            long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
+            long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS); //- 1;
+
+//            while(tempDate.before(checkoutDate)) {
+//                finalAmount.add(publishedRate.getRatePerNight());
+//                tempDate = addDays(tempDate, 1);
+//            }
             
-//            finalAmount = new BigDecimal(diff).multiply(publishedRate.getRatePerNight());
+            finalAmount = new BigDecimal(diff).multiply(publishedRate.getRatePerNight());
             
         }
         
