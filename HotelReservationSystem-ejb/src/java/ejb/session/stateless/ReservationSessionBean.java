@@ -5,17 +5,15 @@
  */
 package ejb.session.stateless;
 
-import entity.Employee;
 import entity.Guest;
 import entity.Reservation;
 import entity.RoomType;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -23,9 +21,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import util.exception.EmployeeNotFoundException;
 import util.exception.GuestNotFoundException;
 import util.exception.InputDataValidationException;
+import util.exception.NotEnoughRoomException;
 import util.exception.ReservationNotFoundException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -60,6 +58,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     public Reservation createNewReservation(Reservation reservationEntity, String roomTypeName, Long guestID) throws RoomTypeNotFoundException, UnknownPersistenceException, InputDataValidationException, GuestNotFoundException{
         RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
         Guest guest = guestSessionBeanLocal.retrieveGuestById(guestID);
+
+        // also delete the roomTypeName and guestId parameter up there later
         
         Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(reservationEntity);
          
@@ -86,6 +86,33 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
+    }
+    
+    
+    
+    public Reservation reserveNewReservation(Reservation newReservation, String roomTypeName, Long guestId) throws RoomTypeNotFoundException, GuestNotFoundException, NotEnoughRoomException, UnknownPersistenceException, InputDataValidationException {
+        
+        RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
+        Guest guest = guestSessionBeanLocal.retrieveGuestById(guestId);
+        
+        Date checkinDate = newReservation.getCheckinDate();
+        Date checkoutDate = newReservation.getCheckoutDate();
+        
+        Integer numberOfRoomsAvailable = roomTypeSessionBeanLocal.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, guestId);
+        
+        if(numberOfRoomsAvailable < newReservation.getNoOfRoom()) 
+        {
+            throw new NotEnoughRoomException("There is not enough number of rooms available for booking!");
+        }
+        
+        // associate
+        newReservation = createNewReservation(newReservation, roomTypeName, guestId);
+        
+        // if reservation made after 2 am, then call allocation method;
+        //
+        //
+        
+        return newReservation;
     }
     
     @Override

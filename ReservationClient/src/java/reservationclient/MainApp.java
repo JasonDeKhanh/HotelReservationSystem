@@ -30,6 +30,7 @@ import util.exception.GuestNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.NoRoomTypeAvaiableForReservationException;
+import util.exception.NotEnoughRoomException;
 import util.exception.ReservationNotFoundException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -267,14 +268,14 @@ public class MainApp {
             if(checkinDate.equals(checkoutDate)){
                 throw new CheckinCheckoutSameDayException("Check-in Date and Check-out Date cannot be the same day");
             }
-//            System.out.print("Enter number of rooms to book> ");
-//            numberOfRooms = Integer.parseInt(scanner.nextLine().trim());
+            System.out.print("Enter number of rooms to book> ");
+            numberOfRooms = Integer.parseInt(scanner.nextLine().trim());
             // do if checkin is AFTER checkout --> throw exception, catch beneath also
             
             // call session bean here
             //
             
-            List<RoomType> availableRoomTypes = roomTypeSessionBeanRemote.searchAvailableRoomTypeForReservation(checkinDate, checkoutDate);
+            List<RoomType> availableRoomTypes = roomTypeSessionBeanRemote.searchAvailableRoomTypeForReservation(checkinDate, checkoutDate, numberOfRooms);
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
             // Should we show number of rooms left able to be booked also? The inventory of room type
@@ -318,7 +319,16 @@ public class MainApp {
                     
                     newReservation.setNoOfRoom(numOfRooms);
                     
-                    //newReservation = reservationSessionBeanRemote.createNewReservation(newReservation, roomTypeName, currentGuest.getGuestId());
+                    Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(newReservation);
+                    
+                    if(constraintViolations.isEmpty()) {
+                        newReservation = reservationSessionBeanRemote.reserveNewReservation(newReservation, roomTypeName, currentGuest.getGuestId());
+                        System.out.println("Reservation with ID " + newReservation.getReservationId() + " successfully created!");
+                    } else {
+                        showInputDataValidationErrorsForReservation(constraintViolations);
+                    }
+                    
+                    
                 }
                 else
                 {
@@ -329,7 +339,7 @@ public class MainApp {
             
             
         } 
-        catch(NoRoomTypeAvaiableForReservationException | RoomTypeNotFoundException ex)
+        catch(NoRoomTypeAvaiableForReservationException | RoomTypeNotFoundException | GuestNotFoundException | NotEnoughRoomException ex)
         {
             System.out.println("An error occurred: " + ex.getMessage());
         }
@@ -340,7 +350,15 @@ public class MainApp {
         catch (ParseException ex) {
             System.out.println("Invalid date input!\n");
         } 
-
+        catch(UnknownPersistenceException ex)
+        {
+            System.out.println("An unknown error has occurred while creating the new employee!: " + ex.getMessage() + "\n");
+        }
+        catch(InputDataValidationException ex)
+        {
+            System.out.println(ex.getMessage() + "\n");
+        }
+        
         // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
@@ -414,6 +432,19 @@ public class MainApp {
     
     //Bean Validation methods
     private void showInputDataValidationErrorsForRegisteredGuestEntity(Set<ConstraintViolation<RegisteredGuest>>constraintViolations)
+    {
+        System.out.println("\nInput data validation error!:");
+            
+        for(ConstraintViolation constraintViolation:constraintViolations)
+        {
+            System.out.println("\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage());
+        }
+
+        System.out.println("\nPlease try again......\n");
+    }
+    
+    //Bean Validation methods
+    private void showInputDataValidationErrorsForReservation(Set<ConstraintViolation<Reservation>>constraintViolations)
     {
         System.out.println("\nInput data validation error!:");
             

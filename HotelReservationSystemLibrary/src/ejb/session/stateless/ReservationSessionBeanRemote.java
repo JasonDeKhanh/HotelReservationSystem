@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Remote;
 import util.exception.GuestNotFoundException;
 import util.exception.InputDataValidationException;
+import util.exception.NotEnoughRoomException;
 import util.exception.ReservationNotFoundException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -29,7 +30,9 @@ public interface ReservationSessionBeanRemote {
     
     public List<Reservation> retrieveAllReservationsByGuestId(Long guestID) throws GuestNotFoundException;
 
-     public Reservation createNewReservation(Reservation reservationEntity, String roomTypeName, Long guestID) throws RoomTypeNotFoundException, UnknownPersistenceException, InputDataValidationException, GuestNotFoundException;
+     public Reservation createNewReservation(Reservation reservationEntity, String roomTypeName, Long guestId) throws RoomTypeNotFoundException, UnknownPersistenceException, InputDataValidationException, GuestNotFoundException;
+
+    public Reservation reserveNewReservation(Reservation newReservation, String roomTypeName, Long guestId) throws RoomTypeNotFoundException, GuestNotFoundException, NotEnoughRoomException, UnknownPersistenceException, InputDataValidationException;
     
    
 }
