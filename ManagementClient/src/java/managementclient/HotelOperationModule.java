@@ -412,11 +412,17 @@ public class HotelOperationModule {
             roomType.setCapacity(Integer.parseInt(input));
         }
         
-        System.out.print("Enter room type inventory (blank if no change)> ");
+        System.out.print("Enter room type amenities (blank if no change)> ");
         input = scanner.nextLine().trim();
         if(input.length() > 0) {
-            roomType.setInventory(Integer.parseInt(input));
+            roomType.setAmenities(scanner.nextLine().trim());
         }
+        
+//        System.out.print("Enter room type inventory (blank if no change)> ");
+//        input = scanner.nextLine().trim();
+//        if(input.length() > 0) {
+//            roomType.setInventory(Integer.parseInt(input));
+//        }
         
         System.out.print("Enter next higher room type name. Enter 'None' if there is no higher room type. (blank if no change)> ");
         String nextHigherRoomTypeName = scanner.nextLine().trim();
