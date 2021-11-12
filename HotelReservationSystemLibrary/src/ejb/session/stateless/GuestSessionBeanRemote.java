@@ -27,5 +27,7 @@ public interface GuestSessionBeanRemote {
     public Guest retrieveRegisteredGuestByIdentificationNumber(String ID) throws GuestNotFoundException;
 
    public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException;
+
+    public String guestCheckin(String guestID) throws GuestNotFoundException;
     
 }

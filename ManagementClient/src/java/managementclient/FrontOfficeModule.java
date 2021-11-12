@@ -211,6 +211,7 @@ public class FrontOfficeModule {
     public void doCheckoutGuest() {
         
         System.out.println("*** Hotel Reservation System Management Client :: Front Office :: Check-out Guest ***");
+        System.out.println("Bye, have a nice day :)");
         
     }
 }
