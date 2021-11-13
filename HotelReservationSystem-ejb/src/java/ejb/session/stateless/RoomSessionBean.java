@@ -84,10 +84,10 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
             }
         }
         
-        if(!hasNormalRate || !hasPublishedRate){
-            throw new RoomHasNoRoomRateException("This room type has no room rate.");
-        }
-        
+//        if(!hasNormalRate || !hasPublishedRate){
+//            throw new RoomHasNoRoomRateException("This room type has no room rate.");
+//        }
+//        
         if(!roomType.getEnabled()){
             throw new RoomTypeDisabledException("This room type is disabled.");
         }

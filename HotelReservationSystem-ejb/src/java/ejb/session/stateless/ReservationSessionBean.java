@@ -235,8 +235,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     public List<Reservation> retrieveAllReservationsByGuestId(Long guestID) throws GuestNotFoundException
     {
 //        Guest guest = guestSessionBeanLocal.retrieveRegisteredGuestByID(guestID);
-        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest.guestId = :inGuestId AND r.partner := inPartner");
-        query.setParameter("inPartner", null);
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest.guestId = :inGuestId AND r.partner = NULL");
+//        query.setParameter("inPartner", null);
         query.setParameter("inGuestId", guestID);
         
         List<Reservation> reservations = query.getResultList();
