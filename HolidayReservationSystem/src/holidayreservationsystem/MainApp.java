@@ -127,7 +127,7 @@ public class MainApp {
             checkinDate = scanner.nextLine().trim();
             System.out.print("Enter Check-out Date (dd/mm/yyyy)> ");
             checkoutDate = scanner.nextLine().trim();
-            System.out.print("Enter Check-out Date (dd/mm/yyyy)> ");
+            System.out.print("Enter number of rooms> ");
             Integer noOfRoom = Integer.parseInt(scanner.nextLine().trim());
 
             // do if checkin is AFTER checkout --> throw exception, catch beneath also
