@@ -293,6 +293,45 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         }
     }
     
+    public List<RoomType> searchAvailableRoomTypeForReservationForPartner(Date checkinDate, Date checkoutDate) throws NoRoomTypeAvaiableForReservationException, RoomTypeNotFoundException {
+        
+        /*
+            for each Room Type that is enabled, go through all reservations with that room type
+            check which one affects the current room reservation
+            if that (roomType.inventory - count of room affect reservation) >= numberOfRooms, then
+            this roomType is available for booking.
+            **need to check again during reservation
+            
+        */
+        List<RoomType> roomTypeToReturn = new ArrayList<>();
+        
+        Query queryRoomType = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.enabled = :inEnabled");
+        queryRoomType.setParameter("inEnabled", true);
+        
+        List<RoomType> roomTypes = (List<RoomType>) queryRoomType.getResultList();
+        
+        if(roomTypes.isEmpty()) {
+            throw new NoRoomTypeAvaiableForReservationException("There is no available room type available");
+        }
+        
+        for(RoomType roomType: roomTypes) {
+            Integer numberOfRoomsThisRoomTypeAvailable = getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId());
+//            System.out.println("Roomtype: " + roomType.getName() + " with numberAvailable: " + numberOfRoomsThisRoomTypeAvailable);
+//            if(numberOfRoomsThisRoomTypeAvailable >= numberOfRooms) {
+//                roomTypeToReturn.add(roomType);
+//            }
+            if(numberOfRoomsThisRoomTypeAvailable > 0) {
+                roomTypeToReturn.add(roomType);
+            }
+        }
+        
+        if(roomTypeToReturn.isEmpty()) {
+            throw new NoRoomTypeAvaiableForReservationException("There is no avaialble room type available for reserving!");
+        } else {
+            return roomTypeToReturn;
+        }
+    }
+    
     
     public Integer getNumberOfRoomsThisRoomTypeAvailableForReserve(Date checkinDate, Date checkoutDate, Long roomTypeId) throws RoomTypeNotFoundException {
         

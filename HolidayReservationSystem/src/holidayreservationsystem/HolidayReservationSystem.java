@@ -5,6 +5,7 @@
  */
 package holidayreservationsystem;
 
+import java.text.ParseException;
 import ws.client.GuestIdentificationNumberExistException_Exception;
 import ws.client.GuestNotFoundException_Exception;
 import ws.client.InputDataValidationException_Exception;
@@ -29,7 +30,7 @@ public class HolidayReservationSystem {
      * @throws ws.client.NotEnoughRoomException_Exception
      * @throws ws.client.ReservationNotFoundException_Exception
      */
-    public static void main(String[] args) throws GuestNotFoundException_Exception, GuestIdentificationNumberExistException_Exception, UnknownPersistenceException_Exception, InputDataValidationException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception {
+    public static void main(String[] args) throws GuestNotFoundException_Exception, GuestIdentificationNumberExistException_Exception, UnknownPersistenceException_Exception, InputDataValidationException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception, ParseException {
         
         MainApp mainApp = new MainApp();
         mainApp.runApp();

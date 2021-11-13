@@ -125,6 +125,21 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         }
     }
     
+    
+    
+    public List<Reservation> retrieveReservationsByPartnerId(Long partnerId) {
+
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.partner.partnerId = :inPartnerId");
+        query.setParameter("inPartnerId", partnerId);
+
+        List<Reservation> reservations = (List<Reservation>) query.getResultList();
+
+        reservations.size();
+
+        return reservations;	
+
+    }
+    
     @Override
     public Partner partnerLogin(String username, String password) throws InvalidLoginCredentialException
     {

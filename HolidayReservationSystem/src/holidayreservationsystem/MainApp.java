@@ -6,7 +6,10 @@
 package holidayreservationsystem;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -41,7 +44,7 @@ public class MainApp {
     
     private Partner currentPartner = null;
     
-    public void runApp() throws GuestNotFoundException_Exception, GuestIdentificationNumberExistException_Exception, InputDataValidationException_Exception, UnknownPersistenceException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception {
+    public void runApp() throws GuestNotFoundException_Exception, GuestIdentificationNumberExistException_Exception, InputDataValidationException_Exception, UnknownPersistenceException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception, ParseException {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         
@@ -118,7 +121,7 @@ public class MainApp {
 //        }
     }
     
-    private void doSearchHotelRoom() throws NoRoomTypeAvaiableForReservationException_Exception, GuestNotFoundException_Exception, ParseException_Exception, RoomTypeNotFoundException_Exception, DatatypeConfigurationException, GuestIdentificationNumberExistException_Exception, InputDataValidationException_Exception, UnknownPersistenceException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception {
+    private void doSearchHotelRoom() throws NoRoomTypeAvaiableForReservationException_Exception, GuestNotFoundException_Exception, ParseException_Exception, RoomTypeNotFoundException_Exception, DatatypeConfigurationException, GuestIdentificationNumberExistException_Exception, InputDataValidationException_Exception, UnknownPersistenceException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception, ParseException {
         
             System.out.println("*** Hotel Reservation System Reservation Client :: Search Hotel Room ***\n");
             Scanner scanner = new Scanner(System.in);
@@ -139,7 +142,7 @@ public class MainApp {
             // call session bean here
             //
             System.out.println("HERE=====================");
-            List<RoomType> availableRoomTypes = service.getPartnerEntityWebServicePort().partnerSearchRoom(checkinDate, checkoutDate, noOfRoom);
+            List<RoomType> availableRoomTypes = service.getPartnerEntityWebServicePort().partnerSearchRoom(checkinDate, checkoutDate,noOfRoom);
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
             // Should we show number of rooms left able to be booked also? The inventory of room type
@@ -154,8 +157,8 @@ public class MainApp {
                 // like do a roomType.getRateToBeApplied() <-- if-else inside there
                 number += 1;
 
-                System.out.printf("%2s", number);
-                System.out.printf("%14s%22s   %s\n", roomType.getName(), service.getPartnerEntityWebServicePort().getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId()), service.getPartnerEntityWebServicePort().getReservationAmount(checkinDate, checkoutDate, roomType.getRoomTypeId()));
+                System.out.printf("%4s", roomType.getRoomTypeId());
+                System.out.printf("%30s%28s   %25s\n",roomType.getName(), service.getPartnerEntityWebServicePort().getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId()), service.getPartnerEntityWebServicePort().getReservationAmount(checkinDate, checkoutDate, roomType.getRoomTypeId()));
             }
             
             System.out.println("------------------------");
@@ -174,11 +177,25 @@ public class MainApp {
                     Reservation newReservation = new Reservation();
                     newReservation.setType(ReservationType.ONLINE);
                     
-                    XMLGregorianCalendar inDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(checkinDate);
-                    XMLGregorianCalendar outDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(checkinDate);
+                    Date iDate = inputDateFormat.parse(checkinDate);
+//                    XMLGregorianCalendar inDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(iDate);
+//                    XMLGregorianCalendar outDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(checkinDate);
+
+                    Date inputDate = inputDateFormat.parse(checkinDate); 
+                    Date outputDate = inputDateFormat.parse(checkoutDate); 
+                    GregorianCalendar inDate = new GregorianCalendar();
+                    inDate.setTime(inputDate);
+                    GregorianCalendar outDate = new GregorianCalendar();
+                    outDate.setTime(outputDate);
                     
-                    newReservation.setCheckinDate(inDate);
-                    newReservation.setCheckoutDate(outDate);
+                    XMLGregorianCalendar inDate2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(inDate);
+                    XMLGregorianCalendar outDate2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(outDate);
+
+//                    Date inDate = inputDateFormat.parse(checkinDate); 
+//                    Date outDate = inputDateFormat.parse(checkoutDate); 
+                    
+                    newReservation.setCheckinDate(inDate2);
+                    newReservation.setCheckoutDate(outDate2);
                     
                      // Ask guest to enter name and identification number
                     String guestName = "";
@@ -204,10 +221,10 @@ public class MainApp {
                     
                
                     //Long guestId = service.getPartnerEntityWebServicePort().createNewUnregisteredGuestGuest(guestName, guestIdentificationNumber);
-                    Guest guestId = service.getPartnerEntityWebServicePort().createNewUnregisteredGuestGuest(guestName, guestIdentificationNumber);
+                    Long guestId = service.getPartnerEntityWebServicePort().createNewUnregisteredGuestGuest(guestName, guestIdentificationNumber);
                     
                     
-                    newReservation = service.getPartnerEntityWebServicePort().reserveNewReservation(newReservation, roomTypeName, guestId.getGuestId(), currentPartner.getPartnerId());
+                    newReservation = service.getPartnerEntityWebServicePort().reserveNewReservation(newReservation, roomTypeName, guestId, currentPartner.getPartnerId());
                     System.out.println("Reservation with ID " + newReservation.getReservationId() + " successfully created!");
                    
 
@@ -232,7 +249,7 @@ public class MainApp {
         
     }
     
-    private void loggedInMenu() throws GuestNotFoundException_Exception, GuestIdentificationNumberExistException_Exception, InputDataValidationException_Exception, UnknownPersistenceException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception {
+    private void loggedInMenu() throws GuestNotFoundException_Exception, GuestIdentificationNumberExistException_Exception, InputDataValidationException_Exception, UnknownPersistenceException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception, ParseException {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         

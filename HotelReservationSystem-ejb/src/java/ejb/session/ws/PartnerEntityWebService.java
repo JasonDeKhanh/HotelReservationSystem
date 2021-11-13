@@ -108,12 +108,14 @@ public class PartnerEntityWebService {
         
         // must pass in number of rooms for the third parameter!!!! CHANGE LATERR
         // client must enter number of rooms
+//        List<RoomType> availableRoomTypes = roomTypeSessionBeanLocal.searchAvailableRoomTypeForReservation(inDate, outDate, noOfRoom);
         List<RoomType> availableRoomTypes = roomTypeSessionBeanLocal.searchAvailableRoomTypeForReservation(inDate, outDate, noOfRoom);
         
         for(RoomType roomType : availableRoomTypes){
             em.detach(roomType);
-//            roomType.getRooms().clear();
-//            roomType.getRoomRates().clear();
+            roomType.setNextHigherRoomType(null);
+            roomType.getRooms().clear();
+            roomType.getRoomRates().clear();
             for(RoomRate rateRate: roomType.getRoomRates()){
                 em.detach(rateRate);
                 rateRate.setRoomType(null);
@@ -171,6 +173,11 @@ public class PartnerEntityWebService {
         
         em.detach(reservation);
         
+        reservation.setGuest(null);
+        reservation.setRoomAllocationExceptionReport(null);
+        reservation.setPartner(null);
+        reservation.getRooms().clear();
+        
         em.detach(reservation.getPartner());
         reservation.getPartner().getReservations().clear();
         
@@ -186,24 +193,24 @@ public class PartnerEntityWebService {
         }
         
         
-        
         return reservation;
     }
     
     //create unregistred guest
     @WebMethod(operationName = "createNewUnregisteredGuestGuest") //guestName, guestIdentificationNumber
-    public Guest createNewUnregisteredGuestGuest(@WebParam(name = "guestName")String guestName, @WebParam(name = "guestID")String guestID) throws GuestIdentificationNumberExistException, UnknownPersistenceException, InputDataValidationException{
+    public Long createNewUnregisteredGuestGuest(@WebParam(name = "guestName")String guestName, @WebParam(name = "guestID")String guestID) throws GuestIdentificationNumberExistException, UnknownPersistenceException, InputDataValidationException{
         Guest guest = guestSessionBeanLocal.createNewUnregisteredGuestGuest(new UnregisteredGuest(guestName, guestID));
         
         em.detach(guest);
+        guest.getReservations().clear();
         
         for(Reservation r : guest.getReservations()){
             em.detach(r);
-            r.setPartner(null);
+            r.setGuest(null);
         }
         
 //        return guest.getGuestId();
-        return guest;
+        return guest.getGuestId();
        
         
     }
