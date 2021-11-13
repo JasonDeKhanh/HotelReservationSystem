@@ -41,4 +41,6 @@ public interface RoomTypeSessionBeanRemote {
     public Integer getNumberOfRoomsThisRoomTypeAvailableForReserve(Date checkinDate, Date checkoutDate, Long roomTypeId) throws RoomTypeNotFoundException;
 
     public BigDecimal getReservationAmount(Date checkinDate, Date checkoutDate, ReservationType reservationType, Long roomTypeId) throws RoomTypeNotFoundException, ParseException;
+    
+    public List<RoomType> searchAvailableRoomTypeForReservationForPartner(Date checkinDate, Date checkoutDate) throws NoRoomTypeAvaiableForReservationException, RoomTypeNotFoundException;
 }

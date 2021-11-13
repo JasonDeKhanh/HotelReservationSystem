@@ -33,4 +33,6 @@ public interface PartnerSessionBeanRemote {
     public List<Reservation> retrieveAllReservationsByPartnerId(Long partnerId);
     
     public Reservation retrieveReservationsByReservationId(Long reservationId) throws ReservationNotFoundException;
+
+    public List<Reservation> retrieveReservationsByPartnerId(Long partnerId);
 }
