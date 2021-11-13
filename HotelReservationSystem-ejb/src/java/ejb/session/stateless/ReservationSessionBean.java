@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Guest;
+import entity.Partner;
 import entity.Reservation;
 import entity.Room;
 import entity.RoomType;
@@ -37,6 +38,9 @@ import util.exception.UnknownPersistenceException;
  */
 @Stateless
 public class ReservationSessionBean implements ReservationSessionBeanRemote, ReservationSessionBeanLocal {
+
+    @EJB(name = "PartnerSessionBeanLocal")
+    private PartnerSessionBeanLocal partnerSessionBeanLocal;
 
     @EJB(name = "RoomSessionBeanLocal")
     private RoomSessionBeanLocal roomSessionBeanLocal;
@@ -117,6 +121,55 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
         BigDecimal totalAmountPerRoom = roomTypeSessionBeanLocal.getReservationAmount(checkinDate, checkoutDate, newReservation.getType(), roomType.getRoomTypeId());
         newReservation.setPrice(totalAmountPerRoom.multiply(new BigDecimal(newReservation.getNoOfRoom())));
+//        newReservation.setPrice(new BigDecimal(17891789));
+        
+        // associate
+        newReservation = createNewReservation(newReservation, roomTypeName, guestId);
+        
+        // if reservation made after 2 am, then call allocation method;
+        //
+        // if curDate = check in date && curTime after 2am
+        // call allocation
+        
+        Date resDate = newReservation.getCheckinDate();
+        Date curDate = new Date();
+        if((curDate.getDate()==resDate.getDate() && curDate.getMonth()==resDate.getMonth() && curDate.getYear()==resDate.getYear()) // same date
+                && ((curDate.getHours() > 2) // time hour is later than 2o clock
+                    || (curDate.getHours()==2 && curDate.getMinutes() > 0))) 
+        {
+//            System.out.println("hello");
+            roomSessionBeanLocal.allocateRoomToReservation(checkinDate);
+        }
+        
+        return newReservation;
+    }
+    
+    @Override
+    public Reservation reserveNewReservationThruPartner(Reservation newReservation, String roomTypeName, Long guestId, Long partnerId) throws RoomTypeNotFoundException, GuestNotFoundException, NotEnoughRoomException, UnknownPersistenceException, InputDataValidationException, ParseException, ReservationNotFoundException {
+        
+        RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
+        Guest guest = guestSessionBeanLocal.retrieveGuestById(guestId);
+        
+        Date checkinDate = newReservation.getCheckinDate();
+        Date checkoutDate = newReservation.getCheckoutDate();
+        
+        
+                
+        Integer numberOfRoomsAvailable = roomTypeSessionBeanLocal.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, guestId);
+        
+        if(numberOfRoomsAvailable < newReservation.getNoOfRoom()) 
+        {
+            throw new NotEnoughRoomException("There is not enough number of rooms available for booking!");
+        }
+        
+        BigDecimal totalAmountPerRoom = roomTypeSessionBeanLocal.getReservationAmount(checkinDate, checkoutDate, newReservation.getType(), roomType.getRoomTypeId());
+        newReservation.setPrice(totalAmountPerRoom.multiply(new BigDecimal(newReservation.getNoOfRoom())));
+        
+        Partner partner = partnerSessionBeanLocal.retrievePartnerById(partnerId);
+        newReservation.setPartner(partner);
+        partner.getReservations().add(newReservation);
+        
+        
 //        newReservation.setPrice(new BigDecimal(17891789));
         
         // associate

@@ -35,5 +35,6 @@ public interface ReservationSessionBeanRemote {
 
     public Reservation reserveNewReservation(Reservation newReservation, String roomTypeName, Long guestId) throws RoomTypeNotFoundException, GuestNotFoundException, NotEnoughRoomException, UnknownPersistenceException, InputDataValidationException, ParseException, ReservationNotFoundException;
     
+    
    
 }

@@ -9,6 +9,7 @@ import entity.Partner;
 import entity.Reservation;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.GuestNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.PartnerUsernameExistException;
@@ -32,5 +33,7 @@ public interface PartnerSessionBeanLocal {
     public List<Reservation> retrieveAllReservationsByPartnerId(Long partnerId);
     
     public Reservation retrieveReservationsByReservationId(Long reservationId) throws ReservationNotFoundException;
+
+    public Partner retrievePartnerById(Long partnerId) throws GuestNotFoundException;
 
 }

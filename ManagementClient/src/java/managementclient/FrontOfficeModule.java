@@ -197,9 +197,9 @@ public class FrontOfficeModule {
                     // Ask guest to enter name and identification number
                     String guestName = "";
                     String guestIdentificationNumber = "";
-                    System.out.print("Enter Check-in Date (dd/mm/yyyy)> ");
+                    System.out.print("Enter Guest Name > ");
                     guestName = scanner.nextLine().trim();
-                    System.out.print("Enter Check-out Date (dd/mm/yyyy)> ");
+                    System.out.print("Enter Guest Identiication Number > ");
                     guestIdentificationNumber = scanner.nextLine().trim(); 
                     
                     // check if guest already exists, if yes then use him, else create new unregistered guest entity
