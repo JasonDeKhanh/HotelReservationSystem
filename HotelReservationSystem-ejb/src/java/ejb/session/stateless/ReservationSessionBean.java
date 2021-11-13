@@ -112,7 +112,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
         
                 
-        Integer numberOfRoomsAvailable = roomTypeSessionBeanLocal.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, guestId);
+        Integer numberOfRoomsAvailable = roomTypeSessionBeanLocal.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId());
         
         if(numberOfRoomsAvailable < newReservation.getNoOfRoom()) 
         {
@@ -155,7 +155,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
         
                 
-        Integer numberOfRoomsAvailable = roomTypeSessionBeanLocal.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, guestId);
+        Integer numberOfRoomsAvailable = roomTypeSessionBeanLocal.getNumberOfRoomsThisRoomTypeAvailableForReserve(checkinDate, checkoutDate, roomType.getRoomTypeId());
         
         if(numberOfRoomsAvailable < newReservation.getNoOfRoom()) 
         {
