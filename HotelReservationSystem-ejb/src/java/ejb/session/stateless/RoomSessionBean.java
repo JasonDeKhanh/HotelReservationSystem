@@ -233,111 +233,117 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     
     public void allocateRoomToReservation(Date checkinDate) throws ReservationNotFoundException, UnknownPersistenceException, InputDataValidationException {
         
-        Query query = em.createQuery("SELECT res FROM Reservation res WHERE res.checkinDate = :inCheckinDate");
+        Query query = em.createQuery("SELECT res FROM Reservation res WHERE res.checkinDate = :inCheckinDate AND res.");
         query.setParameter("inCheckinDate", checkinDate);
         
         List<Reservation> reservations = (List<Reservation>) query.getResultList();
         
         for(Reservation reservation : reservations) {
             
-            Integer numberOfRooms = reservation.getNoOfRoom();
-            List<Room> assignedRooms = new ArrayList<>();
-            RoomType roomType = reservation.getRoomType();
-            RoomType nextHigherRoomType = roomType.getNextHigherRoomType();
-            
-            Query queryRoom = em.createQuery("SELECT r FROM Room r WHERE r.roomType = :inRoomType AND r.roomStatus = :inStatus AND r.disabled = :inDisabled");
-            queryRoom.setParameter("inRoomType", roomType);
-            queryRoom.setParameter("inStatus", RoomStatus.AVAILABLE);
-            queryRoom.setParameter("inDisabled", false);
-            
-            // roomsQuery 
-            List<Room> roomsTemp = (List<Room>) queryRoom.getResultList();
-            List<Room> roomsQuery = new ArrayList<>();
-            for(Room room: roomsTemp) {
-                if(isRoomFree(room)) {
-                    roomsQuery.add(room);
-                }
-            }
-            //
-            
-            // enough room of desired type for reservation
-            if(roomsQuery.size() >= numberOfRooms) 
+            // Check if reservation is already allocated by checking the size of its rooms list.
+            // if size > 0, then it means rooms have been allocated to this reservation, and thus will not go through allocation process again
+            Integer currRoomListSize = reservation.getRooms().size();
+            if(currRoomListSize == 0) 
             {
-                for(Room room: roomsQuery)
-                {
-                    assignedRooms.add(room);
-                    if(assignedRooms.size() == numberOfRooms) 
-                    {
-                        break;
-                    }
-                }
-                
-            } 
-            else if(roomsQuery.size() < numberOfRooms && nextHigherRoomType != null) 
-            {
-                // obtain list of all free room of the next higher type
-                Query queryRoomHigher = em.createQuery("SELECT r FROM Room r WHERE r.roomType = :inRoomType AND r.roomStatus = :inStatus AND r.disabled = :inDisabled");
-                queryRoomHigher.setParameter("inRoomType", nextHigherRoomType);
-                queryRoomHigher.setParameter("inStatus", RoomStatus.AVAILABLE);
-                queryRoomHigher.setParameter("inDisabled", false);
+                Integer numberOfRooms = reservation.getNoOfRoom();
+                List<Room> assignedRooms = new ArrayList<>();
+                RoomType roomType = reservation.getRoomType();
+                RoomType nextHigherRoomType = roomType.getNextHigherRoomType();
+
+                Query queryRoom = em.createQuery("SELECT r FROM Room r WHERE r.roomType = :inRoomType AND r.roomStatus = :inStatus AND r.disabled = :inDisabled");
+                queryRoom.setParameter("inRoomType", roomType);
+                queryRoom.setParameter("inStatus", RoomStatus.AVAILABLE);
+                queryRoom.setParameter("inDisabled", false);
 
                 // roomsQuery 
-                List<Room> roomsTemp2 = (List<Room>) queryRoomHigher.getResultList();
-                List<Room> roomsHigherQuery = new ArrayList<>();
-                for(Room room: roomsTemp2) {
+                List<Room> roomsTemp = (List<Room>) queryRoom.getResultList();
+                List<Room> roomsQuery = new ArrayList<>();
+                for(Room room: roomsTemp) {
                     if(isRoomFree(room)) {
-                        roomsHigherQuery.add(room);
+                        roomsQuery.add(room);
                     }
                 }
-                
-                if((roomsQuery.size() + roomsHigherQuery.size()) >= numberOfRooms) // partial upgrade possible
+                //
+
+                // enough room of desired type for reservation
+                if(roomsQuery.size() >= numberOfRooms) 
                 {
-                    for(Room room: roomsQuery) // add all the free rooms of desired type
+                    for(Room room: roomsQuery)
                     {
                         assignedRooms.add(room);
-                    }
-                    
-                    // fill in the rest of the number of rooms with rooms of the higher type
-                    for(Room roomHigher: roomsHigherQuery)
-                    {
-                        assignedRooms.add(roomHigher);
                         if(assignedRooms.size() == numberOfRooms) 
                         {
                             break;
                         }
                     }
-                    
-                    RoomAllocationExceptionReport roomAlloExceptionReport = new RoomAllocationExceptionReport();
-                    roomAlloExceptionReport.setType(RoomAllocationExceptionType.FREE_UPGRADE);
-                    roomAlloExceptionReport.setReason("Room allocation error, room of higher type was assigned");
-                    roomAlloExceptionReport = roomAllocationExceptionReportSessionBeanLocal.createNewRoomAllocationExceptionReport(roomAlloExceptionReport, reservation.getReservationId());
-                    
-                }
-                else // nextHigherRoomType exists but not enough total free rooms for reservations
+
+                } 
+                else if(roomsQuery.size() < numberOfRooms && nextHigherRoomType != null) 
+                {
+                    // obtain list of all free room of the next higher type
+                    Query queryRoomHigher = em.createQuery("SELECT r FROM Room r WHERE r.roomType = :inRoomType AND r.roomStatus = :inStatus AND r.disabled = :inDisabled");
+                    queryRoomHigher.setParameter("inRoomType", nextHigherRoomType);
+                    queryRoomHigher.setParameter("inStatus", RoomStatus.AVAILABLE);
+                    queryRoomHigher.setParameter("inDisabled", false);
+
+                    // roomsQuery 
+                    List<Room> roomsTemp2 = (List<Room>) queryRoomHigher.getResultList();
+                    List<Room> roomsHigherQuery = new ArrayList<>();
+                    for(Room room: roomsTemp2) {
+                        if(isRoomFree(room)) {
+                            roomsHigherQuery.add(room);
+                        }
+                    }
+
+                    if((roomsQuery.size() + roomsHigherQuery.size()) >= numberOfRooms) // partial upgrade possible
+                    {
+                        for(Room room: roomsQuery) // add all the free rooms of desired type
+                        {
+                            assignedRooms.add(room);
+                        }
+
+                        // fill in the rest of the number of rooms with rooms of the higher type
+                        for(Room roomHigher: roomsHigherQuery)
+                        {
+                            assignedRooms.add(roomHigher);
+                            if(assignedRooms.size() == numberOfRooms) 
+                            {
+                                break;
+                            }
+                        }
+
+                        RoomAllocationExceptionReport roomAlloExceptionReport = new RoomAllocationExceptionReport();
+                        roomAlloExceptionReport.setType(RoomAllocationExceptionType.FREE_UPGRADE);
+                        roomAlloExceptionReport.setReason("Room allocation error, room of higher type was assigned");
+                        roomAlloExceptionReport = roomAllocationExceptionReportSessionBeanLocal.createNewRoomAllocationExceptionReport(roomAlloExceptionReport, reservation.getReservationId());
+
+                    }
+                    else // nextHigherRoomType exists but not enough total free rooms for reservations
+                    {
+                        RoomAllocationExceptionReport roomAlloExceptionReport = new RoomAllocationExceptionReport();
+                        roomAlloExceptionReport.setType(RoomAllocationExceptionType.NO_UPGRADE);
+                        roomAlloExceptionReport.setReason("Room allocation error, no room allocated");
+                        roomAlloExceptionReport = roomAllocationExceptionReportSessionBeanLocal.createNewRoomAllocationExceptionReport(roomAlloExceptionReport, reservation.getReservationId());
+
+                    }
+                } // when there is a higher room type
+                else // higher room type doesn't exist
                 {
                     RoomAllocationExceptionReport roomAlloExceptionReport = new RoomAllocationExceptionReport();
                     roomAlloExceptionReport.setType(RoomAllocationExceptionType.NO_UPGRADE);
                     roomAlloExceptionReport.setReason("Room allocation error, no room allocated");
                     roomAlloExceptionReport = roomAllocationExceptionReportSessionBeanLocal.createNewRoomAllocationExceptionReport(roomAlloExceptionReport, reservation.getReservationId());
-                    
-                }
-            } // when there is a higher room type
-            else // higher room type doesn't exist
-            {
-                RoomAllocationExceptionReport roomAlloExceptionReport = new RoomAllocationExceptionReport();
-                roomAlloExceptionReport.setType(RoomAllocationExceptionType.NO_UPGRADE);
-                roomAlloExceptionReport.setReason("Room allocation error, no room allocated");
-                roomAlloExceptionReport = roomAllocationExceptionReportSessionBeanLocal.createNewRoomAllocationExceptionReport(roomAlloExceptionReport, reservation.getReservationId());
 
-            }
-            
-            
-            // Associating rooms and reservation
-            for(Room room: assignedRooms) 
-            {
-                reservation.getRooms().add(room);
-                room.getReservations().add(reservation);
-            }
+                }
+
+
+                // Associating rooms and reservation
+                for(Room room: assignedRooms) 
+                {
+                    reservation.getRooms().add(room);
+                    room.getReservations().add(reservation);
+                }
+            } // else room is allocated, do nothing
             
         } // end for reservations loop
         
