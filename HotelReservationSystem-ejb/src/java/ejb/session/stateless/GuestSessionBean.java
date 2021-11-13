@@ -190,29 +190,42 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     }
     
     public String guestCheckin(String guestID) throws GuestNotFoundException{
-        Guest guest = retrieveRegisteredGuestByIdentificationNumber(guestID);
-        Boolean checkedIn = false;
-        String output ="";
-        for(Reservation r : guest.getReservations()){
-            if(r.getCheckinDate().equals(new Date())){
-                if(r.getRooms().size()>0){
-                    for(Room room: r.getRooms()){
-                        output+="Allocated room: "+room.getRoomNumber()+". \n";
+        Query query = em.createQuery("SELECT ug FROM UnregisteredGuest ug WHERE ug.identificationNumber = :inIdentificationNumber");
+        query.setParameter("inIdentificationNumber", guestID);
+        
+        try {
+            Guest guest = (UnregisteredGuest) query.getSingleResult();
+            Boolean checkedIn = false;
+            String output ="";
+
+
+
+            for(Reservation r : guest.getReservations()){
+
+                Date checkinDate = r.getCheckinDate();
+
+                if(checkinDate.equals(new Date(checkinDate.getYear(), checkinDate.getMonth(), checkinDate.getDate()))){
+                    if(r.getRooms().size()>0){
+                        for(Room room: r.getRooms()){
+                            output+="Allocated room: "+room.getRoomNumber()+". \n";
+                        }
+                    }else if(r.getRoomAllocationExceptionReport()!=null){
+                        if(r.getRoomAllocationExceptionReport().getType()==RoomAllocationExceptionType.NO_UPGRADE){
+                            output = "Sorry, we do not have enough room to allocate to you!";
+                        }
+                    } else{
+                        output="Something went wrong.";
                     }
-                }else if(r.getRoomAllocationExceptionReport()!=null){
-                    if(r.getRoomAllocationExceptionReport().getType()==RoomAllocationExceptionType.NO_UPGRADE){
-                        output = "Sorry, we do not have enough room to allocate to you!";
-                    }
-                } else{
-                    output="Something went wrong.";
+                    checkedIn = true;
                 }
-                checkedIn = true;
             }
+            if(checkedIn == false){
+                output="You dont have reservation today.";
+            }
+            return output;
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new GuestNotFoundException("Guest Identification Number " + guestID + " does not exist!");
         }
-        if(checkedIn == false){
-            output="You dont have reservation today.";
-        }
-        return output;
     }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RegisteredGuest>>constraintViolations)
