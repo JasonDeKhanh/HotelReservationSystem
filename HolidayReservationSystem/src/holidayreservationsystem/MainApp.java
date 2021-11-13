@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -26,6 +28,7 @@ import ws.client.ParseException_Exception;
 import ws.client.Partner;
 import ws.client.PartnerEntityWebService_Service;
 import ws.client.Reservation;
+import ws.client.ReservationNotFoundException;
 import ws.client.ReservationNotFoundException_Exception;
 import ws.client.ReservationType;
 import ws.client.RoomType;
@@ -44,8 +47,9 @@ public class MainApp {
     
     private Partner currentPartner = null;
     
-    public void runApp() throws GuestNotFoundException_Exception, GuestIdentificationNumberExistException_Exception, InputDataValidationException_Exception, UnknownPersistenceException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception, ParseException {
-        Scanner scanner = new Scanner(System.in);
+    //public void runApp() throws GuestNotFoundException_Exception, GuestIdentificationNumberExistException_Exception, InputDataValidationException_Exception, UnknownPersistenceException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception, ParseException {
+    public void runApp() {
+     Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         
         while(true) {
@@ -70,6 +74,20 @@ public class MainApp {
                         loggedInMenu();
                     } catch(InvalidLoginCredentialException_Exception ex) {
                         System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
+                    } catch (GuestNotFoundException_Exception ex) {
+                        System.out.println(ex.getMessage()+"\n");
+                    } catch (GuestIdentificationNumberExistException_Exception ex) {
+                        System.out.println(ex.getMessage()+"\n");
+                    } catch (InputDataValidationException_Exception ex) {
+                        System.out.println(ex.getMessage()+"\n");
+                    } catch (UnknownPersistenceException_Exception ex) {
+                        System.out.println(ex.getMessage()+"\n");
+                    } catch (NotEnoughRoomException_Exception ex) {
+                        System.out.println(ex.getMessage()+"\n");
+                    } catch (ReservationNotFoundException_Exception ex) {
+                        System.out.println(ex.getMessage()+"\n");
+                    } catch (ParseException ex) {
+                        System.out.println("Invalid date input!");
                     }
                 
                 } else if (response == 2) {
@@ -77,6 +95,18 @@ public class MainApp {
                         doSearchHotelRoom();
                     }catch( GuestNotFoundException_Exception | NoRoomTypeAvaiableForReservationException_Exception| DatatypeConfigurationException|ParseException_Exception| RoomTypeNotFoundException_Exception ex){
                         System.out.println(ex.getMessage());
+                    } catch (GuestIdentificationNumberExistException_Exception ex) {
+                        System.out.println(ex.getMessage()+"\n");
+                    } catch (InputDataValidationException_Exception ex) {
+                        System.out.println(ex.getMessage()+"\n");
+                    } catch (UnknownPersistenceException_Exception ex) {
+                       System.out.println(ex.getMessage()+"\n");
+                    } catch (NotEnoughRoomException_Exception ex) {
+                        System.out.println(ex.getMessage()+"\n");
+                    } catch (ReservationNotFoundException_Exception ex) {
+                        System.out.println(ex.getMessage()+"\n");
+                    } catch (ParseException ex) {
+                        System.out.println("Invalid date input!");
                     }
                     
                 }else if (response == 3) {
@@ -141,7 +171,7 @@ public class MainApp {
 
             // call session bean here
             //
-            System.out.println("HERE=====================");
+          
             List<RoomType> availableRoomTypes = service.getPartnerEntityWebServicePort().partnerSearchRoom(checkinDate, checkoutDate,noOfRoom);
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
@@ -228,12 +258,12 @@ public class MainApp {
                     System.out.println("Reservation with ID " + newReservation.getReservationId() + " successfully created!");
                    
 
-                    System.out.print("Enter Room Type Name you want to book> ");
-                    roomTypeName = scanner.nextLine().trim();
-                    System.out.print("Enter number of rooms you want to book> ");
-                    numOfRooms = Integer.parseInt(scanner.nextLine().trim());
-                    
-                    newReservation.setNoOfRoom(numOfRooms);
+//                    System.out.print("Enter Room Type Name you want to book> ");
+//                    roomTypeName = scanner.nextLine().trim();
+//                    System.out.print("Enter number of rooms you want to book> ");
+//                    numOfRooms = Integer.parseInt(scanner.nextLine().trim());
+//                    
+//                    newReservation.setNoOfRoom(numOfRooms);
                     
                     //newReservation = reservationSessionBeanRemote.createNewReservation(newReservation, roomTypeName, currentGuest.getGuestId());
                 }
@@ -304,45 +334,47 @@ public class MainApp {
         }
     }
     
-    private void doViewMyReservationDetails(){
+    private void doViewMyReservationDetails() throws ReservationNotFoundException_Exception{
         
-        // Reservation reservation;
+         Reservation reservation;
         // how to search view reservation details??? Like search by what
-//        String  = "";
-//        Scanner scanner = new Scanner(System.in);
-//        Long reservationId = null;
-//        
-//        System.out.println("*** Hotel Reservation System Reservation Client :: View My Reservation Details ***\n");
-//        System.out.print("Enter reservation ID> ");
-//        reservationId = new Long(scanner.nextLine().trim());
-//        
-//        try {
-//            Reservation r = reservationSessionBeanRemote.retrieveReservationById(reservationId);
-//        } catch (ReservationNotFoundException ex) {
-//            System.out.println(ex.getMessage());
+        
+        Scanner scanner = new Scanner(System.in);
+        Long reservationId = null;
+        
+        System.out.println("*** Holiday Reservation System Reservation Client :: View Partner Reservation Details ***\n");
+        System.out.print("Enter reservation ID> ");
+        reservationId = new Long(scanner.nextLine().trim());
+        
+        reservation = service.getPartnerEntityWebServicePort().retrieveReservationsByReservationId(reservationId);
+        
+        System.out.printf("%5s%40s%40s%40s%20s\n","ID", "Reservation Type",  "Check-in Date", "Check-out Date", "Total Price");
+        System.out.printf("%5s%40s%40s%40s%20s\n",reservation.getReservationId(),reservation.getType(), 
+                        reservation.getCheckinDate().toString(), reservation.getCheckoutDate().toString(),reservation.getPrice());
+        System.out.println("\n");
     }
     
     private void doViewAllMyReservations() {
-        System.out.println("*** Hotel Reservation System Reservation Client :: View All My Reservations ***\n");
+        System.out.println("*** Holiday Reservation System Reservation Client :: View All Partner Reservations ***\n");
         
-//        Long guestId = currentPartner.getGuestId();
-//        
-//        List<Reservation> reservations = null;
-//        try {
-//            reservations = reservationSessionBeanRemote.retrieveAllReservationsByGuestId(guestId);
-//        } catch (GuestNotFoundException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//        
-//        System.out.printf("%40s%40s%40s%40s%40s\n", "Reservation Type", "Room Type", "Check-in Date", "Check-out Date", "Rate");
-//        
-//        for(Reservation reservation: reservations) 
-//        {
-//            if(reservation.getPartner()==null){
-//            
-//                System.out.printf("%40s%40s%40s%40s%40s\n",reservation.getType(), reservation.getRoomType().getName(), 
-//                        reservation.getCheckinDate().toString(), reservation.getCheckoutDate().toString(),"");
-//            }
-//        }
+        Long partnerId = currentPartner.getPartnerId();
+        
+        List<Reservation> reservations = null;
+    
+        reservations = service.getPartnerEntityWebServicePort().retrieveAllReservationsByPartnerId(partnerId);
+
+        
+        System.out.printf("%5s%40s%40s%40s%20s\n","ID", "Reservation Type",  "Check-in Date", "Check-out Date", "Total Price");
+        
+        for(Reservation reservation: reservations) 
+        {
+            if(reservation.getPartner()==null){
+            
+                 System.out.printf("%5s%40s%40s%40s%20s\n",reservation.getReservationId(),reservation.getType(), 
+                        reservation.getCheckinDate().toString(), reservation.getCheckoutDate().toString(),reservation.getPrice());
+            }
+        }
+        
+        System.out.println("\n");
     }
 }

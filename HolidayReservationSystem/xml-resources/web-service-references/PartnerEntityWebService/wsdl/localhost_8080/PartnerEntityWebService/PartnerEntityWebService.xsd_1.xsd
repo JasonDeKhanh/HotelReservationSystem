@@ -44,6 +44,14 @@
 
 <xs:element name="reserveNewReservationResponse" type="tns:reserveNewReservationResponse"/>
 
+<xs:element name="retrieveAllReservationsByPartnerId" type="tns:retrieveAllReservationsByPartnerId"/>
+
+<xs:element name="retrieveAllReservationsByPartnerIdResponse" type="tns:retrieveAllReservationsByPartnerIdResponse"/>
+
+<xs:element name="retrieveReservationsByReservationId" type="tns:retrieveReservationsByReservationId"/>
+
+<xs:element name="retrieveReservationsByReservationIdResponse" type="tns:retrieveReservationsByReservationIdResponse"/>
+
 <xs:complexType name="getNumberOfRoomsThisRoomTypeAvailableForReserve">
 <xs:sequence>
 <xs:element name="checkinDate" type="xs:string" minOccurs="0"/>
@@ -85,25 +93,15 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="partnerLogin">
+<xs:complexType name="retrieveAllReservationsByPartnerId">
 <xs:sequence>
-<xs:element name="username" type="xs:string" minOccurs="0"/>
-<xs:element name="password" type="xs:string" minOccurs="0"/>
+<xs:element name="pertnerId" type="xs:long" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="partnerLoginResponse">
+<xs:complexType name="retrieveAllReservationsByPartnerIdResponse">
 <xs:sequence>
-<xs:element name="return" type="tns:partner" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="partner">
-<xs:sequence>
-<xs:element name="partnerId" type="xs:long" minOccurs="0"/>
-<xs:element name="password" type="xs:string" minOccurs="0"/>
-<xs:element name="reservations" type="tns:reservation" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
-<xs:element name="username" type="xs:string" minOccurs="0"/>
+<xs:element name="return" type="tns:reservation" minOccurs="0" maxOccurs="unbounded"/>
 </xs:sequence>
 </xs:complexType>
 
@@ -129,6 +127,15 @@
 <xs:element name="identificationNumber" type="xs:string" minOccurs="0"/>
 <xs:element name="name" type="xs:string" minOccurs="0"/>
 <xs:element name="reservations" type="tns:reservation" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="partner">
+<xs:sequence>
+<xs:element name="partnerId" type="xs:long" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+<xs:element name="reservations" type="tns:reservation" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
@@ -179,6 +186,19 @@
 <xs:element name="roomNumber" type="xs:string" minOccurs="0"/>
 <xs:element name="roomStatus" type="tns:roomStatus" minOccurs="0"/>
 <xs:element name="roomType" type="tns:roomType" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="partnerLogin">
+<xs:sequence>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="partnerLoginResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:partner" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
@@ -239,6 +259,24 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="retrieveReservationsByReservationId">
+<xs:sequence>
+<xs:element name="reservationId" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="retrieveReservationsByReservationIdResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:reservation" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ReservationNotFoundException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="reserveNewReservation">
 <xs:sequence>
 <xs:element name="newReservation" type="tns:reservation" minOccurs="0"/>
@@ -261,12 +299,6 @@
 </xs:complexType>
 
 <xs:complexType name="NotEnoughRoomException">
-<xs:sequence>
-<xs:element name="message" type="xs:string" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ReservationNotFoundException">
 <xs:sequence>
 <xs:element name="message" type="xs:string" minOccurs="0"/>
 </xs:sequence>

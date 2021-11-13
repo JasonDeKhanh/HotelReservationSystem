@@ -78,9 +78,14 @@ public class PartnerEntityWebService {
         
         em.detach(partner);
         
-        for(Reservation r : partner.getReservations()){
-            em.detach(r);
-            r.setPartner(null);
+        for(Reservation reservation : partner.getReservations()){
+            em.detach(reservation);
+            reservation.setPartner(null);
+            reservation.setGuest(null);
+            reservation.setRoomAllocationExceptionReport(null);
+            reservation.setPartner(null);
+            reservation.getRooms().clear();
+            reservation.setRoomType(null);
         }
        
         return partner;
@@ -177,20 +182,21 @@ public class PartnerEntityWebService {
         reservation.setRoomAllocationExceptionReport(null);
         reservation.setPartner(null);
         reservation.getRooms().clear();
+        reservation.setRoomType(null);
         
-        em.detach(reservation.getPartner());
-        reservation.getPartner().getReservations().clear();
-        
-        em.detach(reservation.getGuest());
-        reservation.getGuest().getReservations().clear();
-        
-        em.detach(reservation.getRoomAllocationExceptionReport());
-        reservation.getRoomAllocationExceptionReport().setReservation(null);
+//        em.detach(reservation.getPartner());
+//        reservation.getPartner().getReservations().clear();
+//        
+//        em.detach(reservation.getGuest());
+//        reservation.getGuest().getReservations().clear();
+//        
+//        em.detach(reservation.getRoomAllocationExceptionReport());
+//        reservation.getRoomAllocationExceptionReport().setReservation(null);
 
-        for(Room room: reservation.getRooms()){
-            em.detach(room);
-            room.setRoomType(null);
-        }
+//        for(Room room: reservation.getRooms()){
+//            em.detach(room);
+//            room.setRoomType(null);
+//        }
         
         
         return reservation;
@@ -202,17 +208,49 @@ public class PartnerEntityWebService {
         Guest guest = guestSessionBeanLocal.createNewUnregisteredGuestGuest(new UnregisteredGuest(guestName, guestID));
         
         em.detach(guest);
-        guest.getReservations().clear();
         
         for(Reservation r : guest.getReservations()){
             em.detach(r);
             r.setGuest(null);
         }
         
-//        return guest.getGuestId();
-        return guest.getGuestId();
-       
+        guest.getReservations().clear();
         
+        
+        
+//        return guest.getGuestId();
+        return guest.getGuestId();   
     }
 
+    //view 
+    @WebMethod(operationName = "retrieveAllReservationsByPartnerId") 
+    public List<Reservation> retrieveAllReservationsByPartnerId(@WebParam(name = "pertnerId")Long pertnerId){
+        List<Reservation> reservations = partnerSessionBeanLocal.retrieveAllReservationsByPartnerId(pertnerId);
+        
+         for(Reservation reservation : reservations){
+            
+            em.detach(reservation);
+            
+            reservation.setGuest(null);
+            reservation.setRoomAllocationExceptionReport(null);
+            reservation.setPartner(null);
+            reservation.getRooms().clear();
+            reservation.setRoomType(null);
+        }
+        return reservations;
+    }
+    
+    @WebMethod(operationName = "retrieveReservationsByReservationId") 
+    public Reservation retrieveReservationsByReservationId(@WebParam(name = "reservationId")Long reservationId) throws ReservationNotFoundException{
+        Reservation reservation = partnerSessionBeanLocal.retrieveReservationsByReservationId(reservationId);
+        
+            em.detach(reservation);
+            reservation.setGuest(null);
+            reservation.setRoomAllocationExceptionReport(null);
+            reservation.setPartner(null);
+            reservation.getRooms().clear();
+            reservation.setRoomType(null);
+      
+        return reservation;
+    }
 }

@@ -100,6 +100,42 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     
+    public Reservation createNewReservationWithPartner(Reservation reservationEntity, String roomTypeName, Long guestID, Long partnerId) throws RoomTypeNotFoundException, UnknownPersistenceException, InputDataValidationException, GuestNotFoundException{
+        RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByName(roomTypeName);
+        Guest guest = guestSessionBeanLocal.retrieveGuestById(guestID);
+        Partner partner = partnerSessionBeanLocal.retrievePartnerById(partnerId);
+
+        // also delete the roomTypeName and guestId parameter up there later
+        
+        Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(reservationEntity);
+         
+        if(constraintViolations.isEmpty())
+        {
+            try
+            {
+                reservationEntity.setPartner(partner);
+                partner.getReservations().add(reservationEntity);
+                reservationEntity.setRoomType(roomType);
+                reservationEntity.setGuest(guest);
+                guest.getReservations().add(reservationEntity);
+                em.persist(reservationEntity);
+                em.flush();
+
+                return reservationEntity;
+            }
+            catch(PersistenceException ex)
+            {
+                
+                throw new UnknownPersistenceException(ex.getMessage());
+                
+            }
+        }
+        else
+        {
+            throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+        }
+    }
+    
     
     @Override
     public Reservation reserveNewReservation(Reservation newReservation, String roomTypeName, Long guestId) throws RoomTypeNotFoundException, GuestNotFoundException, NotEnoughRoomException, UnknownPersistenceException, InputDataValidationException, ParseException, ReservationNotFoundException {
@@ -165,15 +201,17 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         BigDecimal totalAmountPerRoom = roomTypeSessionBeanLocal.getReservationAmount(checkinDate, checkoutDate, newReservation.getType(), roomType.getRoomTypeId());
         newReservation.setPrice(totalAmountPerRoom.multiply(new BigDecimal(newReservation.getNoOfRoom())));
         
-        Partner partner = partnerSessionBeanLocal.retrievePartnerById(partnerId);
-        newReservation.setPartner(partner);
-        partner.getReservations().add(newReservation);
+//        Partner partner = partnerSessionBeanLocal.retrievePartnerById(partnerId);
+//        newReservation.setPartner(partner);
+//        partner.getReservations().add(newReservation);
         
         
 //        newReservation.setPrice(new BigDecimal(17891789));
         
         // associate
-        newReservation = createNewReservation(newReservation, roomTypeName, guestId);
+//        newReservation = createNewReservation(newReservation, roomTypeName, guestId);
+        
+        newReservation = createNewReservationWithPartner(newReservation, roomTypeName, guestId, partnerId);
         
         // if reservation made after 2 am, then call allocation method;
         //
