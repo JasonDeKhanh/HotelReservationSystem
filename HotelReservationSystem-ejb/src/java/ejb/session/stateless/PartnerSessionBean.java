@@ -95,6 +95,21 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     }
     
     @Override
+    public Partner retrievePartnerById(Long partnerId) throws GuestNotFoundException {
+        
+        Partner partner = em.find(Partner.class, partnerId);
+        
+        if(partner != null)
+        {
+            return partner;
+        }
+        else
+        {
+            throw new GuestNotFoundException("Partner ID " + partnerId + " does not exist!");
+        }   
+    }
+    
+    @Override
     public Partner retrievePartnerByUsername(String username) throws PartnerUsernameExistException
     {
         Query query = em.createQuery("SELECT p FROM Partner p WHERE p.username = :inUsername");

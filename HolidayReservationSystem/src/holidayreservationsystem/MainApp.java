@@ -5,25 +5,28 @@
  */
 package holidayreservationsystem;
 
-import java.text.ParseException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import ws.client.GuestIdentificationNumberExistException_Exception;
+import ws.client.GuestNotFoundException_Exception;
+import ws.client.InputDataValidationException_Exception;
 import ws.client.InvalidLoginCredentialException_Exception;
-import ws.client.NoRoomTypeAvaiableForReservationException;
 import ws.client.NoRoomTypeAvaiableForReservationException_Exception;
+import ws.client.NotEnoughRoomException_Exception;
 import ws.client.ParseException_Exception;
 import ws.client.Partner;
 import ws.client.PartnerEntityWebService_Service;
 import ws.client.Reservation;
+import ws.client.ReservationNotFoundException_Exception;
 import ws.client.ReservationType;
 import ws.client.RoomType;
-import ws.client.RoomTypeNotFoundException;
 import ws.client.RoomTypeNotFoundException_Exception;
+import ws.client.UnknownPersistenceException_Exception;
 
 /**
  *
@@ -37,7 +40,7 @@ public class MainApp {
     
     private Partner currentPartner = null;
     
-    public void runApp() {
+    public void runApp() throws GuestNotFoundException_Exception, GuestIdentificationNumberExistException_Exception, InputDataValidationException_Exception, UnknownPersistenceException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         
@@ -68,7 +71,7 @@ public class MainApp {
                 } else if (response == 2) {
                     try{
                         doSearchHotelRoom();
-                    }catch(NoRoomTypeAvaiableForReservationException_Exception| DatatypeConfigurationException|ParseException_Exception| RoomTypeNotFoundException_Exception ex){
+                    }catch( GuestNotFoundException_Exception | NoRoomTypeAvaiableForReservationException_Exception| DatatypeConfigurationException|ParseException_Exception| RoomTypeNotFoundException_Exception ex){
                         System.out.println(ex.getMessage());
                     }
                     
@@ -114,7 +117,7 @@ public class MainApp {
 //        }
     }
     
-    private void doSearchHotelRoom() throws NoRoomTypeAvaiableForReservationException_Exception, ParseException_Exception, RoomTypeNotFoundException_Exception, DatatypeConfigurationException {
+    private void doSearchHotelRoom() throws NoRoomTypeAvaiableForReservationException_Exception, GuestNotFoundException_Exception, ParseException_Exception, RoomTypeNotFoundException_Exception, DatatypeConfigurationException, GuestIdentificationNumberExistException_Exception, InputDataValidationException_Exception, UnknownPersistenceException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception {
         
             System.out.println("*** Hotel Reservation System Reservation Client :: Search Hotel Room ***\n");
             Scanner scanner = new Scanner(System.in);
@@ -127,20 +130,19 @@ public class MainApp {
             checkinDate = scanner.nextLine().trim();
             System.out.print("Enter Check-out Date (dd/mm/yyyy)> ");
             checkoutDate = scanner.nextLine().trim();
-            System.out.print("Enter number of rooms> ");
+            System.out.print("Enter number of rooms to book> ");
             Integer noOfRoom = Integer.parseInt(scanner.nextLine().trim());
 
             // do if checkin is AFTER checkout --> throw exception, catch beneath also
 
             // call session bean here
             //
-            List<RoomType> availableRoomTypes = service.getPartnerEntityWebServicePort().partnerSearchRoom(checkinDate, checkoutDate,noOfRoom);
-//            System.out.println(availableRoomTypes.get(0).getName());
+            List<RoomType> availableRoomTypes = service.getPartnerEntityWebServicePort().partnerSearchRoom(checkinDate, checkoutDate, noOfRoom);
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
             // Should we show number of rooms left able to be booked also? The inventory of room type
-            System.out.printf("%2s", "");
-            System.out.printf("%14s%22s   %s\n", "Room Type", "Number of Rooms Available", "Rate Per Night");
+            System.out.printf("%4s", "ID");
+            System.out.printf("%30s%28s   %25s\n", "Room Type Name", "Number of Rooms Available", "Total Rate Per Room");
             
             Integer number = 0;
             for(RoomType roomType: availableRoomTypes)
@@ -164,23 +166,47 @@ public class MainApp {
             {
                 if(currentPartner != null)
                 {
-                    // String response = "";
+                     // String response = "";
                     String roomTypeName = "";
                     Integer numOfRooms = 0;
                     Reservation newReservation = new Reservation();
                     newReservation.setType(ReservationType.ONLINE);
-                    
-
-  
-//                    Date inDate = inputDateFormat.parse(checkinDate);
-//
-//                    Date outDate = inputDateFormat.parse(checkoutDate); 
                     
                     XMLGregorianCalendar inDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(checkinDate);
                     XMLGregorianCalendar outDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(checkinDate);
                     
                     newReservation.setCheckinDate(inDate);
                     newReservation.setCheckoutDate(outDate);
+                    
+                     // Ask guest to enter name and identification number
+                    String guestName = "";
+                    String guestIdentificationNumber = "";
+                    System.out.print("Enter Guest Name > ");
+                    guestName = scanner.nextLine().trim();
+                    System.out.print("Enter Guest Identiication Number > ");
+                    guestIdentificationNumber = scanner.nextLine().trim(); 
+
+                    
+                    System.out.print("Enter Room Type Name you want to book> ");
+                    roomTypeName = scanner.nextLine().trim();
+                    System.out.print("Enter number of rooms you want to book> ");
+                    numOfRooms = Integer.parseInt(scanner.nextLine().trim());
+                    
+                    newReservation.setPrice(BigDecimal.ONE);
+                    
+                    newReservation.setNoOfRoom(numOfRooms);
+                    
+                    
+                    // check if guest already exists, if yes then use him, else create new unregistered guest entity
+//                    Guest currentGuest = new UnregisteredGuest(guestName, guestIdentificationNumber);
+                    
+               
+                    Long guestId = service.getPartnerEntityWebServicePort().createNewUnregisteredGuestGuest(guestName, guestIdentificationNumber);
+                    
+                    
+                    newReservation = service.getPartnerEntityWebServicePort().reserveNewReservation(newReservation, roomTypeName, guestId, currentPartner.getPartnerId());
+                    System.out.println("Reservation with ID " + newReservation.getReservationId() + " successfully created!");
+                   
 
                     System.out.print("Enter Room Type Name you want to book> ");
                     roomTypeName = scanner.nextLine().trim();
@@ -203,7 +229,7 @@ public class MainApp {
         
     }
     
-    private void loggedInMenu() {
+    private void loggedInMenu() throws GuestNotFoundException_Exception, GuestIdentificationNumberExistException_Exception, InputDataValidationException_Exception, UnknownPersistenceException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         

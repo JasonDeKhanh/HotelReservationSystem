@@ -150,6 +150,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         }
     }
     
+    @Override
     public UnregisteredGuest createNewUnregisteredGuestGuest(UnregisteredGuest newGuest) throws GuestIdentificationNumberExistException, UnknownPersistenceException, InputDataValidationException {
     
         Set<ConstraintViolation<UnregisteredGuest>>constraintViolations = validator.validate(newGuest);

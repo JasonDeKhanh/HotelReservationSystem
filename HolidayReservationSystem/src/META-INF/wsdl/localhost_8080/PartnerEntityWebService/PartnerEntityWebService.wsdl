@@ -16,6 +16,36 @@
 <message name="RoomTypeNotFoundException">
 <part name="fault" element="tns:RoomTypeNotFoundException"/>
 </message>
+<message name="reserveNewReservation">
+<part name="parameters" element="tns:reserveNewReservation"/>
+</message>
+<message name="reserveNewReservationResponse">
+<part name="parameters" element="tns:reserveNewReservationResponse"/>
+</message>
+<message name="GuestNotFoundException">
+<part name="fault" element="tns:GuestNotFoundException"/>
+</message>
+<message name="NotEnoughRoomException">
+<part name="fault" element="tns:NotEnoughRoomException"/>
+</message>
+<message name="UnknownPersistenceException">
+<part name="fault" element="tns:UnknownPersistenceException"/>
+</message>
+<message name="InputDataValidationException">
+<part name="fault" element="tns:InputDataValidationException"/>
+</message>
+<message name="ReservationNotFoundException">
+<part name="fault" element="tns:ReservationNotFoundException"/>
+</message>
+<message name="createNewUnregisteredGuestGuest">
+<part name="parameters" element="tns:createNewUnregisteredGuestGuest"/>
+</message>
+<message name="createNewUnregisteredGuestGuestResponse">
+<part name="parameters" element="tns:createNewUnregisteredGuestGuestResponse"/>
+</message>
+<message name="GuestIdentificationNumberExistException">
+<part name="fault" element="tns:GuestIdentificationNumberExistException"/>
+</message>
 <message name="getNumberOfRoomsThisRoomTypeAvailableForReserve">
 <part name="parameters" element="tns:getNumberOfRoomsThisRoomTypeAvailableForReserve"/>
 </message>
@@ -46,6 +76,24 @@
 <output wsam:Action="http://ws.session.ejb/PartnerEntityWebService/getReservationAmountResponse" message="tns:getReservationAmountResponse"/>
 <fault message="tns:ParseException" name="ParseException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/getReservationAmount/Fault/ParseException"/>
 <fault message="tns:RoomTypeNotFoundException" name="RoomTypeNotFoundException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/getReservationAmount/Fault/RoomTypeNotFoundException"/>
+</operation>
+<operation name="reserveNewReservation">
+<input wsam:Action="http://ws.session.ejb/PartnerEntityWebService/reserveNewReservationRequest" message="tns:reserveNewReservation"/>
+<output wsam:Action="http://ws.session.ejb/PartnerEntityWebService/reserveNewReservationResponse" message="tns:reserveNewReservationResponse"/>
+<fault message="tns:RoomTypeNotFoundException" name="RoomTypeNotFoundException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/reserveNewReservation/Fault/RoomTypeNotFoundException"/>
+<fault message="tns:GuestNotFoundException" name="GuestNotFoundException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/reserveNewReservation/Fault/GuestNotFoundException"/>
+<fault message="tns:NotEnoughRoomException" name="NotEnoughRoomException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/reserveNewReservation/Fault/NotEnoughRoomException"/>
+<fault message="tns:UnknownPersistenceException" name="UnknownPersistenceException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/reserveNewReservation/Fault/UnknownPersistenceException"/>
+<fault message="tns:InputDataValidationException" name="InputDataValidationException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/reserveNewReservation/Fault/InputDataValidationException"/>
+<fault message="tns:ParseException" name="ParseException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/reserveNewReservation/Fault/ParseException"/>
+<fault message="tns:ReservationNotFoundException" name="ReservationNotFoundException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/reserveNewReservation/Fault/ReservationNotFoundException"/>
+</operation>
+<operation name="createNewUnregisteredGuestGuest">
+<input wsam:Action="http://ws.session.ejb/PartnerEntityWebService/createNewUnregisteredGuestGuestRequest" message="tns:createNewUnregisteredGuestGuest"/>
+<output wsam:Action="http://ws.session.ejb/PartnerEntityWebService/createNewUnregisteredGuestGuestResponse" message="tns:createNewUnregisteredGuestGuestResponse"/>
+<fault message="tns:GuestIdentificationNumberExistException" name="GuestIdentificationNumberExistException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/createNewUnregisteredGuestGuest/Fault/GuestIdentificationNumberExistException"/>
+<fault message="tns:UnknownPersistenceException" name="UnknownPersistenceException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/createNewUnregisteredGuestGuest/Fault/UnknownPersistenceException"/>
+<fault message="tns:InputDataValidationException" name="InputDataValidationException" wsam:Action="http://ws.session.ejb/PartnerEntityWebService/createNewUnregisteredGuestGuest/Fault/InputDataValidationException"/>
 </operation>
 <operation name="getNumberOfRoomsThisRoomTypeAvailableForReserve">
 <input wsam:Action="http://ws.session.ejb/PartnerEntityWebService/getNumberOfRoomsThisRoomTypeAvailableForReserveRequest" message="tns:getNumberOfRoomsThisRoomTypeAvailableForReserve"/>
@@ -81,6 +129,54 @@
 </fault>
 <fault name="RoomTypeNotFoundException">
 <soap:fault name="RoomTypeNotFoundException" use="literal"/>
+</fault>
+</operation>
+<operation name="reserveNewReservation">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="RoomTypeNotFoundException">
+<soap:fault name="RoomTypeNotFoundException" use="literal"/>
+</fault>
+<fault name="GuestNotFoundException">
+<soap:fault name="GuestNotFoundException" use="literal"/>
+</fault>
+<fault name="NotEnoughRoomException">
+<soap:fault name="NotEnoughRoomException" use="literal"/>
+</fault>
+<fault name="UnknownPersistenceException">
+<soap:fault name="UnknownPersistenceException" use="literal"/>
+</fault>
+<fault name="InputDataValidationException">
+<soap:fault name="InputDataValidationException" use="literal"/>
+</fault>
+<fault name="ParseException">
+<soap:fault name="ParseException" use="literal"/>
+</fault>
+<fault name="ReservationNotFoundException">
+<soap:fault name="ReservationNotFoundException" use="literal"/>
+</fault>
+</operation>
+<operation name="createNewUnregisteredGuestGuest">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="GuestIdentificationNumberExistException">
+<soap:fault name="GuestIdentificationNumberExistException" use="literal"/>
+</fault>
+<fault name="UnknownPersistenceException">
+<soap:fault name="UnknownPersistenceException" use="literal"/>
+</fault>
+<fault name="InputDataValidationException">
+<soap:fault name="InputDataValidationException" use="literal"/>
 </fault>
 </operation>
 <operation name="getNumberOfRoomsThisRoomTypeAvailableForReserve">

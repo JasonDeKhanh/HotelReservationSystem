@@ -5,13 +5,17 @@
  */
 package ejb.session.ws;
 
+import ejb.session.stateless.GuestSessionBeanLocal;
 import ejb.session.stateless.PartnerSessionBeanLocal;
+import ejb.session.stateless.ReservationSessionBeanLocal;
 import ejb.session.stateless.RoomTypeSessionBeanLocal;
+import entity.Guest;
 import entity.Partner;
 import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
+import entity.UnregisteredGuest;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,9 +29,15 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.enumeration.ReservationType;
+import util.exception.GuestIdentificationNumberExistException;
+import util.exception.GuestNotFoundException;
+import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.NoRoomTypeAvaiableForReservationException;
+import util.exception.NotEnoughRoomException;
+import util.exception.ReservationNotFoundException;
 import util.exception.RoomTypeNotFoundException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -36,6 +46,12 @@ import util.exception.RoomTypeNotFoundException;
 @WebService(serviceName = "PartnerEntityWebService")
 @Stateless()
 public class PartnerEntityWebService {
+
+    @EJB(name = "GuestSessionBeanLocal")
+    private GuestSessionBeanLocal guestSessionBeanLocal;
+
+    @EJB(name = "ReservationSessionBeanLocal")
+    private ReservationSessionBeanLocal reservationSessionBeanLocal;
 
     @EJB(name = "RoomTypeSessionBeanLocal")
     private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
@@ -75,6 +91,7 @@ public class PartnerEntityWebService {
      * Web service operation
      * @param checkinDate
      * @param checkoutDate
+     * @param noOfRoom
      * @return 
      * @throws java.text.ParseException
      * @throws util.exception.NoRoomTypeAvaiableForReservationException
@@ -144,7 +161,48 @@ public class PartnerEntityWebService {
         return result;
     }
     
-    //create unregistred guest
+    //reserve method newReservation, roomTypeName, currentGuest.getGuestId()
+    @WebMethod(operationName = "reserveNewReservation")
+    public Reservation reserveNewReservation(@WebParam(name = "newReservation")Reservation newReservation, @WebParam(name = "roomTypeName")String roomTypeName,
+            @WebParam(name = "guestId")Long guestId, @WebParam(name = "partnerId")Long partnerId) throws RoomTypeNotFoundException, GuestNotFoundException, 
+            NotEnoughRoomException, UnknownPersistenceException, InputDataValidationException, ParseException, ReservationNotFoundException{
+        
+        Reservation reservation = reservationSessionBeanLocal.reserveNewReservationThruPartner(newReservation, roomTypeName, guestId, partnerId);
+        
+        em.detach(reservation);
+        
+        em.detach(reservation.getPartner());
+        reservation.getPartner().getReservations().clear();
+        
+        em.detach(reservation.getGuest());
+        reservation.getGuest().getReservations().clear();
+        
+        em.detach(reservation.getRoomAllocationExceptionReport());
+        reservation.getRoomAllocationExceptionReport().setReservation(null);
+
+        for(Room room: reservation.getRooms()){
+            em.detach(room);
+            room.setRoomType(null);
+        }
+        
+        
+        
+        return reservation;
+    }
     
+    //create unregistred guest
+    @WebMethod(operationName = "createNewUnregisteredGuestGuest") //guestName, guestIdentificationNumber
+    public Long createNewUnregisteredGuestGuest(@WebParam(name = "guestName")String guestName, @WebParam(name = "guestID")String guestID) throws GuestIdentificationNumberExistException, UnknownPersistenceException, InputDataValidationException{
+        Guest guest = guestSessionBeanLocal.createNewUnregisteredGuestGuest(new UnregisteredGuest(guestName, guestID));
+        
+        em.detach(guest);
+        
+        for(Reservation r : guest.getReservations()){
+            em.detach(r);
+            r.setPartner(null);
+        }
+        
+        return guest.getGuestId();
+    }
 
 }
