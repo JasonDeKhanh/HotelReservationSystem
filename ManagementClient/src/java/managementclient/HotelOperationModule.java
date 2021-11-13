@@ -520,11 +520,11 @@ public class HotelOperationModule {
             }
             // show room rates
             System.out.println("Rates: ");
-            /*
+            
             for ( RoomRate roomRate : roomType.getRoomRates()) {
                 System.out.println(" - " + roomRate.getName() + ": " + roomRate.getRatePerNight() + " dollars/night");
             }
-            */
+            
             System.out.println("---------------------");
             System.out.println("");
         }
@@ -691,15 +691,19 @@ public class HotelOperationModule {
         
         List<Room> rooms = roomSessionBeanRemote.retrieveAllRooms();
         
-    
+        System.out.printf("%10s%20s%30s%30s\n","Room ID", "Room Number", "Room Type", "Room Status");
         for(Room room : rooms) {
-            System.out.println("--------------------");
-            System.out.println("Room ID: " + room.getRoomId());
-            System.out.println("Room Number: " + room.getRoomNumber());
-            System.out.println("Room Type: " + room.getRoomType().getName());
-            System.out.println("Room Status: " + room.getRoomStatus());
-            System.out.println("--------------------");
+            
+            System.out.printf("%10s%20s%30s%30s\n",room.getRoomId(),room.getRoomNumber(), room.getRoomType().getName(), room.getRoomStatus());
+//            System.out.println("--------------------");
+//            System.out.println("Room ID: " + room.getRoomId());
+//            System.out.println("Room Number: " + room.getRoomNumber());
+//            System.out.println("Room Type: " + room.getRoomType().getName());
+//            System.out.println("Room Status: " + room.getRoomStatus());
+//            System.out.println("--------------------");
         }
+        
+        
     }
     
     public void doViewRoomAllocationExceptionReport() {
@@ -1033,22 +1037,34 @@ public class HotelOperationModule {
         Scanner scanner = new Scanner(System.in);
         String input;
         
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        
+        
         System.out.println("*** Hotel Reservation System Manager Client :: System Administration :: View All Room Rates ***\n");
         
         List<RoomRate> roomRates = roomRateSessionBeanRemote.retrieveAllRoomRates();
         
-    
+        System.out.printf("%10s%40s%20s%20s%20s%20s\n","Rate ID", "Rate Name", "Rate Type", "Rate Per Night","Start Date", "End Date");
+            
         for(RoomRate roomRate : roomRates) {
-            System.out.println("--------------------");
-            System.out.println("Room Rate ID: " + roomRate.getRoomRateId());
-            System.out.println("Room Rate Name: " + roomRate.getName());
-            System.out.println("Rate Type: " + roomRate.getRateType());
-            System.out.println("Rate Per Night: S$" + roomRate.getRatePerNight());
+            String startDate = "";
+            String endDate = "";
             if(roomRate.getRateType().equals(RoomRateType.PEAK) || roomRate.getRateType().equals(RoomRateType.PROMOTION)) {
-                System.out.println("Start Date: " + roomRate.getStartDate());
-                System.out.println("End Date: " + roomRate.getEndDate());
+                startDate = "" + outputDateFormat.format(roomRate.getStartDate());
+                endDate = "" + outputDateFormat.format(roomRate.getEndDate());
             }
-            System.out.println("--------------------");
+            System.out.printf("%10s%40s%20s%20s%20s%20s\n",roomRate.getRoomRateId(),roomRate.getName(), roomRate.getRateType(), 
+                    roomRate.getRatePerNight(), startDate, endDate);
+//            System.out.println("--------------------");
+//            System.out.println("Room Rate ID: " + roomRate.getRoomRateId());
+//            System.out.println("Room Rate Name: " + roomRate.getName());
+//            System.out.println("Rate Type: " + roomRate.getRateType());
+//            System.out.println("Rate Per Night: S$" + roomRate.getRatePerNight());
+//            if(roomRate.getRateType().equals(RoomRateType.PEAK) || roomRate.getRateType().equals(RoomRateType.PROMOTION)) {
+//                System.out.println("Start Date: " + roomRate.getStartDate());
+//                System.out.println("End Date: " + roomRate.getEndDate());
+//            }
+//            System.out.println("--------------------");
         }
     }
     
