@@ -1,12 +1,28 @@
 <?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is Metro/2.4.3 (RELEASE-2.4.3-ad3323c; 2019-01-21T17:46:06+0000) JAXWS-RI/2.3.2 JAXWS-API/2.3.2 JAXB-RI/2.3.2 JAXB-API/2.3.2 git-revision#unknown. --><xs:schema xmlns:tns="http://ws.session.ejb/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://ws.session.ejb/">
 
+<xs:element name="GuestIdentificationNumberExistException" type="tns:GuestIdentificationNumberExistException"/>
+
+<xs:element name="GuestNotFoundException" type="tns:GuestNotFoundException"/>
+
+<xs:element name="InputDataValidationException" type="tns:InputDataValidationException"/>
+
 <xs:element name="InvalidLoginCredentialException" type="tns:InvalidLoginCredentialException"/>
 
 <xs:element name="NoRoomTypeAvaiableForReservationException" type="tns:NoRoomTypeAvaiableForReservationException"/>
 
+<xs:element name="NotEnoughRoomException" type="tns:NotEnoughRoomException"/>
+
 <xs:element name="ParseException" type="tns:ParseException"/>
 
+<xs:element name="ReservationNotFoundException" type="tns:ReservationNotFoundException"/>
+
 <xs:element name="RoomTypeNotFoundException" type="tns:RoomTypeNotFoundException"/>
+
+<xs:element name="UnknownPersistenceException" type="tns:UnknownPersistenceException"/>
+
+<xs:element name="createNewUnregisteredGuestGuest" type="tns:createNewUnregisteredGuestGuest"/>
+
+<xs:element name="createNewUnregisteredGuestGuestResponse" type="tns:createNewUnregisteredGuestGuestResponse"/>
 
 <xs:element name="getNumberOfRoomsThisRoomTypeAvailableForReserve" type="tns:getNumberOfRoomsThisRoomTypeAvailableForReserve"/>
 
@@ -23,6 +39,10 @@
 <xs:element name="partnerSearchRoom" type="tns:partnerSearchRoom"/>
 
 <xs:element name="partnerSearchRoomResponse" type="tns:partnerSearchRoomResponse"/>
+
+<xs:element name="reserveNewReservation" type="tns:reserveNewReservation"/>
+
+<xs:element name="reserveNewReservationResponse" type="tns:reserveNewReservationResponse"/>
 
 <xs:complexType name="getNumberOfRoomsThisRoomTypeAvailableForReserve">
 <xs:sequence>
@@ -183,6 +203,70 @@
 </xs:complexType>
 
 <xs:complexType name="NoRoomTypeAvaiableForReservationException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createNewUnregisteredGuestGuest">
+<xs:sequence>
+<xs:element name="guestName" type="xs:string" minOccurs="0"/>
+<xs:element name="guestID" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createNewUnregisteredGuestGuestResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GuestIdentificationNumberExistException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="UnknownPersistenceException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="InputDataValidationException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="reserveNewReservation">
+<xs:sequence>
+<xs:element name="newReservation" type="tns:reservation" minOccurs="0"/>
+<xs:element name="roomTypeName" type="xs:string" minOccurs="0"/>
+<xs:element name="guestId" type="xs:long" minOccurs="0"/>
+<xs:element name="partnerId" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="reserveNewReservationResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:reservation" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GuestNotFoundException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="NotEnoughRoomException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ReservationNotFoundException">
 <xs:sequence>
 <xs:element name="message" type="xs:string" minOccurs="0"/>
 </xs:sequence>
