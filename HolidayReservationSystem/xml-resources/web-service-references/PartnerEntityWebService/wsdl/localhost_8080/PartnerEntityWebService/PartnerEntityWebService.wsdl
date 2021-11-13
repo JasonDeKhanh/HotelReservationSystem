@@ -70,6 +70,39 @@
 <message name="NoRoomTypeAvaiableForReservationException">
 <part name="fault" element="tns:NoRoomTypeAvaiableForReservationException"/>
 </message>
+<message name="createNewUnregisteredGuestGuest">
+<part name="parameters" element="tns:createNewUnregisteredGuestGuest"/>
+</message>
+<message name="createNewUnregisteredGuestGuestResponse">
+<part name="parameters" element="tns:createNewUnregisteredGuestGuestResponse"/>
+</message>
+<message name="GuestIdentificationNumberExistException">
+<part name="fault" element="tns:GuestIdentificationNumberExistException"/>
+</message>
+<message name="getNumberOfRoomsThisRoomTypeAvailableForReserve">
+<part name="parameters" element="tns:getNumberOfRoomsThisRoomTypeAvailableForReserve"/>
+</message>
+<message name="getNumberOfRoomsThisRoomTypeAvailableForReserveResponse">
+<part name="parameters" element="tns:getNumberOfRoomsThisRoomTypeAvailableForReserveResponse"/>
+</message>
+<message name="partnerLogin">
+<part name="parameters" element="tns:partnerLogin"/>
+</message>
+<message name="partnerLoginResponse">
+<part name="parameters" element="tns:partnerLoginResponse"/>
+</message>
+<message name="InvalidLoginCredentialException">
+<part name="fault" element="tns:InvalidLoginCredentialException"/>
+</message>
+<message name="partnerSearchRoom">
+<part name="parameters" element="tns:partnerSearchRoom"/>
+</message>
+<message name="partnerSearchRoomResponse">
+<part name="parameters" element="tns:partnerSearchRoomResponse"/>
+</message>
+<message name="NoRoomTypeAvaiableForReservationException">
+<part name="fault" element="tns:NoRoomTypeAvaiableForReservationException"/>
+</message>
 <portType name="PartnerEntityWebService">
 <operation name="getReservationAmount">
 <input wsam:Action="http://ws.session.ejb/PartnerEntityWebService/getReservationAmountRequest" message="tns:getReservationAmount"/>
@@ -179,31 +212,6 @@
 <soap:fault name="InputDataValidationException" use="literal"/>
 </fault>
 </operation>
-<operation name="partnerLogin">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-<fault name="InvalidLoginCredentialException">
-<soap:fault name="InvalidLoginCredentialException" use="literal"/>
-</fault>
-</operation>
-<operation name="getNumberOfRoomsThisRoomTypeAvailableForReserve">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-<fault name="ParseException">
-<soap:fault name="ParseException" use="literal"/>
-</fault>
-<fault name="RoomTypeNotFoundException">
-<soap:fault name="RoomTypeNotFoundException" use="literal"/>
 </fault>
 </operation>
 <operation name="partnerSearchRoom">
@@ -231,3 +239,28 @@
 </port>
 </service>
 </definitions>
+<operation name="partnerLogin">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="InvalidLoginCredentialException">
+<soap:fault name="InvalidLoginCredentialException" use="literal"/>
+</fault>
+</operation>
+<operation name="getNumberOfRoomsThisRoomTypeAvailableForReserve">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="ParseException">
+<soap:fault name="ParseException" use="literal"/>
+</fault>
+<fault name="RoomTypeNotFoundException">
+<soap:fault name="RoomTypeNotFoundException" use="literal"/>
