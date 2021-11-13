@@ -12,6 +12,7 @@ import java.util.Scanner;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import ws.client.Guest;
 import ws.client.GuestIdentificationNumberExistException_Exception;
 import ws.client.GuestNotFoundException_Exception;
 import ws.client.InputDataValidationException_Exception;
@@ -137,6 +138,7 @@ public class MainApp {
 
             // call session bean here
             //
+            System.out.println("HERE=====================");
             List<RoomType> availableRoomTypes = service.getPartnerEntityWebServicePort().partnerSearchRoom(checkinDate, checkoutDate, noOfRoom);
             
             // need to print out Room Type name, the name of the rate to be applied (just one) and the actual rate per night $$
@@ -201,10 +203,11 @@ public class MainApp {
 //                    Guest currentGuest = new UnregisteredGuest(guestName, guestIdentificationNumber);
                     
                
-                    Long guestId = service.getPartnerEntityWebServicePort().createNewUnregisteredGuestGuest(guestName, guestIdentificationNumber);
+                    //Long guestId = service.getPartnerEntityWebServicePort().createNewUnregisteredGuestGuest(guestName, guestIdentificationNumber);
+                    Guest guestId = service.getPartnerEntityWebServicePort().createNewUnregisteredGuestGuest(guestName, guestIdentificationNumber);
                     
                     
-                    newReservation = service.getPartnerEntityWebServicePort().reserveNewReservation(newReservation, roomTypeName, guestId, currentPartner.getPartnerId());
+                    newReservation = service.getPartnerEntityWebServicePort().reserveNewReservation(newReservation, roomTypeName, guestId.getGuestId(), currentPartner.getPartnerId());
                     System.out.println("Reservation with ID " + newReservation.getReservationId() + " successfully created!");
                    
 

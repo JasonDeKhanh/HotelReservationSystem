@@ -130,7 +130,7 @@ public class PartnerEntityWebService {
     }
     
     @WebMethod(operationName = "getNumberOfRoomsThisRoomTypeAvailableForReserve")
-    public Integer getNumberOfRoomsThisRoomTypeAvailableForReserve(@WebParam(name = "checkinDate")String checkinDate, 
+    public Integer getNumberOfRoomsThisRoomTypeAvailableForReserve(@WebParam(name = "checkinDate") String checkinDate, 
             @WebParam(name = "checkoutDate") String checkoutDate, @WebParam(name = "roomTypeId") Long roomTypeId) throws ParseException, RoomTypeNotFoundException{
         
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
@@ -192,7 +192,7 @@ public class PartnerEntityWebService {
     
     //create unregistred guest
     @WebMethod(operationName = "createNewUnregisteredGuestGuest") //guestName, guestIdentificationNumber
-    public Long createNewUnregisteredGuestGuest(@WebParam(name = "guestName")String guestName, @WebParam(name = "guestID")String guestID) throws GuestIdentificationNumberExistException, UnknownPersistenceException, InputDataValidationException{
+    public Guest createNewUnregisteredGuestGuest(@WebParam(name = "guestName")String guestName, @WebParam(name = "guestID")String guestID) throws GuestIdentificationNumberExistException, UnknownPersistenceException, InputDataValidationException{
         Guest guest = guestSessionBeanLocal.createNewUnregisteredGuestGuest(new UnregisteredGuest(guestName, guestID));
         
         em.detach(guest);
@@ -202,7 +202,10 @@ public class PartnerEntityWebService {
             r.setPartner(null);
         }
         
-        return guest.getGuestId();
+//        return guest.getGuestId();
+        return guest;
+       
+        
     }
 
 }

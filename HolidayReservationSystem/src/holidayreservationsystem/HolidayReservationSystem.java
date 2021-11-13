@@ -5,19 +5,10 @@
  */
 package holidayreservationsystem;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
 import ws.client.GuestIdentificationNumberExistException_Exception;
 import ws.client.GuestNotFoundException_Exception;
 import ws.client.InputDataValidationException_Exception;
-import ws.client.InvalidLoginCredentialException;
-import ws.client.InvalidLoginCredentialException_Exception;
 import ws.client.NotEnoughRoomException_Exception;
-import ws.client.Partner;
-import ws.client.PartnerEntityWebService_Service;
 import ws.client.ReservationNotFoundException_Exception;
 import ws.client.UnknownPersistenceException_Exception;
 
@@ -31,6 +22,12 @@ public class HolidayReservationSystem {
 //    
     /**
      * @param args the command line arguments
+     * @throws ws.client.GuestNotFoundException_Exception
+     * @throws ws.client.GuestIdentificationNumberExistException_Exception
+     * @throws ws.client.UnknownPersistenceException_Exception
+     * @throws ws.client.InputDataValidationException_Exception
+     * @throws ws.client.NotEnoughRoomException_Exception
+     * @throws ws.client.ReservationNotFoundException_Exception
      */
     public static void main(String[] args) throws GuestNotFoundException_Exception, GuestIdentificationNumberExistException_Exception, UnknownPersistenceException_Exception, InputDataValidationException_Exception, NotEnoughRoomException_Exception, ReservationNotFoundException_Exception {
         
