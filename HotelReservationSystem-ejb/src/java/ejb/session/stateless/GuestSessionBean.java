@@ -191,11 +191,11 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     }
     
     public String guestCheckin(String guestID) throws GuestNotFoundException{
-        Query query = em.createQuery("SELECT ug FROM UnregisteredGuest ug WHERE ug.identificationNumber = :inIdentificationNumber");
+        Query query = em.createQuery("SELECT ug FROM Guest ug WHERE ug.identificationNumber = :inIdentificationNumber");
         query.setParameter("inIdentificationNumber", guestID);
         
         try {
-            Guest guest = (UnregisteredGuest) query.getSingleResult();
+            Guest guest = (Guest) query.getSingleResult();
             Boolean checkedIn = false;
             String output ="";
 
